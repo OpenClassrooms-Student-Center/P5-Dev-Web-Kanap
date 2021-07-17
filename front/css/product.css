@@ -1,0 +1,121 @@
+/*********/
+/*Product*/
+/*********/
+
+/*Item Details*/
+.item {
+	margin: 135px 0;
+	display: flex;
+	justify-content: center;
+}
+.item article {
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+	width: 50%;
+}
+.item__img {
+	width: 100%;
+}
+.item__img img {
+	width: 100%;
+	border-radius: 15px;
+}
+.item__content {
+	width: 100%;
+	color: white;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+.item__content h1 {
+	text-align: left;
+	font-size: 48px;
+	font-weight: 700;
+	margin-top: 30px;
+	margin-bottom: 0;
+}
+.item__content__titlePrice,
+.item__content__description,
+.item__content__settings {
+	border-bottom: 1px solid white;
+}
+.item__content__titlePrice p {
+	margin-top: 4px;
+}
+.item__content__description {
+	display: flex;
+	flex-direction: column;
+}
+.item__content__description__title {
+	font-weight: 600;
+    font-size: 24px;
+    margin-bottom: 0;
+}
+.item__content__settings {
+	padding-top: 24px;
+	padding-bottom: 18px;
+}
+.item__content__settings__color {
+    margin-bottom: 10px;
+}
+.item__content__settings__color select,
+.item__content__settings__quantity input {
+	color: var(--footer-secondary-color);
+	font-family: 'Montserrat', sans-serif;
+	font-size: 14px;
+    border-radius: 20px;
+    border: 1px solid #767676;
+    text-align: center;
+    text-align-last: center;
+}
+.item__content__settings__color select:focus,
+.item__content__settings__quantity input:focus {
+	outline: none;
+}
+.item__content__addButton {
+    display: flex;
+    justify-content: center;
+    padding-top: 32px;
+}
+.item__content__addButton button {
+	font-size: 22px;
+    border-radius: 40px;
+    border: 0;
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 18px 28px;
+    cursor: pointer;
+}
+.item__content__addButton button:hover {
+    box-shadow: rgba(42, 18, 206, 0.9) 0 0 22px 6px;
+}
+
+
+
+
+
+/***************/
+/*Media queries*/
+/***************/
+
+@media (max-width: 991.98px) {
+	.item article {
+    	width: 70%;
+	}
+	.item__content__settings__color,
+	.item__content__settings__quantity {
+	    display: flex;
+	    flex-direction: column;
+	    align-items: center;
+	}
+	.item__content__settings__color {
+	    margin-bottom: 26px;
+	}
+}
+
+@media (max-width: 575.98px) { 
+	.item article {
+    	width: 90%;
+	}
+}
