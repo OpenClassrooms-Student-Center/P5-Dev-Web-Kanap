@@ -5,7 +5,8 @@ const products = [
     "name": "Kanap Sinopé",
     "price": 1849,
     "imageUrl": "kanap01.jpeg",
-    "description": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    "description": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "altTxt": "Lorem ipsum dolor sit amet, Kanap Sinopé"
   },
   {
     "colors": ["Black/Yellow", "Black/Red"],
@@ -13,7 +14,8 @@ const products = [
     "name": "Kanap Cyllène",
     "price": 4499,
     "imageUrl": "kanap02.jpeg",
-    "description": "Morbi nec erat aliquam, sagittis urna non, laoreet justo. Etiam sit amet interdum diam, at accumsan lectus."
+    "description": "Morbi nec erat aliquam, sagittis urna non, laoreet justo. Etiam sit amet interdum diam, at accumsan lectus.",
+    "altTxt": "Lorem ipsum dolor sit amet, Kanap Cyllène"
   },
   {
     "colors": ["Green", "Red", "Orange"],
@@ -21,7 +23,8 @@ const products = [
     "name": "Kanap Calycé",
     "price": 3199,
     "imageUrl": "kanap03.jpeg",
-    "description": "Pellentesque fermentum arcu venenatis ex sagittis accumsan. Vivamus lacinia fermentum tortor.Mauris imperdiet tellus ante."
+    "description": "Pellentesque fermentum arcu venenatis ex sagittis accumsan. Vivamus lacinia fermentum tortor.Mauris imperdiet tellus ante.",
+    "altTxt": "Lorem ipsum dolor sit amet, Kanap Calycé"
   },
   {
     "colors": ["Pink", "White"],
@@ -29,7 +32,8 @@ const products = [
     "name": "Kanap Autonoé",
     "price": 1499,
     "imageUrl": "kanap04.jpeg",
-    "description": "Donec mattis nisl tortor, nec blandit sapien fermentum at. Proin hendrerit efficitur fringilla. Lorem ipsum dolor sit amet."
+    "description": "Donec mattis nisl tortor, nec blandit sapien fermentum at. Proin hendrerit efficitur fringilla. Lorem ipsum dolor sit amet.",
+    "altTxt": "Lorem ipsum dolor sit amet, Kanap Autonoé"
   },
   {
     "colors": ["Grey", "Purple", "Blue"],
@@ -37,7 +41,8 @@ const products = [
     "name": "Kanap Eurydomé",
     "price": 2249,
     "imageUrl": "kanap05.jpeg",
-    "description": "Ut laoreet vulputate neque in commodo. Suspendisse maximus quis erat in sagittis. Donec hendrerit purus at congue aliquam."
+    "description": "Ut laoreet vulputate neque in commodo. Suspendisse maximus quis erat in sagittis. Donec hendrerit purus at congue aliquam.",
+    "altTxt": "Lorem ipsum dolor sit amet, Kanap Eurydomé"
   },
   {
     "colors": ["Grey", "Navy"],
@@ -45,7 +50,8 @@ const products = [
     "name": "Kanap Hélicé",
     "price": 999,
     "imageUrl": "kanap06.jpeg",
-    "description": "Curabitur vel augue sit amet arcu aliquet interdum. Integer vel quam mi. Morbi nec vehicula mi, sit amet vestibulum."
+    "description": "Curabitur vel augue sit amet arcu aliquet interdum. Integer vel quam mi. Morbi nec vehicula mi, sit amet vestibulum.",
+    "altTxt": "Lorem ipsum dolor sit amet, Kanap Hélicé"
   },
   {
     "colors": ["Red", "Silver"],
@@ -53,7 +59,8 @@ const products = [
     "name": "Kanap Thyoné",
     "price": 1999,
     "imageUrl": "kanap07.jpeg",
-    "description": "EMauris imperdiet tellus ante, sit amet pretium turpis molestie eu. Vestibulum et egestas eros. Vestibulum non lacus orci."
+    "description": "EMauris imperdiet tellus ante, sit amet pretium turpis molestie eu. Vestibulum et egestas eros. Vestibulum non lacus orci.",
+    "altTxt": "Lorem ipsum dolor sit amet, Kanap Thyoné"
   },
   {
     "colors": ["Pink", "Brown", "Yellow", "White"],
@@ -61,7 +68,8 @@ const products = [
     "name": "Kanap orthosie",
     "price": 3999,
     "imageUrl": "kanap08.jpeg",
-    "description": "Mauris molestie laoreet finibus. Aenean scelerisque convallis lacus at dapibus. Morbi imperdiet enim metus rhoncus."
+    "description": "Mauris molestie laoreet finibus. Aenean scelerisque convallis lacus at dapibus. Morbi imperdiet enim metus rhoncus.",
+    "altTxt": "Lorem ipsum dolor sit amet, Kanap orthosie"
   }
 ];
 
