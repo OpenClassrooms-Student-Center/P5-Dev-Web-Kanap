@@ -1,0 +1,18 @@
+/**************/
+/*Confirmation*/
+/**************/
+.confirmation {
+    display: flex;
+    justify-content: center;
+    margin-top: 85px;
+    margin-bottom: 85px;
+}
+
+.confirmation p {
+    background-color: white;
+    color: #3d424f;
+    text-align: center;
+    font-weight: 500;
+    padding: 30px;
+    border-radius: 25px;
+}
