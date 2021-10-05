@@ -10,8 +10,8 @@
 }
 .item article {
 	display: flex;
-    flex-direction: column;
-    align-items: center;
+	flex-direction: column;
+	align-items: center;
 	width: 50%;
 }
 .item__img {
@@ -49,46 +49,46 @@
 }
 .item__content__description__title {
 	font-weight: 600;
-    font-size: 24px;
-    margin-bottom: 0;
+	font-size: 24px;
+	margin-bottom: 0;
 }
 .item__content__settings {
 	padding-top: 24px;
 	padding-bottom: 18px;
 }
 .item__content__settings__color {
-    margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 .item__content__settings__color select,
 .item__content__settings__quantity input {
 	color: var(--footer-secondary-color);
 	font-family: 'Montserrat', sans-serif;
 	font-size: 14px;
-    border-radius: 20px;
-    border: 1px solid #767676;
-    text-align: center;
-    text-align-last: center;
+	border-radius: 20px;
+	border: 1px solid #767676;
+	text-align: center;
+	text-align-last: center;
 }
 .item__content__settings__color select:focus,
 .item__content__settings__quantity input:focus {
 	outline: none;
 }
 .item__content__addButton {
-    display: flex;
-    justify-content: center;
-    padding-top: 32px;
+	display: flex;
+	justify-content: center;
+	padding-top: 32px;
 }
 .item__content__addButton button {
 	font-size: 22px;
-    border-radius: 40px;
-    border: 0;
-    background-color: var(--secondary-color);
-    color: white;
-    padding: 18px 28px;
-    cursor: pointer;
+	border-radius: 40px;
+	border: 0;
+	background-color: var(--secondary-color);
+	color: white;
+	padding: 18px 28px;
+	cursor: pointer;
 }
 .item__content__addButton button:hover {
-    box-shadow: rgba(42, 18, 206, 0.9) 0 0 22px 6px;
+	box-shadow: rgba(42, 18, 206, 0.9) 0 0 22px 6px;
 }
 
 
@@ -101,21 +101,21 @@
 
 @media (max-width: 991.98px) {
 	.item article {
-    	width: 70%;
+		width: 70%;
 	}
 	.item__content__settings__color,
 	.item__content__settings__quantity {
-	    display: flex;
-	    flex-direction: column;
-	    align-items: center;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 	.item__content__settings__color {
-	    margin-bottom: 26px;
+		margin-bottom: 26px;
 	}
 }
 
 @media (max-width: 575.98px) { 
 	.item article {
-    	width: 90%;
+		width: 90%;
 	}
 }
