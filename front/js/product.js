@@ -114,12 +114,16 @@ if (allreadyInBasket === false && colorItem!= "") {
         name: product.name,
         color : colorItem,
         quantity : quantityItemParsed,
+        imageUrl: product.imageUrl,
+
     })
 
 
 }
 localStorage.setItem('basket', JSON.stringify(basket));
 
+
+//Add button to see Basket
 if (colorItem ==="") {
     return
 }
