@@ -115,8 +115,25 @@ if (allreadyInBasket === false && colorItem!= "") {
         color : colorItem,
         quantity : quantityItemParsed,
     })
+
+
 }
 localStorage.setItem('basket', JSON.stringify(basket));
+
+if (colorItem ==="") {
+    return
+}
+else{
+const myBasket = document.querySelector('#seeButton');
+const myBasketButton = document.createElement('button');
+myBasketButton.innerHTML ="Voir mon panier";
+const linkMyBasket = document.createElement ('a');
+linkMyBasket.href = `./cart.html`;
+
+linkMyBasket.appendChild(myBasketButton);
+myBasket.appendChild(linkMyBasket);
+}
+
 
 })
 

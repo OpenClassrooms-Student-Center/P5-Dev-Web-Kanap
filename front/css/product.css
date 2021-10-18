@@ -87,8 +87,28 @@
 	padding: 18px 28px;
 	cursor: pointer;
 }
-.item__content__addButton button:hover {
-	box-shadow: rgba(42, 18, 206, 0.9) 0 0 22px 6px;
+
+
+
+.item__content__seeButton {
+	display: flex;
+	justify-content: center;
+	padding-top: 32px;
+}
+.item__content__seeButton button {
+	font-size: 22px;
+	border-radius: 40px;
+	border: 0;
+	background-color: var(--secondary-color);
+	color: white;
+	padding: 18px 28px;
+	cursor: pointer;
+	background-color: rgb(24, 68, 15);
+}
+
+
+.item__content__seeButton button:hover {
+	box-shadow: rgba(45, 136, 10, 0.9) 0 0 22px 6px;
 }
 
 
