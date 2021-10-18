@@ -1,9 +1,5 @@
 // recuperation of product id
 
-//let params = (new URL(document.location)).searchParams;
-//let id = params.get('id');
-//console.log(id);
-
 var parsedUrl = new URL(window.location.href);
 
 //Verify Id recuperation
@@ -77,14 +73,18 @@ button.addEventListener('click', function(addToBasket) {
 
 
 //Find & catch informations
-const quantityItem = document.querySelector('#quantity').value;
+let quantityItem = document.querySelector('#quantity').value;
 const colorItem = document.querySelector ('#colors').value;
+
+const quantityItemParsed = parseInt(quantityItem, 10);
+console.log (quantityItemParsed)
+
 
 // Verify the product
 if (product===null) {
     return
 }
-if (colorItem === "null" || quantityItem === 0){
+if (colorItem === ""){
     window.alert("Fucking customer, choose a color ! shit !!!! "); 
 }
 
@@ -104,16 +104,16 @@ let allreadyInBasket = false;
 for (let i = 0; i < basket.length;i++){
     if (basket[i].id === idProduct && basket[i].color === colorItem) {
         allreadyInBasket = true;
-        basket[i].quantity += quantityItem;
+        basket[i].quantity += quantityItemParsed;
     }
 }
 //If not, product push in local storage
-if (allreadyInBasket === false && quantityItem!= 0) {
+if (allreadyInBasket === false && colorItem!= "") {
     basket.push({
         id: idProduct,
         name: product.name,
         color : colorItem,
-        quantity : quantityItem,
+        quantity : quantityItemParsed,
     })
 }
 localStorage.setItem('basket', JSON.stringify(basket));
