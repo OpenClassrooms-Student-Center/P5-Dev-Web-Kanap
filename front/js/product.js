@@ -65,79 +65,85 @@ fetch(`http://localhost:3000/api/products/${idProduct}`)
     product = item
 })
 
-//I decalre product to inialise the number
+//I decalre product to inialise the number & add product null
 let product =null;
+let addProductButton = false;
+
 // i add a event on button and define a function addtobasket
+
 let button = document.querySelector('#addToCart')
 button.addEventListener('click', function(addToBasket) {
 
 
 //Find & catch informations
-let quantityItem = document.querySelector('#quantity').value;
-const colorItem = document.querySelector ('#colors').value;
+    let quantityItem = document.querySelector('#quantity').value;
+    const colorItem = document.querySelector ('#colors').value;
 
-const quantityItemParsed = parseInt(quantityItem, 10);
-console.log (quantityItemParsed)
-
-
-// Verify the product
-if (product===null) {
-    return
-}
-if (colorItem === ""){
-    window.alert("Fucking customer, choose a color ! shit !!!! "); 
-}
+    const quantityItemParsed = parseInt(quantityItem, 10);
+    console.log (quantityItemParsed)
 
 
-// existant basket ?
-let basket = localStorage.getItem ('basket');
-if (basket === null){
-    basket = [];
-}
-else {
-    basket = JSON.parse(basket);
-}
-
-
-//verify basket to say if i have already the same product and add quantity on the same product
-let allreadyInBasket = false;
-for (let i = 0; i < basket.length;i++){
-    if (basket[i].id === idProduct && basket[i].color === colorItem) {
-        allreadyInBasket = true;
-        basket[i].quantity += quantityItemParsed;
+    // Verify the product
+    if (product===null) {
+        return
     }
-}
-//If not, product push in local storage
-if (allreadyInBasket === false && colorItem!= "") {
-    basket.push({
-        id: idProduct,
-        name: product.name,
-        color : colorItem,
-        quantity : quantityItemParsed,
-        imageUrl: product.imageUrl,
-
-    })
+    if (colorItem === ""){
+        window.alert("Fucking customer, choose a color ! shit !!!! "); 
+    }
 
 
-}
-localStorage.setItem('basket', JSON.stringify(basket));
+    // existant basket ?
+    let basket = localStorage.getItem ('basket');
+    if (basket === null){
+        basket = [];
+    }
+    else {
+        basket = JSON.parse(basket);
+    }
 
 
-//Add button to see Basket
-if (colorItem ==="") {
-    return
-}
-else{
-const myBasket = document.querySelector('#seeButton');
-const myBasketButton = document.createElement('button');
-myBasketButton.innerHTML ="Voir mon panier";
-const linkMyBasket = document.createElement ('a');
-linkMyBasket.href = `./cart.html`;
+    //verify basket to say if i have already the same product and add quantity on the same product
+    let allreadyInBasket = false;
+    for (let i = 0; i < basket.length;i++){
+        if (basket[i].id === idProduct && basket[i].color === colorItem) {
+            allreadyInBasket = true;
+            basket[i].quantity += quantityItemParsed;
+        }
+    }
+    //If not, product push in local storage
+    if (allreadyInBasket === false && colorItem!= "") {
+        basket.push({
+            id: idProduct,
+            name: product.name,
+            color : colorItem,
+            quantity : quantityItemParsed,
+            imageUrl: product.imageUrl,
 
-linkMyBasket.appendChild(myBasketButton);
-myBasket.appendChild(linkMyBasket);
-}
+        })
 
+
+    }
+    localStorage.setItem('basket', JSON.stringify(basket));
+
+
+
+    //Add button to see Basket
+    if (colorItem ==="" || addProductButton === true) {
+        return
+    }
+    else{
+
+        const myBasket = document.querySelector('#seeButton');
+        const myBasketButton = document.createElement('button');
+        myBasketButton.innerHTML ="Voir mon panier";
+        const linkMyBasket = document.createElement ('a');
+        linkMyBasket.href = `./cart.html`;
+
+        addProductButton = true;
+
+        linkMyBasket.appendChild(myBasketButton);
+        myBasket.appendChild(linkMyBasket);
+    }
 
 })
 
