@@ -143,6 +143,7 @@ let firstName = document.querySelector ('#firstName');
 let lastName = document.querySelector ('#lastName');
 let email = document.querySelector ('#email');
 let city = document.querySelector ('#city');
+let address = document.querySelector ('#address')
 
 //validation of form
 function formError (fieldElement,regex, fieldError, messageError){
@@ -159,4 +160,33 @@ function formError (fieldElement,regex, fieldError, messageError){
 formError (firstName,/^[a-zA-Z-\s]+$/,firstNameError,"Il n'y a que chez Elon Musk qu'un prénom contient un chiffre ou un symbole 😜" );
 formError (lastName,/^[a-zA-Z-\s]+$/,lastNameError,"Seul un pape ou un roi a un chiffre ou un symbole dans son nom... 😜" );
 formError (city,/^[a-zA-Z-\s]+$/,cityError,"La ville pas le code postal svp  😜" );
-formError (email,/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/,emailError,"Bien tenté mais si tu veux commander, j'ai besoin d'un vrai email avec un vrai @ 😜" );
+formError (email,/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,5}$/,emailError,"Bien tenté mais si tu veux commander, j'ai besoin d'un vrai email avec un vrai @ 😜" );
+
+let orderButton = document.querySelector('#order')
+orderButton.addEventListener('click', async function (ev) {
+    ev.preventDefault();
+ 
+    let payload = {
+        contact: {
+            firstName: firstName.value,
+            lastName: lastName.value,
+            address: address.value,
+            city: city.value,
+            email: email.value,
+        },
+        products: basket.map(function (item) {
+            return item.id;
+        })
+    }
+ 
+    let res = await fetch('http://127.0.0.1:3000/api/products/order', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    })
+    let order = await res.json()
+    window.location.href = `confirmation.html?order_id=${order.orderId}`
+})
