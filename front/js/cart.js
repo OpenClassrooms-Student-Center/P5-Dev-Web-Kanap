@@ -1,5 +1,7 @@
-// Je crée les articles dans la section 
+// Section declaration
 const section = document.querySelector('#cart__items');
+const totalPriceContainer = document.querySelector ('#totalPrice')
+const totalQuantityContainer = document.querySelector ('#totalQuantity')
  
 // I verify my basket & parse
 let basket = localStorage.getItem ('basket');
@@ -10,18 +12,18 @@ let basket = localStorage.getItem ('basket');
         basket = JSON.parse(basket);
     }
 // Function to create " html"  & send good data of product contains in local storage
-function laBiteABidule(sniff) {
+function displayProducts(products) {
  
-    sniff.forEach (function(prout){
+    products.forEach (function(product){
         const article = document.createElement('article');
         article.className ='cart__items',
-        article.dataset.id = prout.id;
+        article.dataset.id = product.id;
  
         const divImg = document.createElement('div');
         divImg.className = "cart__item__img";
  
         const img = document.createElement('img');
-        img.src = prout.imageUrl;
+        img.src = product.imageUrl;
         img.alt = "Photographie d'un canapé";
  
  
@@ -32,10 +34,10 @@ function laBiteABidule(sniff) {
         divTitlePrice.className = "cart__item__content__titlePrice";
  
         const h2Title = document.createElement('h2');
-        h2Title.innerHTML = prout.name;
+        h2Title.innerHTML = `${product.name} (${product.color})`;
  
         const pPrice = document.createElement('p');
-        pPrice.innerHTML = prout.price + "€";
+        pPrice.innerHTML = product.price + "€";
  
         const divSetting = document.createElement('div');
         divSetting.className = "cart__item__content__settings";
@@ -52,16 +54,18 @@ function laBiteABidule(sniff) {
         inputQuantity.className = "itemQuantity";
         inputQuantity.min = 1;
         inputQuantity.max = 100;
-        inputQuantity.value = prout.quantity;
+        inputQuantity.value = product.quantity;
         inputQuantity.addEventListener('change', function(){
             for (let i = 0; i < basket.length;i++){
-                if (basket[i].id === prout.id && basket[i].color === prout.color) {
+                if (basket[i].id === product.id && basket[i].color === product.color) {
                     basket[i].quantity = parseInt (inputQuantity.value);
                     console.log(inputQuantity.value)
                 }
             }
-        })
+
         localStorage.setItem('basket', JSON.stringify(basket));
+        totalProducts(products)
+        })
  
  
         const divDelete = document.createElement ('div')
@@ -72,17 +76,19 @@ function laBiteABidule(sniff) {
         pDelete.innerHTML = "Supprimer du panier";
         pDelete.addEventListener('click',function(){
             for (let i = 0; i < basket.length;i++){
-                if (basket[i].id === prout.id && basket[i].color === prout.color) {
+                if (basket[i].id === product.id && basket[i].color === product.color) {
                     basket[i].quantity = 0;
                     console.log(basket.quantity)
                 }
             }
+            basket = basket.filter(function(el){
+                return el.quantity > 0;
+            })
+            localStorage.setItem('basket', JSON.stringify(basket));
+            section.innerHTML = "";
+            totalProducts(products)
+            localStorage.setItem('basket', JSON.stringify(basket));
         })
-        basket = basket.filter(function(el){
-            return el.quantity > 0;
-        })
-        localStorage.setItem('basket', JSON.stringify(basket));
- 
  
         // I add to the article tag the link content
         divDelete.appendChild(pDelete)
@@ -110,5 +116,37 @@ function laBiteABidule(sniff) {
  
     });
 }
- 
-laBiteABidule(basket)
+// function to calcule total price & total quantity
+function totalProducts(products){
+    let totalPrice = 0;
+    let totalQuantity=0;
+    products.forEach(function(product){
+        totalPrice += product.price * product.quantity;
+        totalQuantity += product.quantity;
+    });
+
+    totalPriceContainer.innerHTML = totalPrice;
+    totalQuantityContainer.innerHTML = totalQuantity;
+}
+totalProducts(basket)
+displayProducts(basket)
+
+// Forms declaration
+
+let firstNameError = document.querySelector ('#firstNameErrorMsg')
+let lastNameError = document.querySelector('#lastNameErrorMsg')
+let adressError = document.querySelector ('#addressErrorMsg')
+let cityError = document.querySelector ('#cityErrorMsg')
+let emailError= document.querySelector ('#emailErrorMsg')
+
+let firstName = document.querySelector ('#firstName')
+
+
+firstName.addEventListener('input', function (){
+    if (/^[a-zA-Z-\s]+$/.test(firstName.value)){
+        firstNameError.innerHTML = ""
+    }
+    else{
+        firstNameError.innerHTML = "Elon Musk est un con, donc pas de chiffres dans ton prénom"
+    }
+})
