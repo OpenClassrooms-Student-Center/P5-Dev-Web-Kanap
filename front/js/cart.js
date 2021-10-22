@@ -133,20 +133,30 @@ displayProducts(basket)
 
 // Forms declaration
 
-let firstNameError = document.querySelector ('#firstNameErrorMsg')
-let lastNameError = document.querySelector('#lastNameErrorMsg')
-let adressError = document.querySelector ('#addressErrorMsg')
-let cityError = document.querySelector ('#cityErrorMsg')
-let emailError= document.querySelector ('#emailErrorMsg')
+let firstNameError = document.querySelector ('#firstNameErrorMsg');
+let lastNameError = document.querySelector('#lastNameErrorMsg');
+let adressError = document.querySelector ('#addressErrorMsg');
+let cityError = document.querySelector ('#cityErrorMsg');
+let emailError= document.querySelector ('#emailErrorMsg');
 
-let firstName = document.querySelector ('#firstName')
+let firstName = document.querySelector ('#firstName');
+let lastName = document.querySelector ('#lastName');
+let email = document.querySelector ('#email');
+let city = document.querySelector ('#city');
 
+//validation of form
+function formError (fieldElement,regex, fieldError, messageError){
+    fieldElement.addEventListener('input',function(){
+        if (regex.test(fieldElement.value)){
+            fieldError.innerHTML = "";
+        }
+        else{
+            fieldError.innerHTML = messageError;
+        }
+    })
+}
 
-firstName.addEventListener('input', function (){
-    if (/^[a-zA-Z-\s]+$/.test(firstName.value)){
-        firstNameError.innerHTML = ""
-    }
-    else{
-        firstNameError.innerHTML = "Elon Musk est un con, donc pas de chiffres dans ton prénom"
-    }
-})
+formError (firstName,/^[a-zA-Z-\s]+$/,firstNameError,"Il n'y a que chez Elon Musk qu'un prénom contient un chiffre ou un symbole 😜" );
+formError (lastName,/^[a-zA-Z-\s]+$/,lastNameError,"Seul un pape ou un roi a un chiffre ou un symbole dans son nom... 😜" );
+formError (city,/^[a-zA-Z-\s]+$/,cityError,"La ville pas le code postal svp  😜" );
+formError (email,/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/,emailError,"Bien tenté mais si tu veux commander, j'ai besoin d'un vrai email avec un vrai @ 😜" );
