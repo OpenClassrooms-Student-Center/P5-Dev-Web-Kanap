@@ -81,7 +81,8 @@ button.addEventListener('click', function(addToBasket) {
 
     const quantityItemParsed = parseInt(quantityItem, 10);
     console.log (quantityItemParsed)
-
+    const priceParsed = parseInt(product.price, 10);
+    console.log (priceParsed)
 
     // Verify the product
     if (product===null) {
@@ -115,6 +116,7 @@ button.addEventListener('click', function(addToBasket) {
         basket.push({
             id: idProduct,
             name: product.name,
+            price : product.price,
             color : colorItem,
             quantity : quantityItemParsed,
             imageUrl: product.imageUrl,
