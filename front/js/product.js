@@ -2,8 +2,6 @@
 
 var parsedUrl = new URL(window.location.href);
 
-//Verify Id recuperation
-console.log(parsedUrl.searchParams.get("id"));
 
 // declare id
 let idProduct = parsedUrl.searchParams.get("id");
@@ -89,7 +87,7 @@ button.addEventListener('click', function(addToBasket) {
         return
     }
     if (colorItem === ""){
-        window.alert("Fucking customer, choose a color ! shit !!!! "); 
+        window.alert("Customer, choose a color or die ☠️😁 !! "); 
     }
 
 

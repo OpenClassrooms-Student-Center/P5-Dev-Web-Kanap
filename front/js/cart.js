@@ -55,30 +55,32 @@ function displayProducts(products) {
         inputQuantity.min = 1;
         inputQuantity.max = 100;
         inputQuantity.value = product.quantity;
+
+        // listen change on input quantity
         inputQuantity.addEventListener('change', function(){
             for (let i = 0; i < basket.length;i++){
                 if (basket[i].id === product.id && basket[i].color === product.color) {
                     basket[i].quantity = parseInt (inputQuantity.value);
-                    console.log(inputQuantity.value)
+                    
                 }
             }
-
+        // call new localstorage
         localStorage.setItem('basket', JSON.stringify(basket));
+        //call function to adapt total quantity & price
         totalProducts(products)
         })
  
  
         const divDelete = document.createElement ('div')
         divDelete.className = "cart__item__content__settings__delete";
- 
         const pDelete = document.createElement('p');
         pDelete.className = "deleteItem";
         pDelete.innerHTML = "Supprimer du panier";
+        // Listen delete Button & adapt screenplay
         pDelete.addEventListener('click',function(){
             for (let i = 0; i < basket.length;i++){
                 if (basket[i].id === product.id && basket[i].color === product.color) {
                     basket[i].quantity = 0;
-                    console.log(basket.quantity)
                 }
             }
             basket = basket.filter(function(el){
@@ -92,7 +94,7 @@ function displayProducts(products) {
  
         // I add to the article tag the link content
         divDelete.appendChild(pDelete)
- 
+
         divSettingQuantity.appendChild(pQuantity);
         divSettingQuantity.appendChild(inputQuantity);
  
@@ -188,7 +190,7 @@ formError (email,/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,7}$/,emailError,"Bien tenté mais
 
 
 
-// Transfer Client data to back
+// Transfer Client data to back end
 orderButton.addEventListener('click', async function (ev) {
     ev.preventDefault();
  
