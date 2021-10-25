@@ -12,6 +12,8 @@ fetch ('http://localhost:3000/api/products')
 }) 
 // i ask to parse the response as JSON
 
+// Function to create card & link
+
 .then (function(items) {
   items.forEach (function(item){
       const link = document.createElement('a');

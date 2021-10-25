@@ -44,7 +44,6 @@ function setColor (colors){
 }
     
 
-
 //Load API
 fetch(`http://localhost:3000/api/products/${idProduct}`)
 
@@ -124,7 +123,6 @@ button.addEventListener('click', function(addToBasket) {
 
     }
     localStorage.setItem('basket', JSON.stringify(basket));
-
 
 
     //Add button to see Basket
