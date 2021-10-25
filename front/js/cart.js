@@ -145,24 +145,50 @@ let email = document.querySelector ('#email');
 let city = document.querySelector ('#city');
 let address = document.querySelector ('#address')
 
+
+//create object to manage input submit validation o form
+let errors = {
+    firstName: false,        
+    lastName : false,
+    city : false,
+    email : false,
+  }
+
+let orderButton = document.querySelector('#order')
 //validation of form
-function formError (fieldElement,regex, fieldError, messageError){
+function formError (fieldElement,regex, fieldError, messageError, errorName){
     fieldElement.addEventListener('input',function(){
         if (regex.test(fieldElement.value)){
             fieldError.innerHTML = "";
+            errors[errorName] = false;
         }
         else{
             fieldError.innerHTML = messageError;
+            errors[errorName] = true;
         }
+        let allOk = true; 
+        for (let key in errors){
+            if (errors[key]) {
+                allOk = false;
+            }
+        }
+        
+        orderButton.disabled = !allOk;
+       
     })
 }
 
-formError (firstName,/^[a-zA-Z-\s]+$/,firstNameError,"Il n'y a que chez Elon Musk qu'un prénom contient un chiffre ou un symbole 😜" );
-formError (lastName,/^[a-zA-Z-\s]+$/,lastNameError,"Seul un pape ou un roi a un chiffre ou un symbole dans son nom... 😜" );
-formError (city,/^[a-zA-Z-\s]+$/,cityError,"La ville pas le code postal svp  😜" );
-formError (email,/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,5}$/,emailError,"Bien tenté mais si tu veux commander, j'ai besoin d'un vrai email avec un vrai @ 😜" );
+formError (firstName,/^[a-zA-Z-\s]+$/,firstNameError,"Il n'y a que chez Elon Musk qu'un prénom contient un chiffre ou un symbole 😜","firstName" );
+formError (lastName,/^[a-zA-Z-\s]+$/,lastNameError,"Seul un pape ou un roi a un chiffre ou un symbole dans son nom... 😜", "lastName" );
+formError (city,/^[a-zA-Z-\s]+$/,cityError,"La ville pas le code postal svp  😜", "city" );
+formError (email,/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,7}$/,emailError,"Bien tenté mais si tu veux commander, j'ai besoin d'un vrai email avec un vrai @ 😜", "email" );
 
-let orderButton = document.querySelector('#order')
+
+
+
+
+
+// Transfer Client data to back
 orderButton.addEventListener('click', async function (ev) {
     ev.preventDefault();
  
@@ -187,6 +213,13 @@ orderButton.addEventListener('click', async function (ev) {
         },
         body: JSON.stringify(payload)
     })
+
+    // Verify res.ok 
+    if (res.ok){
     let order = await res.json()
     window.location.href = `confirmation.html?order_id=${order.orderId}`
+    }
+    else{
+        window.alert("Une erreur s'est produite.Veuillez reessayer ou nous contacter au 0649714823 !");
+    }
 })

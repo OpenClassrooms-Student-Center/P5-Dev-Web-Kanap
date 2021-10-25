@@ -130,6 +130,9 @@ h2 {
 	cursor: pointer;
 	margin-top: 40px;
 }
+.cart__order__form__submit input:disabled {
+	opacity: 0.5;
+}
 .cart__order__form__submit input:hover {
 	box-shadow: rgb(42 18 206 / 90%) 0 0 22px 6px;
 }
