@@ -8,13 +8,21 @@ const section = document.querySelector('#items');
 fetch ('http://localhost:3000/api/products') 
 
 .then(function(res) {
+  if (res.ok === false) {
+    return null;
+  } else {
     return res.json();
+  }
 }) 
 // i ask to parse the response as JSON
 
 // Function to create card & link
 
 .then (function(items) {
+  if (items === null) {
+    section.innerHTML = 'Une erreur est survenue lors de la récupération des produits.';
+    return;
+  }
   items.forEach (function(item){
       const link = document.createElement('a');
       link.href = `./product.html?id=${item._id}`;

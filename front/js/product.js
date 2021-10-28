@@ -16,10 +16,27 @@ function setImage(info){
     div.appendChild(img);
 }
 
+// function  change display number with space for thousand
+
+function numStr(number, separator = ' ') {
+    number = '' + number;
+    var result = '',
+        cmpt = 0;
+    while (number.match(/^0[0-9]/)) {
+      number = number.substr(1);
+    }
+    for (var i = number.length-1; i >= 0; i--) {
+      result = (cmpt != 0 && cmpt % 3 == 0) ? number[i] + separator + result : number[i] + result;
+      cmpt++;
+    }
+
+    return result;
+  }
+
 //function create price
 function setPrice(price){
     const priceProduct = document.querySelector ('#price');
-    priceProduct.innerHTML = price.price;
+    priceProduct.innerHTML = numStr(price.price);
 }
 //function  create name
 function setName (name){
@@ -43,23 +60,32 @@ function setColor (colors){
 
 }
     
+const section = document.querySelector('section.item');
+section.style.display = 'none';
 
 //Load API
 fetch(`http://localhost:3000/api/products/${idProduct}`)
-
+// prendre en compte une erreur api
 .then(function(res) {
+    if (res.ok=== false){
+        return null;
+    }
     return res.json();
 })  // i ask to parse the response as JSON
 
 .then (function (item){
-
-    setImage(item)
-    setPrice (item)
-    setName (item)
-    setDescription (item)
-    setColor (item.colors)  
+    if (item===null){
+        window.location.href = "index.html";
+        return;
+    }
+    section.style.display = 'flex';
+    setImage(item);
+    setPrice (item);
+    setName (item);
+    setDescription (item);
+    setColor (item.colors) ; 
     /// add element to say item is a product
-    product = item
+    product = item;
 })
 
 //I decalre product to inialise the number & add product null
@@ -82,11 +108,12 @@ button.addEventListener('click', function(addToBasket) {
     console.log (priceParsed)
 
     // Verify the product
-    if (product===null) {
+    if (product===null ) {
         return
     }
     if (colorItem === ""){
         window.alert("Customer, choose a color or die ☠️😁 !! "); 
+        return
     }
 
 

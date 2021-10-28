@@ -2,7 +2,25 @@
 const section = document.querySelector('#cart__items');
 const totalPriceContainer = document.querySelector ('#totalPrice')
 const totalQuantityContainer = document.querySelector ('#totalQuantity')
- 
+
+
+function nullBasket(){
+
+    const noBasket = document.createElement ('p');
+    noBasket.className = "cart__nobasket";
+    noBasket.innerHTML = " Vous n'avez aucun produit dans votre panier";
+    section.appendChild(noBasket);
+    const returnHome = document.createElement ('a');
+    returnHome.className = "cart__returnhome";
+    returnHome.href = './index.html';
+    returnHome.innerHTML = " Revenir à l'accueil";
+    let priceDiv = document.querySelector (".cart__price");
+    priceDiv.remove(priceDiv);
+
+        
+    section.appendChild(noBasket);
+    section.appendChild(returnHome);
+}
 // I verify my basket & parse
 let basket = localStorage.getItem ('basket');
     if (basket === null){
@@ -11,127 +29,147 @@ let basket = localStorage.getItem ('basket');
     else {
         basket = JSON.parse(basket);
     }
-// Function to create " html"  & send good data of product contains in local storage
-function displayProducts(products) {
- 
-    products.forEach (function(product){
-        const article = document.createElement('article');
-        article.className ='cart__items',
-        article.dataset.id = product.id;
- 
-        const divImg = document.createElement('div');
-        divImg.className = "cart__item__img";
- 
-        const img = document.createElement('img');
-        img.src = product.imageUrl;
-        img.alt = "Photographie d'un canapé";
- 
- 
-        const divContent = document.createElement('div');
-        divContent.className = "cart__item__content";
- 
-        const divTitlePrice = document.createElement('div');
-        divTitlePrice.className = "cart__item__content__titlePrice";
- 
-        const h2Title = document.createElement('h2');
-        h2Title.innerHTML = `${product.name} (${product.color})`;
- 
-        const pPrice = document.createElement('p');
-        pPrice.innerHTML = product.price + "€";
- 
-        const divSetting = document.createElement('div');
-        divSetting.className = "cart__item__content__settings";
- 
-        const divSettingQuantity = document.createElement('div');
-        divSettingQuantity.className = "cart__item__content__settings__quantity";
- 
-        const pQuantity = document.createElement('p');
-        pQuantity.innerHTML = "Qté";
- 
-        const inputQuantity = document.createElement ('input');
-        inputQuantity.type = "number";
-        inputQuantity.name = "itemQuantity";
-        inputQuantity.className = "itemQuantity";
-        inputQuantity.min = 1;
-        inputQuantity.max = 100;
-        inputQuantity.value = product.quantity;
 
-        // listen change on input quantity
-        inputQuantity.addEventListener('change', function(){
-            for (let i = 0; i < basket.length;i++){
-                if (basket[i].id === product.id && basket[i].color === product.color) {
-                    basket[i].quantity = parseInt (inputQuantity.value);
-                    
-                }
+// Function to create " html"  & send good data of product contains in local storage
+
+function addQuantityEvent(el, product) {
+    // listen change on input quantity
+    el.addEventListener('change', function(){
+        for (let i = 0; i < basket.length;i++){
+            if (basket[i].id === product.id && basket[i].color === product.color) {
+                basket[i].quantity = parseInt (el.value);
             }
+        }
         // call new localstorage
         localStorage.setItem('basket', JSON.stringify(basket));
         //call function to adapt total quantity & price
-        totalProducts(products)
-        })
- 
- 
-        const divDelete = document.createElement ('div')
-        divDelete.className = "cart__item__content__settings__delete";
-        const pDelete = document.createElement('p');
-        pDelete.className = "deleteItem";
-        pDelete.innerHTML = "Supprimer du panier";
-        // Listen delete Button & adapt screenplay
-        pDelete.addEventListener('click',function(){
-            for (let i = 0; i < basket.length;i++){
-                if (basket[i].id === product.id && basket[i].color === product.color) {
-                    basket[i].quantity = 0;
-                }
-            }
-            basket = basket.filter(function(el){
-                return el.quantity > 0;
-            })
-            localStorage.setItem('basket', JSON.stringify(basket));
-            section.innerHTML = "";
-            totalProducts(products)
-            localStorage.setItem('basket', JSON.stringify(basket));
-        })
- 
-        // I add to the article tag the link content
-        divDelete.appendChild(pDelete)
-
-        divSettingQuantity.appendChild(pQuantity);
-        divSettingQuantity.appendChild(inputQuantity);
- 
-        divSetting.appendChild(divSettingQuantity);
- 
- 
-        divTitlePrice.appendChild(h2Title);
-        divTitlePrice.appendChild(pPrice);
- 
- 
-        divImg.appendChild(img)
- 
-        divContent.appendChild(divTitlePrice)
-        divContent.appendChild(divSetting)
-        divContent.appendChild(divDelete)
- 
-        article.appendChild(divImg);
-        article.appendChild(divContent);   
- 
-        section.appendChild(article);
- 
+        totalProducts();
     });
 }
+
+function addDeleteEvent(el, product) {
+    // Listen delete Button & adapt screenplay
+    el.addEventListener('click',function(){
+        for (let i = 0; i < basket.length;i++){
+            if (basket[i].id === product.id && basket[i].color === product.color) {
+                basket[i].quantity = 0;
+            }
+        }
+        basket = basket.filter(function(el){
+            return el.quantity > 0;
+        });
+        localStorage.setItem('basket', JSON.stringify(basket));
+        section.innerHTML = "";
+        totalProducts();
+        localStorage.setItem('basket', JSON.stringify(basket));
+        displayProducts();
+    });
+}
+
+function createProductElement(tagName, className) {
+    const el = document.createElement(tagName);
+    el.className = className;
+    return el;
+}
+
+function createProduct(product) {
+    const article = createProductElement('article', 'cart__items');
+    const divImg = createProductElement('div', 'cart__item__img');
+    const divContent = createProductElement('div', 'cart__item__content');
+    const divTitlePrice = createProductElement('div', 'cart__item__content__titlePrice');
+    const divSetting = createProductElement('div', 'cart__item__content__settings');
+    const divSettingQuantity = createProductElement('div', 'cart__item__content__settings__quantity');
+    const divDelete = createProductElement('div', 'cart__item__content__settings__delete');
+    const pDelete = createProductElement('div', 'deleteItem');
+    const img = document.createElement('img');
+    const h2Title = document.createElement('h2');
+    const pPrice = document.createElement('p');
+    const pQuantity = document.createElement('p');
+    const inputQuantity = createProductElement('input', 'itemQuantity');
+
+    article.dataset.id = product.id;
+
+    img.src = product.imageUrl;
+    img.alt = "Photographie d'un canapé";
+
+    h2Title.innerHTML = `${product.name} (${product.color})`;
+
+    pPrice.innerHTML = product.price + "€";
+
+    pQuantity.innerHTML = "Qté";
+
+    inputQuantity.type = "number";
+    inputQuantity.name = "itemQuantity";
+    inputQuantity.min = 1;
+    inputQuantity.max = 100;
+    inputQuantity.value = product.quantity;
+
+    pDelete.innerHTML = "Supprimer du panier";
+
+    divDelete.appendChild(pDelete);
+
+    divSettingQuantity.appendChild(pQuantity);
+    divSettingQuantity.appendChild(inputQuantity);
+
+    divSetting.appendChild(divSettingQuantity);
+
+    divTitlePrice.appendChild(h2Title);
+    divTitlePrice.appendChild(pPrice);
+
+    divImg.appendChild(img);
+
+    divContent.appendChild(divTitlePrice);
+    divContent.appendChild(divSetting);
+    divContent.appendChild(divDelete);
+
+    article.appendChild(divImg);
+    article.appendChild(divContent);   
+
+    section.appendChild(article);
+
+    addQuantityEvent(inputQuantity, product);
+    addDeleteEvent(pDelete, product);
+}
+
+function displayProducts() {
+
+    if (basket.length ===0){
+        localStorage.removeItem("basket")
+        nullBasket()
+    }
+ 
+    basket.forEach(createProduct);
+}
+// function  change display number with space for thousand
+function numStr(number, separator = ' ') {
+    number = '' + number;
+    var result = '',
+        cmpt = 0;
+    while (number.match(/^0[0-9]/)) {
+      number = number.substr(1);
+    }
+    for (var i = number.length-1; i >= 0; i--) {
+      result = (cmpt != 0 && cmpt % 3 == 0) ? number[i] + separator + result : number[i] + result;
+      cmpt++;
+    }
+
+    return result;
+  }
 // function to calcule total price & total quantity
-function totalProducts(products){
+function totalProducts(){
     let totalPrice = 0;
     let totalQuantity=0;
-    products.forEach(function(product){
+    basket.forEach(function(product){
         totalPrice += product.price * product.quantity;
         totalQuantity += product.quantity;
     });
-
-    totalPriceContainer.innerHTML = totalPrice;
+    totalPriceContainer.innerHTML = numStr(totalPrice);
     totalQuantityContainer.innerHTML = totalQuantity;
 }
-totalProducts(basket)
-displayProducts(basket)
+
+
+totalProducts();
+displayProducts();
 
 // Forms declaration
 
@@ -175,7 +213,7 @@ function formError (fieldElement,regex, fieldError, messageError, errorName){
             }
         }
         
-        orderButton.disabled = !allOk;
+        orderButton.disabled = !allOk || basket.length===0;
        
     })
 }
@@ -193,6 +231,10 @@ formError (email,/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,7}$/,emailError,"Bien tenté mais
 // Transfer Client data to back end
 orderButton.addEventListener('click', async function (ev) {
     ev.preventDefault();
+    
+    if (basket.length ===0){
+        return
+    } 
  
     let payload = {
         contact: {
