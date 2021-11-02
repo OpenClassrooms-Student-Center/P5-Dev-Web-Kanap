@@ -11,3 +11,5 @@ if (!orderId) {
 
 let orderIdContainer = document.querySelector ('#orderId');
 orderIdContainer.innerHTML = orderId;
+
+localStorage.clear();

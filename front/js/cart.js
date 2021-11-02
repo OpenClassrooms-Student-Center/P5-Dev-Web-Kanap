@@ -1,9 +1,11 @@
+
 // Section declaration
 const section = document.querySelector('#cart__items');
 const totalPriceContainer = document.querySelector ('#totalPrice')
 const totalQuantityContainer = document.querySelector ('#totalQuantity')
 
 
+// function to manage display 0 product in basket
 function nullBasket(){
 
     const noBasket = document.createElement ('p');
@@ -30,7 +32,7 @@ let basket = localStorage.getItem ('basket');
         basket = JSON.parse(basket);
     }
 
-// Function to create " html"  & send good data of product contains in local storage
+// Function to add quantity
 
 function addQuantityEvent(el, product) {
     // listen change on input quantity
@@ -47,31 +49,39 @@ function addQuantityEvent(el, product) {
     });
 }
 
+//Function to delete product in basket
 function addDeleteEvent(el, product) {
     // Listen delete Button & adapt screenplay
     el.addEventListener('click',function(){
-        for (let i = 0; i < basket.length;i++){
-            if (basket[i].id === product.id && basket[i].color === product.color) {
-                basket[i].quantity = 0;
+        if (confirm("Etes vous sur de vouloir supprimer ce produit ?")){
+            for (let i = 0; i < basket.length;i++){
+                if (basket[i].id === product.id && basket[i].color === product.color) {
+                    basket[i].quantity = 0;
+                }
             }
+            basket = basket.filter(function(el){
+                return el.quantity > 0;
+            });
+            localStorage.setItem('basket', JSON.stringify(basket));
+            section.innerHTML = "";
+            totalProducts();
+            localStorage.setItem('basket', JSON.stringify(basket));
+            displayProducts();
+        } else{
+            return
         }
-        basket = basket.filter(function(el){
-            return el.quantity > 0;
-        });
-        localStorage.setItem('basket', JSON.stringify(basket));
-        section.innerHTML = "";
-        totalProducts();
-        localStorage.setItem('basket', JSON.stringify(basket));
-        displayProducts();
     });
+    
 }
 
+//function to simplify Element cration
 function createProductElement(tagName, className) {
     const el = document.createElement(tagName);
     el.className = className;
     return el;
 }
 
+//function to create "HTML & CSS"
 function createProduct(product) {
     const article = createProductElement('article', 'cart__items');
     const divImg = createProductElement('div', 'cart__item__img');
@@ -131,6 +141,7 @@ function createProduct(product) {
     addDeleteEvent(pDelete, product);
 }
 
+//function to adapt screen display 
 function displayProducts() {
 
     if (basket.length ===0){
@@ -195,6 +206,7 @@ let errors = {
   }
 
 let orderButton = document.querySelector('#order')
+
 //validation of form
 function formError (fieldElement,regex, fieldError, messageError, errorName){
     fieldElement.addEventListener('input',function(){

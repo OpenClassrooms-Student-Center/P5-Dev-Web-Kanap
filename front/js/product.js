@@ -1,8 +1,6 @@
 // recuperation of product id
 
 var parsedUrl = new URL(window.location.href);
-
-
 // declare id
 let idProduct = parsedUrl.searchParams.get("id");
 
@@ -59,53 +57,68 @@ function setColor (colors){
     }
 
 }
-    
+
+//Function to push a confirmation adding product
+function ProductAdded(){
+    const divAddBasket = document.querySelector('.item__content__addButton');
+    const addProductOk = document.createElement('p');
+    addProductOk.innerHTML = "Votre produit a bien été ajouté à votre panier";
+    divAddBasket.appendChild(addProductOk);
+    function delay(){
+        setTimeout(eraseMsgProductAdded, 1000) //wait 1s    
+    }
+    function eraseMsgProductAdded(){
+        var removeChild = divAddBasket.removeChild(addProductOk);
+    }
+    delay()
+
+}
+
+
 const section = document.querySelector('section.item');
 section.style.display = 'none';
 
 //Load API
-fetch(`http://localhost:3000/api/products/${idProduct}`)
-// prendre en compte une erreur api
-.then(function(res) {
-    if (res.ok=== false){
-        return null;
-    }
-    return res.json();
-})  // i ask to parse the response as JSON
+function loadProduct(){
+    fetch(`http://localhost:3000/api/products/${idProduct}`)
+    // prendre en compte une erreur api
+    .then(function(res) {
+        if (res.ok=== false){
+            return null;
+        }
+        return res.json();
+    })  // i ask to parse the response as JSON
 
-.then (function (item){
-    if (item===null){
-        window.location.href = "index.html";
-        return;
-    }
-    section.style.display = 'flex';
-    setImage(item);
-    setPrice (item);
-    setName (item);
-    setDescription (item);
-    setColor (item.colors) ; 
-    /// add element to say item is a product
-    product = item;
-})
+    .then (function (item){
+        if (item===null){
+            window.location.href = "index.html";
+            return;
+        }
+        section.style.display = 'flex';
+        setImage(item);
+        setPrice (item);
+        setName (item);
+        setDescription (item);
+        setColor (item.colors) ; 
+        /// add element to say item is a product
+        product = item;
+    })
+}
+loadProduct ();
 
 //I decalre product to inialise the number & add product null
 let product =null;
 let addProductButton = false;
-
+let button = document.querySelector('#addToCart')
 // i add a event on button and define a function addtobasket
 
-let button = document.querySelector('#addToCart')
 button.addEventListener('click', function(addToBasket) {
-
-
 //Find & catch informations
     let quantityItem = document.querySelector('#quantity').value;
     const colorItem = document.querySelector ('#colors').value;
 
     const quantityItemParsed = parseInt(quantityItem, 10);
-    console.log (quantityItemParsed)
     const priceParsed = parseInt(product.price, 10);
-    console.log (priceParsed)
 
     // Verify the product
     if (product===null ) {
@@ -126,8 +139,10 @@ button.addEventListener('click', function(addToBasket) {
         basket = JSON.parse(basket);
     }
 
+    ProductAdded()
 
     //verify basket to say if i have already the same product and add quantity on the same product
+
     let allreadyInBasket = false;
     for (let i = 0; i < basket.length;i++){
         if (basket[i].id === idProduct && basket[i].color === colorItem) {
@@ -149,10 +164,11 @@ button.addEventListener('click', function(addToBasket) {
 
 
     }
+
     localStorage.setItem('basket', JSON.stringify(basket));
 
 
-    //Add button to see Basket
+    //Add button to see Basket and message "product in the basket"
     if (colorItem ==="" || addProductButton === true) {
         return
     }
@@ -170,5 +186,6 @@ button.addEventListener('click', function(addToBasket) {
         myBasket.appendChild(linkMyBasket);
     }
 
+   
 })
 
