@@ -197,16 +197,3 @@ h2 {
 .cart__returnhome:hover {
 	box-shadow: rgb(42 18 206 / 90%) 0 0 22px 6px;
 }
-
-/* add style message add product in basket */
-.item__content__addButton p{
-	font-size: 22px;
-	border-radius: 40px;
-	margin : 15px 40% 15px 40%;
-	border: 0;
-	background-color: var(--secondary-color);
-	color: white;
-	padding: 18px 28px;
-	cursor: pointer;
-	text-decoration: none;
-}

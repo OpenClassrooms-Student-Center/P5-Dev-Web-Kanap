@@ -67,6 +67,7 @@ function addDeleteEvent(el, product) {
             totalProducts();
             localStorage.setItem('basket', JSON.stringify(basket));
             displayProducts();
+            orderButton.disabled = basket.length===0;
         } else{
             return
         }
@@ -104,7 +105,7 @@ function createProduct(product) {
 
     h2Title.innerHTML = `${product.name} (${product.color})`;
 
-    pPrice.innerHTML = product.price + "€";
+    pPrice.innerHTML = numStr(product.price) + "€" + " " + "/ unité";
 
     pQuantity.innerHTML = "Qté";
 
