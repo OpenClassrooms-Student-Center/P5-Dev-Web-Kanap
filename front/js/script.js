@@ -1,30 +1,26 @@
-const section = document.getElementById("items");
-const panierLocalStorage = localStorage.getItem("panier");
+const sectionArticle = document.getElementById("items");
 
-const response = async function () {
+const getProducts = async function () {
   fetch("http://localhost:3000/api/products")
-    .then((response) => response.json())
+    .then((result) => result.json())
+
     .then((data) => {
       console.log(data);
-
-      for (const kanap of data) {
-        let article = `<a href="./product.html?id=${kanap._id}">
+      for (let kanap of data) {
+        console.log(kanap.name);
+        let item = ` <a href="./product.html?id=${kanap._id}">
         <article>
-          <img
-            src="${kanap.imageUrl}"
-            alt="${kanap.altTxt}"
-          />
+          <img src="${kanap.imageUrl}" alt="${kanap.altTxt}">
           <h3 class="productName">${kanap.name}</h3>
-          <p class="productDescription">
-            ${kanap.description}
-          </p>
+          <p class="productDescription">${kanap.description}.</p>
         </article>
-      </a>`;
-        section.innerHTML += article;
+      </a> `;
+
+        sectionArticle.innerHTML += item;
       }
     })
-    .catch((e) => {
-      console.log(data.status);
+    .catch((err) => {
+      console.error(err);
     });
 };
-response();
+getProducts();
