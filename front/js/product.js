@@ -10,7 +10,7 @@ const boutonPanier = document.getElementById("addToCart");
 fetch(`http://localhost:3000/api/products/${productId}`)
   .then((res) => res.json())
   .then((data) => {
-    console.log(data.name);
+    console.log(`nom du produit ${data.name}`);
     let image = document.createElement("img");
     image.setAttribute("src", data.imageUrl);
     image.setAttribute("alt", data.altTxt);
@@ -80,7 +80,7 @@ const getArticle = (data) => {
   ) {
     panier.push(product);
     console.log(
-      `il y a ${panier.length} article dans le panier ${product.name} prix ${product.totalPrice}`
+      `il y a ${panier.length} article dans le panier ${product.name} prix total ${product.totalPrice} €`
     );
   } else {
     const item = panier.find(
@@ -92,7 +92,7 @@ const getArticle = (data) => {
       item.quantity = parseInt(product.quantity) + parseInt(item.quantity);
       product.quantity += item.quantity;
       console.log(
-        `il y a ${panier.length} article dans le panier ${product.name} prix ${product.totalPrice}`
+        `il y a ${panier.length} article dans le panier ${product.name} prix total ${product.totalPrice}€`
       );
     } else {
       panier.push(product);
