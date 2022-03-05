@@ -6,6 +6,11 @@ const productDescription = document.getElementById("description");
 const productColor = document.getElementById("colors");
 const productQuantity = document.getElementById("quantity");
 const boutonPanier = document.getElementById("addToCart");
+// Creation de la fonction de formatage du prix
+var formatter = new Intl.NumberFormat("de-FR", {
+  style: "currency",
+  currency: "EUR",
+});
 
 fetch(`http://localhost:3000/api/products/${productId}`)
   .then((res) => res.json())
@@ -16,7 +21,7 @@ fetch(`http://localhost:3000/api/products/${productId}`)
     image.setAttribute("alt", data.altTxt);
     productImage.appendChild(image);
     productName.innerHTML = data.name;
-    productPrice.innerHTML = data.price;
+    productPrice.innerHTML = formatter.format(data.price);
     productDescription.innerHTML = data.description;
     document.title = data.name;
 
@@ -56,10 +61,8 @@ const getArticle = (data) => {
     quantity: productQuantity.value,
     name: data.name,
     description: data.description,
-    //   price: data.price,
     image: data.imageUrl,
     altTxt: data.altTxt,
-    // totalPrice: data.price * parseInt(productQuantity.value, 10),
   };
 
   console.table(product);
@@ -80,26 +83,17 @@ const getArticle = (data) => {
     productColor.value != null
   ) {
     panier.push(product);
-    console.log(
-      `il y a ${panier.length} article dans le panier ${product.name} prix total ${product.totalPrice} €`
-    );
   } else {
     const item = panier.find(
       (item) => item.id == product.id && item.color == product.color
     );
-    console.log(item);
+
     if (item) {
       console.log("meme produit");
       item.quantity = parseInt(product.quantity) + parseInt(item.quantity);
       product.quantity += item.quantity;
-      console.log(
-        `il y a ${panier.length} article dans le panier ${product.name} prix total ${product.totalPrice}€`
-      );
     } else {
       panier.push(product);
-      console.log(
-        `il y a ${panier.length} article dans le panier nome du produit : ${product.name} prix total : ${product.totalPrice} €`
-      );
     }
   }
   localStorage.setItem("panier", JSON.stringify(panier));

@@ -63,8 +63,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (x != null) {
                   x.remove();
                 }
-
-                //  location.reload();
               }
             });
           }
