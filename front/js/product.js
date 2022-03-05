@@ -18,6 +18,7 @@ fetch(`http://localhost:3000/api/products/${productId}`)
     productName.innerHTML = data.name;
     productPrice.innerHTML = data.price;
     productDescription.innerHTML = data.description;
+    document.title = data.name;
 
     for (let color of data.colors) {
       let option = document.createElement("option");
@@ -55,10 +56,10 @@ const getArticle = (data) => {
     quantity: productQuantity.value,
     name: data.name,
     description: data.description,
-    price: data.price,
+    //   price: data.price,
     image: data.imageUrl,
     altTxt: data.altTxt,
-    totalPrice: data.price * parseInt(productQuantity.value, 10),
+    // totalPrice: data.price * parseInt(productQuantity.value, 10),
   };
 
   console.table(product);
