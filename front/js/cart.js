@@ -2,11 +2,13 @@ document.addEventListener("DOMContentLoaded", () => {
   let panierLocalStorage = localStorage.getItem("panier");
   let panier = JSON.parse(panierLocalStorage);
   const sectionArticle = document.getElementById("cart__items");
+
   // Creation de la fonction de formatage du prix
   var formatter = new Intl.NumberFormat("de-FR", {
     style: "currency",
     currency: "EUR",
   });
+
   if (panier) {
     const getProductsPrice = async function () {
       // Appel de l'API kanap
@@ -20,10 +22,9 @@ document.addEventListener("DOMContentLoaded", () => {
           const totalQuantity = document.getElementById("totalQuantity");
           const deleteItem = document.querySelectorAll(".deleteItem");
           const totalPrice = document.getElementById("totalPrice");
-          // creation de la fonction de la gestion des quantitées et des prix
           const getQuantity = () => {
-            let totalQ = 0; // creation d'une variable pour la quantitée
-            let totalP = 0; // creation d'une variabkle pour le prix
+            let totalQ = 0;
+            let totalP = 0;
             for (let i = 0; i < panier.length; i++) {
               prix[i].children[2].value =
                 getPrice(panier[i].id, data) * panier[i].quantity;
@@ -35,45 +36,46 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             totalQuantity.innerHTML = totalQ;
             totalPrice.innerHTML = formatter.format(totalP);
+            console.log(typeof totalP);
           };
           getQuantity();
-
           for (let i = 0; i < panier.length; i++) {
-            productQuantity[i].addEventListener("change", function () {
-              panier[i].quantity = productQuantity[i].value;
+            productQuantity[i].addEventListener("change", function (e) {
+              panier[i].quantity = e.target.value;
               localStorage.setItem("panier", JSON.stringify(panier));
               getQuantity();
             });
           }
-          for (let i = 0; i < deleteItem.length; i++) {
-            deleteItem[i].addEventListener("click", function () {
-              removeItems();
-              let x = deleteItem[i].closest(".cart__item");
-              if (x != null) {
-                setTimeout(function () {
-                  x.remove();
-                }, 400);
-              }
-              getQuantity();
-            });
+          function deleteIt() {
+            for (let i = 0; i < panier.length; i++) {
+              deleteItem[i].addEventListener("click", function () {
+                const result = panier.find(
+                  (elt) =>
+                    elt.id == panier[i].id && elt.color == panier[i].color
+                );
+                console.log(result);
+                if (result) {
+                  console.log("double");
+                  const removeResult = panier.filter((elt) => elt != result);
+
+                  panier = removeResult;
+
+                  getQuantity();
+                  let x = deleteItem[i].closest(".cart__item");
+                  if (x != null) {
+                    x.remove();
+                  }
+                }
+                localStorage.setItem("panier", JSON.stringify(panier));
+              });
+            }
           }
+          deleteIt();
         })
         .catch((err) => {
           console.error(err);
         });
     };
-    function removeItems() {
-      for (let i = 0; i < panier.length; i++) {
-        const result = panier.find(
-          (elt) => elt.id === panier[i].id && elt.color === panier[i].color
-        );
-        const removeResult = panier.filter((elt) => elt !== result);
-        panier = removeResult;
-      }
-
-      localStorage.setItem("panier", JSON.stringify(panier));
-      console.log(panier.length);
-    }
     function getPrice(id, data) {
       const result = data.filter((elt) => elt._id == id);
       if (result) {
@@ -83,10 +85,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
     const displayPanier = () => {
-      if (sectionArticle != null) {
-        let html = "";
-        for (let article of panier) {
-          html += ` <article class="cart__item" data-id="${article.id}" data-color="${article.color}">
+      let html = "";
+      for (let article of panier) {
+        html += ` <article class="cart__item" data-id="${article.id}" data-color="${article.color}">
             <div class="cart__item__img">
               <img src="${article.image}" alt="Photographie d'un canapé">
             </div>
@@ -107,12 +108,12 @@ document.addEventListener("DOMContentLoaded", () => {
               </div>
             </div>
           </article>`;
-        }
-        sectionArticle.innerHTML = html;
       }
+      sectionArticle.innerHTML = html;
     };
     displayPanier();
     getProductsPrice();
+
     const getPanierId = (obj) => {
       let itemsId = [];
       for (let itemId of obj) {
@@ -123,6 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
     getPanierId(panier);
     let productID = getPanierId(panier);
     /// """""""""""""""""""""""""""""""""  Gestion du formulaire """""""""""""""""""""""""""""""""""""///
+
     const firstName = document.getElementById("firstName");
     const lastName = document.getElementById("lastName");
     const address = document.getElementById("address");
@@ -131,28 +133,22 @@ document.addEventListener("DOMContentLoaded", () => {
     let nameRegEx = new RegExp(
       /^[A-Za-zàçéèêëîïôöûüÿÀÉÈËÎÏÔÖÛÜ]+([-'\s][A-Za-zàçéèêëîïôöûüÿÀÉÈËÎÏÔÖÛÜ]+)?$/
     );
+
     let reghexEmail = new RegExp(/.+\@.+\..+/);
     let reghexAdresse = new RegExp(
       /^[^&~"#{([|`_\\\^@\])}=+°¨$£¤%!§:;.?<>/*]+$/
     );
+
     const validForm = (userInput, regExp, elt) => {
-      let txtValue = elt.previousElementSibling.textContent;
-      elt.style.paddingLeft = "3px";
-      elt.setAttribute(
-        "placeholder",
-        `Veuillez entrez votre ${txtValue.toLowerCase().replace(":", "")}`
-      );
       if (!regExp.test(userInput) || userInput == "") {
-        elt.style.color = "red";
-        elt.nextElementSibling.textContent = `Votre ${txtValue
-          .toLowerCase()
-          .replace(":", "")} n'est pas valide`;
+        elt.nextElementSibling.textContent = "Veuillez erespeter le format";
         return false;
       }
       elt.nextElementSibling.textContent = "";
       return true;
     };
     const btnOrder = document.getElementById("order");
+
     btnOrder.addEventListener("click", function (e) {
       e.preventDefault();
       let resfirstName = validForm(firstName.value, nameRegEx, firstName);
@@ -160,14 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let resAddress = validForm(address.value, reghexAdresse, address);
       let resCity = validForm(city.value, nameRegEx, city);
       let resEmail = validForm(email.value, reghexEmail, email);
-      if (
-        resfirstName &&
-        reslastName &&
-        resAddress &&
-        resCity &&
-        resEmail &&
-        panier.length !== 0
-      ) {
+      if (resfirstName && reslastName && resAddress && resCity && resEmail) {
         let contactUser = {
           firstName: firstName.value,
           lastName: lastName.value,
@@ -175,6 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
           city: city.value,
           email: email.value,
         };
+
         fetch("http://localhost:3000/api/products/order", {
           method: "POST",
           headers: {
@@ -187,17 +177,18 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log(data.orderId);
 
             setTimeout(function () {
-              window.location.href = `confirmation.html?id_order=${data.orderId}`;
+              window.location.href = `confirmation.html?id_order=  ${data.orderId}`;
             }, 400);
             localStorage.clear();
-          })
-          .catch((e) => console.error(e));
+          });
       }
     });
   }
+
   let id_order = new URL(location.href).searchParams.get("id_order");
+  console.log(id_order);
   let order = document.getElementById("orderId");
-  if (order !== null) {
+  if (order != null) {
     order.innerHTML = `<br/> ${id_order}`;
   }
 });
