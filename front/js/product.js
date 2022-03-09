@@ -1,4 +1,6 @@
+// recuperation de id du produit dans l'URL
 const productId = new URL(location.href).searchParams.get("id");
+console.log(`id recuperé dans l'URL ${productId}`); // Affichage dans la console de l'id du produit
 const productImage = document.querySelector(".item__img");
 const productName = document.getElementById("title");
 const productPrice = document.getElementById("price");
@@ -12,47 +14,43 @@ var formatter = new Intl.NumberFormat("de-FR", {
   currency: "EUR",
 });
 
-fetch(`http://localhost:3000/api/products/${productId}`)
-  .then((res) => res.json())
-  .then((data) => {
-    console.log(`nom du produit ${data.name}`);
-    let image = document.createElement("img");
-    image.setAttribute("src", data.imageUrl);
-    image.setAttribute("alt", data.altTxt);
-    productImage.appendChild(image);
-    productName.innerHTML = data.name;
-    productPrice.innerHTML = formatter.format(data.price);
-    productDescription.innerHTML = data.description;
-    document.title = data.name;
+const getArticleData = async () => {
+  fetch(`http://localhost:3000/api/products/${productId}`)
+    .then((res) => res.json())
+    .then((data) => {
+      let image = document.createElement("img");
+      image.setAttribute("src", data.imageUrl);
+      image.setAttribute("alt", data.altTxt);
+      productImage.appendChild(image);
+      productName.innerHTML = data.name;
+      productPrice.innerHTML = formatter.format(data.price);
+      productDescription.innerHTML = data.description;
+      document.title = data.name;
 
-    for (let color of data.colors) {
-      let option = document.createElement("option");
-      option.innerHTML = color;
-      option.value = color;
-      productColor.appendChild(option);
-    }
-    boutonPanier.addEventListener("click", function (event) {
-      event.preventDefault();
-      event.stopPropagation();
-      //  Si la quantité ou bien la couleur ne sont pas sélectioné => pop up alert() si non appel de la fonction addProduct """"///
-      if (productColor.value == "") {
-        alert("il faut choisir une couleur");
-      } else if (productQuantity.value < 1 || productQuantity.value > 100) {
-        alert("il faut choisir une quantitée");
-      } else {
-        getArticle(data);
+      for (let color of data.colors) {
+        let option = document.createElement("option");
+        option.innerHTML = color;
+        option.value = color;
+        productColor.appendChild(option);
       }
-    });
-  })
-  .catch((e) => console.log(e));
-
-productColor.addEventListener("change", function (e) {
-  console.log(e.target.value);
-});
-productQuantity.addEventListener("change", function (e) {
-  console.log(e.target.value);
-});
-console.log(`id recuperé dans l'URL ${productId}`);
+      boutonPanier.addEventListener("click", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        //  Si la quantité ou bien la couleur ne sont pas sélectioné => pop up alert() si non appel de la fonction addProduct """"///
+        if (productColor.value == "") {
+          alert("il faut choisir une couleur");
+        } else if (productQuantity.value < 1 || productQuantity.value > 100) {
+          alert("il faut choisir une quantitée");
+        } else {
+          getArticle(data);
+        }
+      });
+    })
+    .catch((e) => console.error(e));
+};
+getArticleData();
+productColor.addEventListener("change", function (e) {});
+productQuantity.addEventListener("change", function (e) {});
 
 const getArticle = (data) => {
   const product = {
@@ -64,8 +62,6 @@ const getArticle = (data) => {
     image: data.imageUrl,
     altTxt: data.altTxt,
   };
-
-  console.table(product);
 
   let panierLocalStorage = localStorage.getItem("panier"); // initialisation de la variable d'acces au Local Storage
   let panier; // Creation de la variable qui va stoquer le comtenu du panier.
@@ -89,7 +85,6 @@ const getArticle = (data) => {
     );
 
     if (item) {
-      console.log("meme produit");
       item.quantity = parseInt(product.quantity) + parseInt(item.quantity);
       product.quantity += item.quantity;
     } else {
