@@ -8,6 +8,7 @@ const productDescription = document.getElementById("description");
 const productColor = document.getElementById("colors");
 const productQuantity = document.getElementById("quantity");
 const boutonPanier = document.getElementById("addToCart");
+
 // Creation de la fonction de formatage du prix
 var formatter = new Intl.NumberFormat("de-FR", {
   style: "currency",
@@ -33,6 +34,7 @@ const getArticleData = async () => {
         option.value = color;
         productColor.appendChild(option);
       }
+
       boutonPanier.addEventListener("click", function (event) {
         event.preventDefault();
         event.stopPropagation();
