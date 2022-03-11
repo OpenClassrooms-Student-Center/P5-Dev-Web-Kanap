@@ -101,8 +101,7 @@ if (panier) {
               let product_id = art.getAttribute("data-id");
               let product_color = art.getAttribute("data-color");
 
-              let panier = localStorage.getItem("panier");
-              panier = JSON.parse(panier);
+              panier = getCart();
 
               const product = panier.map((element) => {
                 if (
@@ -124,8 +123,7 @@ if (panier) {
         const deleteItems = function () {
           for (let i = 0; i < deleteItem.length; i++) {
             deleteItem[i].addEventListener("click", function () {
-              let panier = localStorage.getItem("panier");
-              panier = JSON.parse(panier);
+              panier = getCart();
 
               let art = deleteItem[i].closest(`article`);
 
@@ -145,7 +143,7 @@ if (panier) {
               }
               if (panier.length == 0) {
                 let txt = document.querySelector("h1");
-                txt.textContent += "est vide";
+                txt.textContent += " est vide";
               }
             });
           }
