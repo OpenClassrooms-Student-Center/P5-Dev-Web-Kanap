@@ -42,7 +42,7 @@ const getArticleData = function () {
         if (productColor.value == "") {
           alert("il faut choisir une couleur");
         } else if (productQuantity.value < 1 || productQuantity.value > 100) {
-          alert("il faut choisir une quantitée");
+          alert("il faut choisir une quantitée entre 1 et 100");
         } else {
           getArticle(data); // appel de la fonction de creation du panier
         }
@@ -71,7 +71,7 @@ const getArticle = (data) => {
   let panier; // Creation de la variable qui va stoquer le comtenu du panier.
 
   if (panierLocalStorage == null) {
-    console.log("panier vide");
+    // console.log("panier vide");
     panier = [];
   } else {
     panier = JSON.parse(panierLocalStorage);
@@ -85,6 +85,8 @@ const getArticle = (data) => {
   ) {
     panier.push(product); // ajout du produit dans le panier
     // si il y a un produit dans le panier
+    alert(`
+    vous avez ajouter un article dans le panier`);
   } else {
     // verification si le panier contient deja le meme produit grasse a sa couleur et son id
     const item = panier.find(
@@ -94,9 +96,13 @@ const getArticle = (data) => {
     if (item) {
       item.quantity = parseInt(product.quantity) + parseInt(item.quantity);
       product.quantity += item.quantity;
+      alert(`la quantité à été modifiée dans le panier`);
     } else {
       // si non on ajoute le produit au panier
       panier.push(product);
+
+      alert(`
+      vous avez ajouter un article dans le panier`);
     }
   }
   localStorage.setItem("panier", JSON.stringify(panier));
