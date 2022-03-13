@@ -8,7 +8,6 @@ const productDescription = document.getElementById("description");
 const productColor = document.getElementById("colors");
 const productQuantity = document.getElementById("quantity");
 const boutonPanier = document.getElementById("addToCart");
-
 // Creation de la fonction de formatage du prix
 var formatter = new Intl.NumberFormat("fr-FR", {
   style: "currency",
@@ -34,7 +33,6 @@ const getArticleData = function () {
         option.value = color;
         productColor.appendChild(option); // insertion des element option
       }
-
       boutonPanier.addEventListener("click", function (event) {
         event.preventDefault();
         event.stopPropagation();
@@ -53,7 +51,6 @@ const getArticleData = function () {
 getArticleData();
 productColor.addEventListener("change", function (e) {});
 productQuantity.addEventListener("change", function (e) {});
-
 // creation de la fonction de creation du panier
 const getArticle = (data) => {
   // creation de l'objet produit
