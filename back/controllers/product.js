@@ -47,6 +47,7 @@ exports.getOneProduct = (req, res, next) => {
  *
  */
 exports.orderProducts = (req, res, next) => {
+    console.log('coucou');
   if (!req.body.contact ||
       !req.body.contact.firstName ||
       !req.body.contact.lastName ||

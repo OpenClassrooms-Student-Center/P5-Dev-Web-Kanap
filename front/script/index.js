@@ -3,7 +3,6 @@ const dataApi = fetch("http://localhost:3000/api/products")
 
 dataApi.then(async (resData) => {
     const res = await resData.json();
-    console.log(res);
 
 
     try{
@@ -18,7 +17,7 @@ dataApi.then(async (resData) => {
         function ficheProduit (i){
             const productLink = document.createElement("a");
             section.appendChild(productLink);
-            productLink.href = "./product.html?id=${res[i]._id}"
+            productLink.href= `product.html?id=${res[i]._id}`;
 
             const productObject = document.createElement("article");
             productLink.appendChild(productObject);
