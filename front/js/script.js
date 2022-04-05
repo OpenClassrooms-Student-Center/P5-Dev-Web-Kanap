@@ -1,6 +1,6 @@
 // 1 -- Récupérer les données de l'API et les stocker dans une variable
 const section = document.getElementById("items"); //on cible la section
-// on récupère les données avec Fetch
+// 2 -- On récupère les données avec Fetch
 fetch("http://localhost:3000/api/products")
   .then((response) => response.json())
   .then((products) => {
