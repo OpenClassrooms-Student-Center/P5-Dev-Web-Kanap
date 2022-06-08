@@ -1,6 +1,6 @@
 // single product 
-var str = window.location.href;
-var url = new URL(str);
+var string = window.location.href;
+var url = new URL(string);
 var idProduct = url.searchParams.get("id");
 let article = "";
 const colorPicked = document. querySelector("#colors");
