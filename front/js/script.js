@@ -8,12 +8,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   products = await getProducts();
 
   for (const product in products) {
-    const newElement = createKanap(products[product])
+    const newElement = create(products[product])
     items.appendChild(newElement);
   }
 })
 
-const createKanap = (product) => {
+const create = (product) => {
   const newElement = document.createElement('a')
   const article = document.createElement('article')
   const productImage = document.createElement('img')
