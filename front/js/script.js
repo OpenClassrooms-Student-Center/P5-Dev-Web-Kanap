@@ -1,36 +1,56 @@
-async function getArticles() {
-  var articlesCatch = await fetch("http://localhost:3000/api/products")
-  return await articlesCatch.json();
-}
-async function fillSection() {
-  var result = await getArticles ()
-  .then(function (resultatAPI){
-      const articles = resultatAPI;
-      console.table(articles);
-      console.log(articles);
-      for (let article in articles) {
-          let productLink = document.createElement("a");
-          document.querySelector(".items").appendChild(productLink);
-          productLink.href = `product.html?id=${resultatAPI[article]._id}`;
-          let productArticle = document.createElement("article");
-          productLink.appendChild(productArticle);
-          let productImg = document.createElement("img");
-          productArticle.appendChild(productImg);
-          productImg.src = resultatAPI[article].imageUrl;
-          productImg.alt = resultatAPI[article].altTxt;
-          let productName = document.createElement("h3");
-          productArticle.appendChild(productName);
-          productName.classList.add("productName");
-          productName.innerHTML = resultatAPI[article].name;
-          let productDescription = document.createElement("p");
-          productArticle.appendChild(productDescription);
-          productDescription.classList.add("productName");
-          productDescription.innerHTML = resultatAPI[article].description;
-      }
-  })
-  .catch (function(error){
-      return error;
-  });
+const URLapi = 'http://localhost:3000/api/products'
+
+var products = {};
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const items = document.getElementById('items')
+
+  products = await getProducts();
+
+  for (const product in products) {
+    const newElement = createKanap(products[product])
+    items.appendChild(newElement);
+  }
+})
+
+const createKanap = (product) => {
+  const newElement = document.createElement('a')
+  const article = document.createElement('article')
+  const productImage = document.createElement('img')
+  const productName = document.createElement('h3')
+  const productDesc = document.createElement('p')
+
+  newElement.href = `./product.html?id=${product._id}`
+  productImage.src = product.imageUrl;
+  productImage.alt = product.altTxt;
+  productName.innerHTML = product.name;
+  productName.classList.add('productName');
+  productDesc.innerHTML = product.description;
+  productDesc.classList.add('productDescription')
+
+  article.appendChild(productImage)
+  article.appendChild(productName)
+  article.appendChild(productDesc)
+  newElement.appendChild(article)
+  return newElement
 }
 
-fillSection();
+const getProducts = async () => {
+  const response = await fetch(URLapi)
+  if (!response.ok) {
+    return
+  }
+
+  const productsText = await response.text()
+  if (!productsText) {
+    return
+  }
+
+  const products = {}
+  const productArray = await JSON.parse(productsText)
+  productArray.forEach(product => {
+    products[product._id] = product
+  })
+
+  return products
+}
