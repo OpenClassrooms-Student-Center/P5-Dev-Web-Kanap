@@ -84,7 +84,7 @@ getCart();
 
 function getTotals(){
 
-    // Récupération du total des quantités
+    // total quantity
     var elemsQtt = document.getElementsByClassName('itemQuantity');
     var myLength = elemsQtt.length,
     totalQtt = 0;
@@ -97,7 +97,7 @@ function getTotals(){
     productTotalQuantity.innerHTML = totalQtt;
     console.log(totalQtt);
 
-    // Récupération du prix total
+    // total price
     totalPrice = 0;
 
     for (var i = 0; i < myLength; ++i) {
