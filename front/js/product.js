@@ -22,8 +22,8 @@ function getArticle() {
             getPost(article);
         }
     })
-    .catch((error) => {
-        console.log("Une erreur est survenue");
+    .catch(function(error){
+        return error;
     })
 }
     
@@ -75,7 +75,7 @@ function addToCart(article) {
     };
 
 
-    let produitLocalStorage = JSON.parse(localStorage.getItem("produit"));
+    let produitLocalStorage = JSON.parse(localStorage.getItem("product"));
     const popupConfirmation =() =>{
         if(window.confirm(`Votre commande ${chooseQuantity} ${article.name} ${chooseColor} est ajoutée au panier. Pour le consulter, cliquez sur OK`)){
             window.location.href ="cart.html";
