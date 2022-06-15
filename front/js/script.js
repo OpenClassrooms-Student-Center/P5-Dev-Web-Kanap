@@ -12,14 +12,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     items.appendChild(newElement);
   }
 })
-
+//nex element
 const create = (product) => {
   const newElement = document.createElement('a')
   const article = document.createElement('article')
   const productImage = document.createElement('img')
   const productName = document.createElement('h3')
   const productDesc = document.createElement('p')
-
+  //change element
   newElement.href = `./product.html?id=${product._id}`
   productImage.src = product.imageUrl;
   productImage.alt = product.altTxt;
@@ -34,7 +34,7 @@ const create = (product) => {
   newElement.appendChild(article)
   return newElement
 }
-
+//call Api
 const getProducts = async () => {
   const response = await fetch(URLapi)
   if (!response.ok) {

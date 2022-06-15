@@ -16,7 +16,7 @@ const displayProduct = async () => {
   const product = products[itemId]
   displayInfos(product)
 }
-
+// new element
 const displayInfos = (product) => {
   const item__img = document.querySelector('body > main > div > section > article > div.item__img')
   const productImage = document.createElement('img')
@@ -24,7 +24,7 @@ const displayInfos = (product) => {
   const productPrice = document.getElementById('price')
   const productDesc = document.getElementById('description')
   const colorSelector = document.getElementById('colors')
-
+  // change element
   productImage.src = product.imageUrl
   item__img.appendChild(productImage)
   productName.innerHTML = product.name
@@ -77,7 +77,7 @@ const addToCart = () => {
   localStorage.setItem('shoppingCart', JSON.stringify(cart))
   alert(`Votre commande est effectuée`)
 }
-
+//call Api
 const getProducts = async () => {
   const response = await fetch(URLapi)
   if (!response.ok) {
