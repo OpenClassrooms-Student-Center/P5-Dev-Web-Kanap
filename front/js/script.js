@@ -20,8 +20,6 @@ const getProducts = async () => {
   return products
 }
 
-var products = {};
-
 document.addEventListener('DOMContentLoaded', async () => {
   const items = document.getElementById('items')
 

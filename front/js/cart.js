@@ -21,11 +21,6 @@ const getProducts = async () => {
   return products
 }
 
-var shoppingCart = []
-var products = {} 
-var totalQuantity = 0
-var totalPrice = 0
-
 // cart item 
 document.addEventListener('DOMContentLoaded', async () => {
   if (!location.href.includes('cart.html')) {
