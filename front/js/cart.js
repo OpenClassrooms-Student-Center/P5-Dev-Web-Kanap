@@ -26,22 +26,6 @@ const getProducts = async () => {
   return products
 }
 
-
-//local storage shoppingCart
-  function getCart(){
-    let shoppingCart = localStorage.getItem("shoppingCart")
-    if (shoppingCart== null){
-      return [];
-    }else{
-      return JSON.parse(shoppingCart)
-    }
-  }
-  function SaveShoppingCart(product){
-    let shoppingCart = getCart();
-    shoppingCart.push(product)
-    SaveShoppingCart(shoppingCart)
-  }
-   
 // cart item 
 document.addEventListener('DOMContentLoaded', async () => {
   if (!location.href.includes('cart.html')) {
@@ -50,6 +34,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   products = await getProducts();
+
+  //localstorage cart
+  shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'))
+  if (!shoppingCart) {
+    return
+  }
 
   const cart = document.getElementById('cart__items')
 
@@ -198,7 +188,7 @@ const updateTotal = () => {
   const addressErrField = document.getElementById('addressErrorMsg')
   const cityErrField = document.getElementById('cityErrorMsg')
   const emailErrField = document.getElementById('emailErrorMsg')
-  
+
   //regex for informations
   const nameRegex = /^[A-zÀ-ú' -]*$/
   const addressRegex = /([0-9]{1,}) ?([A-zÀ-ú,' -\. ]*)/
