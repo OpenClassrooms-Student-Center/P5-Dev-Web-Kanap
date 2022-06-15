@@ -1,10 +1,5 @@
 const URLapi = 'http://localhost:3000/api/products'
 
-var shoppingCart = []
-var products = {} 
-var totalQuantity = 0
-var totalPrice = 0
-
 // call Api
 const getProducts = async () => {
   const response = await fetch(URLapi)
@@ -26,6 +21,11 @@ const getProducts = async () => {
   return products
 }
 
+var shoppingCart = []
+var products = {} 
+var totalQuantity = 0
+var totalPrice = 0
+
 // cart item 
 document.addEventListener('DOMContentLoaded', async () => {
   if (!location.href.includes('cart.html')) {
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     return
   }
 
-  products = await getProducts();
+  products = await getProducts()
 
   //localstorage cart
   shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'))
@@ -53,7 +53,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     order()
   }
 })
-  const createItemInCart = (item) => {
+
+  const createItemInCart = async (item) => {
   const product = products[item.id]
 
   // new element
@@ -97,12 +98,27 @@ document.addEventListener('DOMContentLoaded', async () => {
   itemDivContentSettingsDelText.addEventListener('click', deleteItem)
   itemDivContentSettingsDelText.innerHTML = 'Supprimer'
 
+  //child element
+  itemDivContentDesc.appendChild(itemDivContentDescName)
+  itemDivContentDesc.appendChild(itemDivContentDescColor)
+  itemDivContentDesc.appendChild(itemDivContentDescPrice)
+  itemDivContentSettingsQty.appendChild(itemDivContentSettingsQtyValue)
+  itemDivContentSettingsQty.appendChild(itemDivContentSettingsQtyInput)
+  itemDivContentSettingsDel.appendChild(itemDivContentSettingsDelText)
+  itemDivContentSettings.appendChild(itemDivContentSettingsQty)
+  itemDivContentSettings.appendChild(itemDivContentSettingsDel)
+  itemDivContent.appendChild(itemDivContentDesc)
+  itemDivContent.appendChild(itemDivContentSettings)
+  itemDivImg.appendChild(itemImg)
+  itemArticle.appendChild(itemDivImg)
+  itemArticle.appendChild(itemDivContent)
+
   return itemArticle
 }
 
 //delete item
 const deleteItem = (delButton) => {
-  if (window.confirm('Voulez-vous supprimer ce produit du panier ?')) {
+  if (window.confirm('Voulez-vous supprimer ce produit ?')) {
     const path = delButton.path || (delButton.composedPath && delButton.composedPath())
     const cartItem = path.find(element => element.classList.contains('cart__item'))
     const id = cartItem.dataset.id
@@ -173,15 +189,16 @@ const updateTotal = () => {
   totalQuantityElement.innerHTML = totalQuantity
   totalPriceElement.innerHTML = totalPrice
 }
-
 // informations customer
-  const searchParams = new URLSearchParams(window.location.search)
+  const order = async () => {
+  const searchParams = new URLSearchParams(location.search)
+
   const firstName = searchParams.get('firstName')
   const lastName = searchParams.get('lastName')
   const address = searchParams.get('address')
   const city = searchParams.get('city')
   const email = searchParams.get('email')
-
+  
   //error informations
   const firstNameErrField = document.getElementById('firstNameErrorMsg')
   const lastNameErrField = document.getElementById('lastNameErrorMsg')
@@ -230,6 +247,23 @@ const updateTotal = () => {
       error = true
     }
   }
+
+  if (error) {
+    return
+  }
+
+  const contact = {
+    firstName,
+    lastName,
+    address,
+    city,
+    email
+  }
+
+}
+
+
+
   
 
 
