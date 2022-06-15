@@ -5,6 +5,28 @@ var products = {}
 var totalQuantity = 0
 var totalPrice = 0
 
+// call Api
+const getProducts = async () => {
+  const response = await fetch(URLapi)
+  if (!response.ok) {
+    return
+  }
+
+  const productsText = await response.text()
+  if (!productsText) {
+    return
+  }
+
+  const products = {}
+  const productArray = await JSON.parse(productsText)
+  productArray.forEach(product => {
+    products[product._id] = product
+  })
+
+  return products
+}
+
+
 //local storage shoppingCart
   function getCart(){
     let shoppingCart = localStorage.getItem("shoppingCart")
@@ -43,6 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 })
   const createItemInCart = (item) => {
   const product = products[item.id]
+
   // new element
   const itemArticle = document.createElement('article')
   const itemDivImg = document.createElement('div')
@@ -58,6 +81,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const itemDivContentSettingsQtyInput = document.createElement('input')
   const itemDivContentSettingsDel = document.createElement('div')
   const itemDivContentSettingsDelText = document.createElement('p')
+
   // change element
   itemArticle.classList.add('cart__item')
   itemArticle.dataset.id = item.id
@@ -85,6 +109,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   return itemArticle
 }
+
 //delete item
 const deleteItem = (delButton) => {
   if (window.confirm('Voulez-vous supprimer ce produit du panier ?')) {
@@ -99,6 +124,7 @@ const deleteItem = (delButton) => {
     updateTotal()
   }
 }
+
 //update quantity of cart
 const updateQuantity = (listener) => {
   if (!listener) {
@@ -157,6 +183,7 @@ const updateTotal = () => {
   totalQuantityElement.innerHTML = totalQuantity
   totalPriceElement.innerHTML = totalPrice
 }
+
 // informations customer
   const searchParams = new URLSearchParams(window.location.search)
   const firstName = searchParams.get('firstName')
@@ -164,12 +191,14 @@ const updateTotal = () => {
   const address = searchParams.get('address')
   const city = searchParams.get('city')
   const email = searchParams.get('email')
+
   //error informations
   const firstNameErrField = document.getElementById('firstNameErrorMsg')
   const lastNameErrField = document.getElementById('lastNameErrorMsg')
   const addressErrField = document.getElementById('addressErrorMsg')
   const cityErrField = document.getElementById('cityErrorMsg')
   const emailErrField = document.getElementById('emailErrorMsg')
+  
   //regex for informations
   const nameRegex = /^[A-zÀ-ú' -]*$/
   const addressRegex = /([0-9]{1,}) ?([A-zÀ-ú,' -\. ]*)/
@@ -211,26 +240,7 @@ const updateTotal = () => {
       error = true
     }
   }
-  // call Api
-  const getProducts = async () => {
-    const response = await fetch(URLapi)
-    if (!response.ok) {
-      return
-    }
   
-    const productsText = await response.text()
-    if (!productsText) {
-      return
-    }
-  
-    const products = {}
-    const productArray = await JSON.parse(productsText)
-    productArray.forEach(product => {
-      products[product._id] = product
-    })
-  
-    return products
-  }
 
 
 

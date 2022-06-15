@@ -1,5 +1,26 @@
 const URLapi = 'http://localhost:3000/api/products'
 
+//call Api
+const getProducts = async () => {
+  const response = await fetch(URLapi)
+  if (!response.ok) {
+    return
+  }
+
+  const productsText = await response.text()
+  if (!productsText) {
+    return
+  }
+
+  const products = {}
+  const productArray = await JSON.parse(productsText)
+  productArray.forEach(product => {
+    products[product._id] = product
+  })
+
+  return products
+}
+
 var products = {};
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -33,24 +54,4 @@ const create = (product) => {
   article.appendChild(productDesc)
   newElement.appendChild(article)
   return newElement
-}
-//call Api
-const getProducts = async () => {
-  const response = await fetch(URLapi)
-  if (!response.ok) {
-    return
-  }
-
-  const productsText = await response.text()
-  if (!productsText) {
-    return
-  }
-
-  const products = {}
-  const productArray = await JSON.parse(productsText)
-  productArray.forEach(product => {
-    products[product._id] = product
-  })
-
-  return products
 }
