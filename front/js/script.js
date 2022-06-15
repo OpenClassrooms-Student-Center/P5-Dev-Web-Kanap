@@ -1,5 +1,4 @@
 const URLapi = 'http://localhost:3000/api/products'
-
 //call Api
 const getProducts = async () => {
   const response = await fetch(URLapi)
@@ -33,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     items.appendChild(newElement);
   }
 })
-//nex element
+//new element
 const create = (product) => {
   const newElement = document.createElement('a')
   const article = document.createElement('article')
