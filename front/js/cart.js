@@ -207,9 +207,9 @@ const updateTotal = () => {
   const emailErrField = document.getElementById('emailErrorMsg')
 
   //regex for informations
-  const nameRegex = /^[A-zÀ-ú' -]*$/
-  const addressRegex = /([0-9]{1,}) ?([A-zÀ-ú,' -\. ]*)/
-  const mailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+  const nameRegex = /([A-Za-z]+(['|\-|\s]?[A-Za-z]+)*)+/
+  const addressRegex = /(\d{1,}) [a-zA-Z0-9\s]+(\.)? [a-zA-Z]+(\,)? [A-Z]{2} [0-9]{5,6}/
+  const mailRegex = /^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:\. [a-zA-Z0-9-]+)*$/
 
   let error = false
 
