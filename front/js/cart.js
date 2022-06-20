@@ -124,15 +124,30 @@ const updateTotal = () => {
   totalPriceElement.innerHTML = totalPrice
 }
 
-const nameRegex = /([A-Za-z]+(['|\-|\s]?[A-Za-z]+)*)+/
-const addressRegex = /(\d{1,}) [a-zA-Z0-9\s]+(\.)? [a-zA-Z]+(\,)? [A-Z]{2} [0-9]{5,6}/
-const mailRegex = /^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:\. [a-zA-Z0-9-]+)*$/
+//define Regex for input
+const nameRegex = new RegexExp ("[A-Za-z]+(['|\-|\s]?[A-Za-z]+)*)+","g");
+const addressRegex = new RegexExp ("\d{1,}) [a-zA-Z0-9\s]+(\.)? [a-zA-Z]+(\,)? [A-Z]{2} [0-9]{5,6}","g");
+const mailRegex = new RegexExp ("^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:\. [a-zA-Z0-9-]+)*$","g");
 
-//const checkRegex = (input, regex, message) {
-  //Je teste ma regex
+//Personnalized message
+const NameErrorMsg = "Saisir un prénom valide.";
+const AdressErrorMsg = "Saisir une adresse valide.";
+const emailErrorMsg = "Saisir une adresse email valide.";
+
+//check the regex match
+const checkRegex = (input, regex, message) => {
+  let Regextest = new RegExp(regex).test(input.value);
+  let ErrorMsg= input.nextElementSibling;
+  if(!Regextest){
+    ErrorMsg.innerHTML= message;
+    return false
+  }else{
+    ErrorMsg.innerHTML="";
+    return true
+  }
   // Si ça revient pas bon, alors je mets le message dans le champs approprié + je return false
   // Sinon alors je vide le message d'erreur + je return true
-//}
+}
 //const order = () => {
 //if(checkRegex(firstName.input, nameregex, "non invalide") éé )
 //}
