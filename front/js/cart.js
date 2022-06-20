@@ -137,7 +137,7 @@ const emailErrorMsg = "Saisir une adresse email valide.";
 //check the regex match
 const checkRegex = (input, regex, message) => {
   let Regextest = new RegExp(regex).test(input.value);
-  let ErrorMsg= input.nextElementSibling;
+  let ErrorMsg= input.nextElementSibling; // renvoie le noeud des inputs
   if(!Regextest){
     ErrorMsg.innerHTML= message;
     return false
