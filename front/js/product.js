@@ -13,12 +13,13 @@ const getProduct = () => {
         }
       }).then((product) => {
         displayInfos(product)
-    addToCart(product)
+        addToCart(product)
 
 
       })
       .catch(function (err) {
-        // Une erreur est survenue
+        const products = document.querySelector("item");
+        products.innerHTML = `Une erreur est survenue (${err})`;
       });
 }
 

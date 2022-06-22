@@ -13,7 +13,8 @@ const getProducts = () => {
               createItemInCart(fullProduct)
           })
           .catch(function (err) {
-              // Une erreur est survenue
+              const cartItemEl = document.getElementById("cart__items");
+              cartItemEl.innerHTML = `Une erreur est survenue : ${err}`;
           });
   })
 
@@ -101,10 +102,16 @@ const deleteItem = (delButton) => {
 
 //update quantity of cart
 const updateQuantity = () => {
+   let quantities = item.quantity.map(el => {
+    return item.quantity * products[item.id]
+  })
+  totalQuantity += quantities * products
+  shoppingCart.setItem('shoppingCart', JSON.stringify(shoppingCart))
+  totalPrice();
+  totalQuantity();
+  updateTotal()
   //Trouver la ligne dans le panier soit en utilisant les dataset en JS ==> utiliser .map
   // Mettre à jour le local Storage avec la nouvelel quantité
-
-  updateTotal()
 }
 
 
@@ -125,19 +132,19 @@ const updateTotal = () => {
 }
 
 //define Regex for input
-const nameRegex = new RegexExp ("[A-Za-z]+(['|\-|\s]?[A-Za-z]+)*)+","g");
-const addressRegex = new RegexExp ("\d{1,}) [a-zA-Z0-9\s]+(\.)? [a-zA-Z]+(\,)? [A-Z]{2} [0-9]{5,6}","g");
-const mailRegex = new RegexExp ("^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:\. [a-zA-Z0-9-]+)*$","g");
+const nameRegex = new RegExp ("/([A-Za-z]+(['|\-|\s]?[A-Za-z]+)*)+/","g");//notation littérale général
+const addressRegex = new RegExp ("/^[a-z0-9\s,'-]*$/i","g");//notation littérale général
+const mailRegex = new RegExp ("^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:\. [a-zA-Z0-9-]+)*$","g");//notation littérale général
 
-//Personnalized message
+/*//Personnalized message
 const NameErrorMsg = "Saisir un prénom valide.";
 const AdressErrorMsg = "Saisir une adresse valide.";
 const emailErrorMsg = "Saisir une adresse email valide.";
-
+*/
 //check the regex match
-const checkRegex = (input, regex, message) => {
+/*const checkRegex = (input, regex, message) => {
   let Regextest = new RegExp(regex).test(input.value);
-  let ErrorMsg= input.nextElementSibling; // renvoie le noeud des inputs
+  let ErrorMsg= input.nextElementSibling; // élement trouvé dans le livre à voir si cela fonctionne
   if(!Regextest){
     ErrorMsg.innerHTML= message;
     return false
@@ -145,89 +152,100 @@ const checkRegex = (input, regex, message) => {
     ErrorMsg.innerHTML="";
     return true
   }
+}
+*/
   // Si ça revient pas bon, alors je mets le message dans le champs approprié + je return false
   // Sinon alors je vide le message d'erreur + je return true
-}
+  
+    //value for the form
+    const firstName = document.getElementById('firstName')
+    const lastName = document.getElementById('lastName')
+    const address = document.getElementById('address')
+    const city = document.getElementById('city')
+    const email = document.getElementById('email')
+
+    //Regex Email
+    const emailErrorMsg = document.getElementById("emailErrorMsg");
+    function validateEmail(email){
+      if (mailRegex.test(email)== false){
+        return false;
+      }else{
+        emailErrorMsg.innerHTML = null;
+        return true;
+      }
+    }
+
+    //Regex firstname
+    const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
+    function validateFirstName(firstName){
+      if (nameRegex.test(firstName) == false){
+        return false;
+     }else{
+        firstNameErrorMsg.innerHTML = null;
+        return true;
+     }
+    }
+
+    //Regex LastName
+    const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
+    function validateLastName(lastName){
+      if (nameRegex.test(lastName) == false){
+        return false;
+      }else{
+        lastNameErrorMsg.innerHTML = null;
+        return true;
+      }
+    }
+
+    //Regex city
+    const cityErrorMsg = document.getElementById("cityErrorMsg");
+    function validateCity(city){
+      if (nameRegex.test(city) == false){
+        return false;
+      }else{
+        cityErrorMsg.innerHTML = null;
+        return true;
+      }
+    }
+
+    //Regex adress
+    const addressErrorMsg = document.getElementById("addressErrorMsg");
+    function validateAddress(address){
+      if (nameRegex.test(address) == false){
+        return false;
+      }else{
+        addressErrorMsg.innerHTML = null;
+        return true;
+      }
+    }
+    const orderButton = document.getElementById("order");
+    orderButton.addEventListener("click", (x) =>{
+      x.preventDefault();
+      let email = validateEmail(email).value;
+      let firstName = validateFirstName(firstName).value;
+      let lastName = validateLastName(lastName).value;
+      let city = validateCity(city).value;
+      let address = validateAddress(address).value;
+      if(email == false || firstName == false || lastName == false || city == false || address == false )
+        {
+         if (email == false ){
+          emailErrorMsg.innerHTML = "Saisir une adresse email valide."
+         }
+         if (firstName == false ){
+          firstNameErrorMsg.innerHTML = "Saisir un prénom valide."
+         } 
+         if (lastName == false ){
+          lastNameErrorMsg.innerHTML = "Saisir un Nom valide."
+         }
+         if (city == false ){
+          cityErrorMsg.innerHTML = "Saisir une ville valide."
+         }
+         if (address == false ){
+          addressErrorMsg.innerHTML = "Saisir une adresse valide."
+         }
+         return;
+        }
+    })
+
 //const order = () => {
 //if(checkRegex(firstName.input, nameregex, "non invalide") éé )
-//}
-// // // informations customer
-// // const order = async () => {
-// //     const searchParams = new URLSearchParams(location.search)
-// //
-// //     const firstName = searchParams.get('firstName')
-// //     const lastName = searchParams.get('lastName')
-// //     const address = searchParams.get('address')
-// //     const city = searchParams.get('city')
-// //     const email = searchParams.get('email')
-// //
-// //     //error informations
-// //     const firstNameErrField = document.getElementById('firstNameErrorMsg')
-// //     const lastNameErrField = document.getElementById('lastNameErrorMsg')
-// //     const addressErrField = document.getElementById('addressErrorMsg')
-// //     const cityErrField = document.getElementById('cityErrorMsg')
-// //     const emailErrField = document.getElementById('emailErrorMsg')
-// //
-// //     //regex for informations
-// //     const nameRegex = /([A-Za-z]+(['|\-|\s]?[A-Za-z]+)*)+/
-// //     const addressRegex = /(\d{1,}) [a-zA-Z0-9\s]+(\.)? [a-zA-Z]+(\,)? [A-Z]{2} [0-9]{5,6}/
-// //     const mailRegex = /^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:\. [a-zA-Z0-9-]+)*$/
-// //
-// //     let error = false
-// //
-// //     if (firstName) {
-// //         if (!firstName.match(nameRegex)) {
-// //             firstNameErrField.innerHTML = 'Saisir un prénom valide.'
-// //             error = true
-// //         }
-// //     }
-// //
-// //     if (lastName) {
-// //         if (!lastName.match(nameRegex)) {
-// //             lastNameErrField.innerHTML = 'Saisir un nom valide.'
-// //             error = true
-// //         }
-// //     }
-// //
-// //     if (address) {
-// //         if (!address.match(addressRegex)) {
-// //             addressErrField.innerHTML = 'Saisir une adresse valide.'
-// //             error = true
-// //         }
-// //     }
-// //
-// //     if (city) {
-// //         if (!city.match(nameRegex)) {
-// //             cityErrField.innerHTML = 'Saisir un nom de ville valide.'
-// //             error = true
-// //         }
-// //     }
-// //
-// //     if (email) {
-// //         if (!email.match(mailRegex)) {
-// //             emailErrField.innerHTML = 'Saisir une adresse email valide.'
-// //             error = true
-// //         }
-// //     }
-// //
-// //     if (error) {
-// //         return
-// //     }
-// //
-// //     const contact = {
-// //         firstName,
-// //         lastName,
-// //         address,
-// //         city,
-// //         email
-// //     }
-// //
-// // }
-//
-//
-//
-//
-//
-//
-//
-//
