@@ -22,6 +22,8 @@ const getProducts = () => {
 
 getProducts()
 
+
+
 const createItemInCart = (product) => {
   // new element
   const itemArticle = document.createElement('article')
@@ -86,6 +88,7 @@ const createItemInCart = (product) => {
 
 
 //delete item
+shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
 const deleteItem = (delButton) => {
   if (window.confirm('Voulez-vous supprimer ce produit ?')) {
       const path = delButton.path || (delButton.composedPath && delButton.composedPath())
@@ -102,13 +105,9 @@ const deleteItem = (delButton) => {
 
 //update quantity of cart
 const updateQuantity = () => {
-   let quantities = item.quantity.map(el => {
-    return item.quantity * products[item.id]
-  })
-  totalQuantity += quantities * products
-  shoppingCart.setItem('shoppingCart', JSON.stringify(shoppingCart))
-  totalPrice();
-  totalQuantity();
+   const quantities = document.querySelectorAll("itemQuantity");
+   const TotalQty = quantities.map(el => el *product)
+    shoppingCart.setItem('shoppingCart', JSON.stringify(shoppingCart))
   updateTotal()
   //Trouver la ligne dans le panier soit en utilisant les dataset en JS ==> utiliser .map
   // Mettre à jour le local Storage avec la nouvelel quantité
