@@ -105,7 +105,7 @@ const deleteItem = (delButton) => {
 
 //update quantity of cart
 const updateQuantity = (e) => {
-  newQuantity=e.target.value;
+  newQuantity= Number(e.target.value);
   article= e.target.closest(".cart__item");
   const cart = JSON.parse(localStorage.getItem("shoppingCart"));
   cart.map((product)=>{
@@ -127,8 +127,8 @@ const updateTotal = (product) => {
   const totalQuantityElement = document.getElementById('totalQuantity')
   const totalPriceElement = document.getElementById('totalPrice')
 
-  totalQuantity = 0
-  totalPrice = 0
+  let totalQuantity = 0
+  let totalPrice = 0
   const cart = JSON.parse(localStorage.getItem("shoppingCart"));
   cart.forEach(product => {
     fetch(`http://localhost:3000/api/products/${product.id}`)
@@ -136,12 +136,11 @@ const updateTotal = (product) => {
     if (res.ok) {
       return res.json();
     }
-  }).then((product) => {
+  }).then((productFound) => {
     totalQuantity += product.quantity
-    totalPrice += product.quantity * products[item.id].price
+    totalPrice += product.quantity * productFound.price
     totalQuantityElement.innerHTML= totalQuantity;
     totalPriceElement.innerHTML = totalPrice;
-
   })
   .catch(function (err) {
     /*const products = document.querySelector("item");
@@ -157,19 +156,14 @@ const updateTotal = (product) => {
   totalQuantityElement.innerHTML = totalQuantity
   totalPriceElement.innerHTML = totalPrice
 }
-
+updateTotal();
 //define Regex for input
 const nameRegex = new RegExp ("/([A-Za-z]+(['|\-|\s]?[A-Za-z]+)*)+/","g");//notation littérale général
 const addressRegex = new RegExp ("/^[a-z0-9\s,'-]*$/i","g");//notation littérale général
 const mailRegex = new RegExp ("^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:\. [a-zA-Z0-9-]+)*$","g");//notation littérale général
 
-/*//Personnalized message
-const NameErrorMsg = "Saisir un prénom valide.";
-const AdressErrorMsg = "Saisir une adresse valide.";
-const emailErrorMsg = "Saisir une adresse email valide.";
-*/
 //check the regex match
-/*const checkRegex = (input, regex, message) => {
+const checkRegex = (input, regex, message) => {
   let Regextest = new RegExp(regex).test(input.value);
   let ErrorMsg= input.nextElementSibling; // élement trouvé dans le livre à voir si cela fonctionne
   if(!Regextest){
@@ -180,7 +174,7 @@ const emailErrorMsg = "Saisir une adresse email valide.";
     return true
   }
 }
-*/
+
   // Si ça revient pas bon, alors je mets le message dans le champs approprié + je return false
   // Sinon alors je vide le message d'erreur + je return true
   
@@ -191,87 +185,17 @@ const emailErrorMsg = "Saisir une adresse email valide.";
     const city = document.getElementById('city')
     const email = document.getElementById('email')
 
-    //Regex Email
-    const emailErrorMsg = document.getElementById("emailErrorMsg");
-    function validateEmail(email){
-      if (mailRegex.test(email)== false){
-        return false;
-      }else{
-        emailErrorMsg.innerHTML = null;
-        return true;
-      }
-    }
-
-    //Regex firstname
-    const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
-    function validateFirstName(firstName){
-      if (nameRegex.test(firstName) == false){
-        return false;
-     }else{
-        firstNameErrorMsg.innerHTML = null;
-        return true;
-     }
-    }
-
-    //Regex LastName
-    const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
-    function validateLastName(lastName){
-      if (nameRegex.test(lastName) == false){
-        return false;
-      }else{
-        lastNameErrorMsg.innerHTML = null;
-        return true;
-      }
-    }
-
-    //Regex city
-    const cityErrorMsg = document.getElementById("cityErrorMsg");
-    function validateCity(city){
-      if (nameRegex.test(city) == false){
-        return false;
-      }else{
-        cityErrorMsg.innerHTML = null;
-        return true;
-      }
-    }
-
-    //Regex adress
-    const addressErrorMsg = document.getElementById("addressErrorMsg");
-    function validateAddress(address){
-      if (nameRegex.test(address) == false){
-        return false;
-      }else{
-        addressErrorMsg.innerHTML = null;
-        return true;
-      }
-    }
+    
     const orderButton = document.getElementById("order");
-    orderButton.addEventListener("click", (x) =>{
-      x.preventDefault();
-      let email = validateEmail(email).value;
-      let firstName = validateFirstName(firstName).value;
-      let lastName = validateLastName(lastName).value;
-      let city = validateCity(city).value;
-      let address = validateAddress(address).value;
-      if(email == false || firstName == false || lastName == false || city == false || address == false )
-        {
-         if (email == false ){
-          emailErrorMsg.innerHTML = "Saisir une adresse email valide."
-         }
-         if (firstName == false ){
-          firstNameErrorMsg.innerHTML = "Saisir un prénom valide."
-         } 
-         if (lastName == false ){
-          lastNameErrorMsg.innerHTML = "Saisir un Nom valide."
-         }
-         if (city == false ){
-          cityErrorMsg.innerHTML = "Saisir une ville valide."
-         }
-         if (address == false ){
-          addressErrorMsg.innerHTML = "Saisir une adresse valide."
-         }
-         return;
-        }
+    orderButton.addEventListener("click", (e) =>{
+      e.preventDefault();
+      if( checkRegex(firstName, nameRegex,"saisir un prenom valide")
+      && checkRegex(lastName, nameRegex,"saisir un nom valide")
+      && checkRegex(address, addressRegex,"saisir une adresse valide")
+      && checkRegex(city, nameRegex,"saisir une ville valide")
+      && checkRegex(email, mailRegex,"saisir un email valide ")){
+        alert("on...");
+      }
     })
 
 //const order = () => {

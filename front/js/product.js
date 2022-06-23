@@ -59,7 +59,7 @@ const addToCart = (product) => {
       return
     }
 
-    item.quantity = itemQuantity
+    item.quantity = Number(itemQuantity) 
 
     const itemColor = document.getElementById('colors').value
 
