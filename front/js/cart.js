@@ -104,27 +104,55 @@ const deleteItem = (delButton) => {
 }
 
 //update quantity of cart
-const updateQuantity = () => {
-   const quantities = document.querySelectorAll("itemQuantity");
-   const TotalQty = quantities.map(el => el *product)
-    shoppingCart.setItem('shoppingCart', JSON.stringify(shoppingCart))
-  updateTotal()
+const updateQuantity = (e) => {
+  newQuantity=e.target.value;
+  article= e.target.closest(".cart__item");
+  const cart = JSON.parse(localStorage.getItem("shoppingCart"));
+  cart.map((product)=>{
+    if (product.id == article.dataset.id && product.color == article.dataset.color){
+      product.quantity= newQuantity;
+      return product
+    }
+  })
+  localStorage.setItem('shoppingCart', JSON.stringify(cart))
+  updateTotal();
+  
+
   //Trouver la ligne dans le panier soit en utilisant les dataset en JS ==> utiliser .map
   // Mettre à jour le local Storage avec la nouvelel quantité
 }
 
 
-const updateTotal = () => {
+const updateTotal = (product) => {
   const totalQuantityElement = document.getElementById('totalQuantity')
   const totalPriceElement = document.getElementById('totalPrice')
 
   totalQuantity = 0
   totalPrice = 0
+  const cart = JSON.parse(localStorage.getItem("shoppingCart"));
+  cart.forEach(product => {
+    fetch(`http://localhost:3000/api/products/${product.id}`)
+  .then((res) => {
+    if (res.ok) {
+      return res.json();
+    }
+  }).then((product) => {
+    totalQuantity += product.quantity
+    totalPrice += product.quantity * products[item.id].price
+    totalQuantityElement.innerHTML= totalQuantity;
+    totalPriceElement.innerHTML = totalPrice;
 
-  for (const item of shoppingCart) {
-      totalQuantity += item.quantity
-      totalPrice += item.quantity * products[item.id].price
-  }
+  })
+  .catch(function (err) {
+    /*const products = document.querySelector("item");
+    products.innerHTML = `Une erreur est survenue (${err})`;
+    */
+  });
+
+    
+  });  
+      
+  
 
   totalQuantityElement.innerHTML = totalQuantity
   totalPriceElement.innerHTML = totalPrice
