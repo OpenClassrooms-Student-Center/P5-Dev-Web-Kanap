@@ -164,12 +164,9 @@ const updateTotal = (product) => {
 };
 updateTotal();
 //define Regex for input
-const nameRegex = new RegExp("/([A-Za-z]+(['|-|s]?[A-Za-z]+)*)+/", "g"); //notation littérale général
-const addressRegex = new RegExp("/^[a-z0-9s,'-]*$/i", "g"); //notation littérale général
-const mailRegex = new RegExp(
-  "^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:. [a-zA-Z0-9-]+)*$",
-  "g"
-); //notation littérale général
+const nameRegex = new RegExp("^[A-Za-zÀ-ú'-\\s]{2,}$", "g"); //notation littérale général
+const addressRegex = new RegExp("^[\\wÀ-ú'-\\s]{2,}$", "g"); //notation littérale général
+const mailRegex = new RegExp("^[\\w.-]+[@]{1}[\\w.-]+[.]{1}[a-z]{2,10}$", "g"); //notation littérale général
 
 //check the regex match
 const checkRegex = (input, regex, message) => {
@@ -184,8 +181,6 @@ const checkRegex = (input, regex, message) => {
   }
 };
 
-// Si ça revient pas bon, alors je mets le message dans le champs approprié + je return false
-// Sinon alors je vide le message d'erreur + je return true
 
 //value for the form
 const firstName = document.getElementById("firstName");
@@ -204,9 +199,40 @@ orderButton.addEventListener("click", (e) => {
     checkRegex(city, nameRegex, "saisir une ville valide") &&
     checkRegex(email, mailRegex, "saisir un email valide ")
   ) {
-    alert("on...");
+    sendOrder();
   }
 });
 
-//const order = () => {
-//if(checkRegex(firstName.input, nameregex, "non invalide") éé )
+const sendOrder = () => {
+  let contact = {
+    firstName: orderButton.firstName.value,
+    lastName: orderButton.lastName.value,
+    address: orderButton.address.value,
+    city: orderButton.city.value,
+    email: orderButton.email.value,
+  };
+  let products = cart.map((shoppingCart) => product._id);
+  let order = { contact, products };
+
+  fetch(`http://localhost:3000/api/products/order`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(order),
+  })
+    .then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+    })
+    .then((product) => {
+      localStorage.clear(); 
+      window.location.href = `./confirmation.html?orderId=${product.orderId}#orderId`;
+    })
+    .catch((err) => {
+      alert(`Une erreur est survenue: ${err}`);
+    });
+  }
+  
