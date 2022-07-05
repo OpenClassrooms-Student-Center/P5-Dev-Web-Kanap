@@ -111,7 +111,7 @@ fetch(`http://localhost:3000/api/products/${id}`)
               quantityFoundProduct = parseInt(i.quantity);
               // si il y a un produit avec le même id et couleur
              const totalQuantity = parseInt(i.quantity) + product.quantity;
-              if (totalQuantity >= 100) {
+              if (totalQuantity > 100) {
                 foundProduct = false;
                 alert('le panier ne peut pas contenir plus de 100 articles');
               }
