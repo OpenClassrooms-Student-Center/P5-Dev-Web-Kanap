@@ -206,7 +206,7 @@ const regExpAdress = new RegExp("^[0-9a-zA-Zà-ùÀ-Ù- -']+$");
 
 
 
-// *****************Elements**********************
+// *****************Elements**********************************
 const firstName = document.getElementById('firstName');
 const lastName = document.getElementById('lastName');
 const address = document.getElementById('address');
@@ -221,7 +221,7 @@ const emailErrorMsg = document.getElementById('emailErrorMsg');
 
 
 
-// *********************Fonctions***************
+// *********************Fonctions*****************************
   
 
 // Fonction pour valider la saisie du prénom
@@ -286,55 +286,15 @@ function validateEmail() {
 }
 
 
+
 // Fonction pour envoyer le formulaire
 function orderCart() {
     const order = document.getElementById('order');
     order.addEventListener('click', (event) => {
         event.preventDefault();
-        // Objet Contacts
-        const contacts = {
-            firstName: firstName.value,
-            lastName: lastName.value,
-            address: address.value,
-            city: city.value,
-            email: email.value
-        };
-
-
         // Si la saisie du formulaire est ok
     if (validateFirstName() && validateLastName() && validateAddress() && validateCity() && validateEmail()) {
-        localStorage.setItem('contacts', JSON.stringify(contacts));
-                // Création array basket avec les produits dans le panier
-                const basket = JSON.parse(localStorage.getItem('products'));
-                let product = [];
-                 basket.forEach(item => {
-                     product.push(item._id);
-                 });
-        // Objet avec contacts et basket
-        let postJson = {
-            contacts: contacts,
-            products: product,
-        };
-        fetch('http://localhost:3000/api/products/order', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'text/plain'
-            },
-            body: JSON.stringify(postJson),
-        })
-        .then(function (res) {
-            return res.json();
-        })
-            .then(function (reponse) {
-            // On recupère le orderId
-            localStorage.setItem("orderId", JSON.stringify(reponse.orderId));
-                console.log(reponse.orderId);
-                document.location.href = `confirmation.html?id=${reponse.orderId}` ;
-    
-        })
-        .catch(function (err) {
-            console.log(err);
-        });
+        getOrderId();
     } else {
         // Message d'erreur
         alert('Merci de vérifier les informations saisie');
@@ -345,3 +305,57 @@ function orderCart() {
 orderCart();
 
 
+// Fonction pour collecter les produits dans le panier
+function getOrderId() {
+    // Objet Contacts
+const contact = {
+    firstName: firstName.value,
+    lastName: lastName.value,
+    address: address.value,
+    city: city.value,
+    email: email.value
+}
+    localStorage.setItem('contacts', JSON.stringify(contact));
+    // Création array basket avec les produits dans le panier
+    const basket = JSON.parse(localStorage.getItem('products'));
+    const product = [];
+    if (basket !== null) {
+        basket.forEach(item => {
+            product.push(item._id);
+        });
+    } else {
+        alert('Impossible de passer la commande, le panier est vide!');
+        return;
+    }
+
+    // Fonction pour récup le orderId
+    function orderId() {
+        // Objet avec contacts et basket
+    let postJson = {
+        contact: contact,
+        products: product,
+        };
+        console.log(postJson);
+    const fetchOrderId = fetch('http://localhost:3000/api/products/order', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(postJson),
+    })
+    .then(function (res) {
+        return res.json();
+    })
+        .then(function (reponse) {
+            // On recupère le orderId
+            console.log(JSON.stringify(reponse.orderId));
+            document.location.href = `confirmation.html?id=${reponse.orderId}` ;
+        })
+    .catch(function (err) {
+        console.log(err);
+    });
+        console.log(fetchOrderId);
+    }
+    orderId();
+    
+}
