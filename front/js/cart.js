@@ -1,113 +1,119 @@
+// --------------------------------------------------------------
 fetch('http://localhost:3000/api/products')
-  .then(function (res) {
-    if (res.ok) {
-      return res.json();
-    }
-  })
-  .then(function (cart) {
-    console.log(cart);
-    if (localStorage.getItem('products') != null) {
-      basket = JSON.parse(localStorage.getItem('products'));
-      //   Boucle pour afficher les produits dans le panier
-      basket.forEach(function (product) {
-        for (let canap of cart) {
-          if (canap._id == product._id) {
-            const article = document
-              .querySelector('#cart__items')
-              .appendChild(document.createElement('article'));
-            article.setAttribute('class', 'cart__item');
-            article.setAttribute('data-id', canap._id);
-            article.setAttribute('data-color', product.color);
-            // Afficher les images
-            const divImg = article.appendChild(document.createElement('div'));
-            divImg.setAttribute('class', 'cart__item__img');
-            let img = divImg.appendChild(document.createElement('img'));
-            img.setAttribute('src', product.img);
-            img.setAttribute('alt', product.alt);
-            //   Afficher div container
-            const divContent = article.appendChild(
-              document.createElement('div')
-            );
-            divContent.setAttribute('class', 'cart__item__content');
-            //   Afficher div description
-            let divContentDescr = divContent.appendChild(
-              document.createElement('div')
-            );
-            divContentDescr.setAttribute(
-              'class',
-              'cart__item__content__description'
-            );
-            //   Afficher titre - couleur - prix
-            let titre = divContentDescr.appendChild(
-              document.createElement('h2')
-            );
-            titre.innerText = canap.name;
-            let clr = divContentDescr.appendChild(document.createElement('p'));
-            clr.innerText = product.color;
-            //   prix total en fonction de la quantité
-            let totalProductPrice = canap.price * product.quantity;
-
-            let price = divContentDescr.appendChild(
-              document.createElement('p')
-            );
-            price.innerText = totalProductPrice + ' €';
-            //   Afficher div settings
-            const divContentSett = divContent.appendChild(
-              document.createElement('div')
-            );
-            divContentSett.setAttribute(
-              'class',
-              'cart__item__content__settings'
-            );
-            const divContentSettQnt = divContentSett.appendChild(
-              document.createElement('div')
-            );
-            //   Afficher quantité
-            divContentSettQnt.setAttribute(
-              'class',
-              'cart__item__content__settings__quantity'
-            );
-            let qte = divContentSettQnt.appendChild(
-              document.createElement('p')
-            );
-            qte.innerText = 'Qté : ';
-            let input = divContentSettQnt.appendChild(
-              document.createElement('input')
-            );
-            input.setAttribute('type', 'number');
-            input.setAttribute('class', 'itemQuantity');
-            input.setAttribute('name', 'itemQuantity');
-            input.setAttribute('min', 1);
-            input.setAttribute('max', 100);
-            input.setAttribute('value', product.quantity);
-            const divContentSettDlt = divContentSett.appendChild(
-              document.createElement('div')
-            );
-            divContentSettDlt.setAttribute(
-              'class',
-              'cart__item__content__settings__delete'
-            );
-            let deleteItem = divContentSettDlt.appendChild(
-              document.createElement('p')
-            );
-            deleteItem.setAttribute('class', 'deleteItem');
-            deleteItem.innerText = 'Supprimer';
-          }
+    .then(function (res) {
+        if (res.ok) {
+            return res.json();
         }
-      });
-    } else {
-      console.log('panier vide');
-      alert('Le panier est vide!');
-    }
-    totalCartQuantity(); /*total quantity */
-    totalProductPrice(); /**total product price */
-    changeQuantity(); /**changer quantité */
-    deleteProduct(); /**supprimer article */
-})
-  .catch(function (err = 'Une erreur est survenue') {
-    console.log(err); // Message d'erreur
-  });
+    })
+    .then(function (cart) {
+        // --------------------------------------------------------------
+        // Fonction pour afficher les produits dans la page panier
+        if (localStorage.getItem('products') != null) {
+            let basket = JSON.parse(localStorage.getItem('products'));
+            //   Boucle pour afficher les produits dans le panier
+            basket.forEach(function (product) {
+                for (let canap of cart) {
+                    if (canap._id == product._id) {
+                        const article = document
+                            .querySelector('#cart__items')
+                            .appendChild(document.createElement('article'));
+                        article.setAttribute('class', 'cart__item');
+                        article.setAttribute('data-id', canap._id);
+                        article.setAttribute('data-color', product.color);
+                        // Afficher les images
+                        const divImg = article.appendChild(document.createElement('div'));
+                        divImg.setAttribute('class', 'cart__item__img');
+                        let img = divImg.appendChild(document.createElement('img'));
+                        img.setAttribute('src', product.img);
+                        img.setAttribute('alt', product.alt);
+                        //   Afficher div container
+                        const divContent = article.appendChild(
+                            document.createElement('div')
+                        );
+                        divContent.setAttribute('class', 'cart__item__content');
+                        //   Afficher div description
+                        let divContentDescr = divContent.appendChild(
+                            document.createElement('div')
+                        );
+                        divContentDescr.setAttribute(
+                            'class',
+                            'cart__item__content__description'
+                        );
+                        //   Afficher titre - couleur - prix
+                        let titre = divContentDescr.appendChild(
+                            document.createElement('h2')
+                        );
+                        titre.innerText = canap.name;
+                        let clr = divContentDescr.appendChild(document.createElement('p'));
+                        clr.innerText = product.color;
+                        //   prix total en fonction de la quantité
+                        let totalProductPrice = canap.price * product.quantity;
+      
+                        let price = divContentDescr.appendChild(
+                            document.createElement('p')
+                        );
+                        price.innerText = totalProductPrice + ' €';
+                        //   Afficher div settings
+                        const divContentSett = divContent.appendChild(
+                            document.createElement('div')
+                        );
+                        divContentSett.setAttribute(
+                            'class',
+                            'cart__item__content__settings'
+                        );
+                        const divContentSettQnt = divContentSett.appendChild(
+                            document.createElement('div')
+                        );
+                        //   Afficher quantité
+                        divContentSettQnt.setAttribute(
+                            'class',
+                            'cart__item__content__settings__quantity'
+                        );
+                        let qte = divContentSettQnt.appendChild(
+                            document.createElement('p')
+                        );
+                        qte.innerText = 'Qté : ';
+                        let input = divContentSettQnt.appendChild(
+                            document.createElement('input')
+                        );
+                        input.setAttribute('type', 'number');
+                        input.setAttribute('class', 'itemQuantity');
+                        input.setAttribute('name', 'itemQuantity');
+                        input.setAttribute('min', 1);
+                        input.setAttribute('max', 100);
+                        input.setAttribute('value', product.quantity);
+                    
+                        // Afficher bouton supprimer
+                        const divContentSettDlt = divContentSett.appendChild(
+                            document.createElement('div')
+                        );
+                        divContentSettDlt.setAttribute(
+                            'class',
+                            'cart__item__content__settings__delete'
+                        );
+                        let deleteItem = divContentSettDlt.appendChild(
+                            document.createElement('p')
+                        );
+                        deleteItem.setAttribute('class', 'deleteItem');
+                        deleteItem.innerText = 'Supprimer';
+                    }
+                }
+            });
+        } else {
+            alert('Le panier est vide!');
+        }
+        totalCartQuantity(); /*totale quantité */
+        totalProductPrice(); /**totale prix  */
+        changeQuantity(); /**changer quantité */
+        deleteProduct(); /**supprimer article */
+    })
+    .catch(function () {
+        alert('Une erreur est survenue');
+    });
+      
 
+
+// -----------------------------------------------------------
 // Affiche total quantité produits dans le panier
 function totalCartQuantity() {
   let item = document.getElementsByClassName('cart__item');
@@ -119,10 +125,12 @@ function totalCartQuantity() {
           return;
     }
   }
-  document.querySelector('#totalQuantity').innerText = totalQuantity;
-  console.log('total quantity:', totalQuantity);
+    document.querySelector('#totalQuantity').innerText = totalQuantity;
 }
 
+
+
+// -----------------------------------------------------------
 // Afficher le prix total
 function totalProductPrice() {
   let itemPrice = document.getElementsByClassName('cart__item');
@@ -134,9 +142,11 @@ function totalProductPrice() {
     );
   }
   document.querySelector('#totalPrice').innerText = totalPrice;
-  console.log('total price:', totalPrice);
 }
 
+
+
+// -------------------------------------------------------------
 // Fonction pour changer la quantité
 function changeQuantity() {
   const newQuantity = document.querySelectorAll('.cart__item');
@@ -165,6 +175,10 @@ function changeQuantity() {
   });
 }
 
+
+
+
+// -------------------------------------------------------------
 // Fonction pour supprimer un article
 function deleteProduct() {
   const btns = document.querySelectorAll('.deleteItem');
@@ -172,7 +186,6 @@ function deleteProduct() {
     const article = btn.closest('article');
     btn.addEventListener('click', () => {
       let basket = JSON.parse(localStorage.getItem('products'));
-      console.log(basket);
       for (let i = 0; i < basket.length; i++) {
         if (
           article.dataset.id == basket[i]._id &&
@@ -184,29 +197,32 @@ function deleteProduct() {
           window.location.reload();
           if (i <= 0) {
             localStorage.removeItem('products', JSON.stringify(basket));
-            alert('le panier est vide!');
+            alert('Le panier est vide!');
           }
         }
       }
 
-      alert('Le produit a été supprimé avec succes!');
+      alert( `"${basket.name}" a été supprimé avec succes!`);
       totalCartQuantity();
       totalProductPrice();
     });
   });
 }
 
-// --------------------------------------------
-// ---------------Formulaire-------------------
 
-// *************RegExp***************************
+
+
+// ---------------------------------------------------------------------
+// -----------------------Formulaire------------------------------------
+
+// RegExp
 const regExpName = new RegExp("^[A-Za-z- -']+$");
 const regExpEmail = new RegExp ('^[a-zA-Z0-9.-_]+[@][a-zA-Z0-9.-_]+[.]{1}[a-z]{2,6}$');
 const regExpAdress = new RegExp("^[0-9a-zA-Zà-ùÀ-Ù- -']+$");
 
 
 
-// *****************Elements**********************************
+// Elements
 const firstName = document.getElementById('firstName');
 const lastName = document.getElementById('lastName');
 const address = document.getElementById('address');
@@ -308,13 +324,13 @@ orderCart();
 // Fonction pour collecter les produits dans le panier
 function getOrderId() {
     // Objet Contacts
-const contact = {
-    firstName: firstName.value,
-    lastName: lastName.value,
-    address: address.value,
-    city: city.value,
-    email: email.value
-}
+    const contact = {
+        firstName: firstName.value,
+        lastName: lastName.value,
+        address: address.value,
+        city: city.value,
+        email: email.value
+    }
     localStorage.setItem('contacts', JSON.stringify(contact));
     // Création array basket avec les produits dans le panier
     const basket = JSON.parse(localStorage.getItem('products'));
@@ -331,31 +347,29 @@ const contact = {
     // Fonction pour récup le orderId
     function orderId() {
         // Objet avec contacts et basket
-    let postJson = {
-        contact: contact,
-        products: product,
+        let postJson = {
+            contact: contact,
+            products: product,
         };
-        console.log(postJson);
-    const fetchOrderId = fetch('http://localhost:3000/api/products/order', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(postJson),
-    })
-    .then(function (res) {
-        return res.json();
-    })
-        .then(function (reponse) {
-            // On recupère le orderId
-            console.log(JSON.stringify(reponse.orderId));
-            document.location.href = `confirmation.html?id=${reponse.orderId}` ;
-        })
-    .catch(function (err) {
-        console.log(err);
-    });
-        console.log(fetchOrderId);
+        const fetchOrderId = fetch('http://localhost:3000/api/products/order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(postJson),
+            })
+            .then(function (res) {
+                return res.json();
+            })
+            .then(function (reponse) {
+                // On recupère le orderId
+                console.log(JSON.stringify(reponse.orderId));
+                document.location.href = `confirmation.html?id=${reponse.orderId}`;
+            })
+            .catch(function () {
+                alert('Une erreur est survenue');
+            });
+        fetchOrderId;
     }
     orderId();
-    
 }

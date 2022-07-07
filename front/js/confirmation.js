@@ -1,15 +1,12 @@
+
+// On cherche le orderId dans le urlsp
 const newUrl = new URLSearchParams(window.location.search);
 const confirmationNumber = newUrl.get('id');
-console.log(confirmationNumber);
 
+// Fonction pour afficher le numéro de commande
 function orderNumber(){
     document.getElementById('orderId').innerText = confirmationNumber;
-    alert('Commande validée avec succes!')
+    alert('Commande validée avec succes!');
     localStorage.clear();
 }
 orderNumber();
-
-// let confirmationNumber = document.getElementById('orderId');
-// confirmationNumber.innerText = localStorage.getItem('orderId');
-// console.log(localStorage.getItem('orderId'));
-// localStorage.clear();
