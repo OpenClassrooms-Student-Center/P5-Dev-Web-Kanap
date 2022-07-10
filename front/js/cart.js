@@ -12,7 +12,7 @@ fetch('http://localhost:3000/api/products')
             let basket = JSON.parse(localStorage.getItem('products'));
             //   Boucle pour afficher les produits dans le panier
             basket.forEach(function (product) {
-                for (let canap of cart) {
+                cart.find((canap)=>{
                     if (canap._id == product._id) {
                         const article = document
                             .querySelector('#cart__items')
@@ -97,8 +97,9 @@ fetch('http://localhost:3000/api/products')
                         deleteItem.setAttribute('class', 'deleteItem');
                         deleteItem.innerText = 'Supprimer';
                     }
-                }
+                })
             });
+            
         } else {
             alert('Le panier est vide!');
         }
@@ -116,7 +117,7 @@ fetch('http://localhost:3000/api/products')
 // -----------------------------------------------------------
 // Affiche total quantité produits dans le panier
 function totalCartQuantity() {
-  let item = document.getElementsByClassName('cart__item');
+    let item = document.getElementsByClassName('cart__item');
     let totalQuantity = 0;
   for (itemQuantity of item) {
     totalQuantity += parseInt(itemQuantity.querySelector('.itemQuantity').value);
@@ -133,7 +134,7 @@ function totalCartQuantity() {
 // -----------------------------------------------------------
 // Afficher le prix total
 function totalProductPrice() {
-  let itemPrice = document.getElementsByClassName('cart__item');
+    let itemPrice = document.getElementsByClassName('cart__item');
   let totalPrice = 0;
   for (item of itemPrice) {
     totalPrice += parseInt(
@@ -202,7 +203,7 @@ function deleteProduct() {
         }
       }
 
-      alert( `"${basket.name}" a été supprimé avec succes!`);
+      alert( `Le produit a été supprimé avec succes!`);
       totalCartQuantity();
       totalProductPrice();
     });
@@ -363,7 +364,6 @@ function getOrderId() {
             })
             .then(function (reponse) {
                 // On recupère le orderId
-                console.log(JSON.stringify(reponse.orderId));
                 document.location.href = `confirmation.html?id=${reponse.orderId}`;
             })
             .catch(function () {

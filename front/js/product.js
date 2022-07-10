@@ -84,6 +84,8 @@ function displaySelectedProduct(item) {
             if (totalQuantity > 100) {
               foundProduct = false;
               alert('Le panier ne peut pas contenir plus de 100 articles');
+              window.location.reload();
+              return;
             }
           }
         });
@@ -91,15 +93,16 @@ function displaySelectedProduct(item) {
         if (foundProduct) {
           product.quantity = product.quantity + quantityFoundProduct;
           basket.push(product);
+          alert(`${quantityCart.value} "${item.name}" en couleur "${product.color}" ajouté au panier!`);
         }
       } else {
         // si le produit n'existe pas dans le ls
         basket.push(product);
+        alert(`${quantityCart.value} "${item.name}" en couleur "${product.color}" ajouté au panier!`);
       }
     }
     // on definie le LocalStorage
     localStorage.setItem('products', JSON.stringify(basket));
-    alert(`${quantityCart.value} "${item.name}" en couleur "${product.color}" ajouté au panier!`);
   });
 
 }
