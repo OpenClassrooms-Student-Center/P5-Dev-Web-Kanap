@@ -203,7 +203,7 @@ function deleteProduct() {
         }
       }
 
-      alert( `Le produit a été supprimé avec succes!`);
+      alert( `Le produit a été supprimé avec succès!`);
       totalCartQuantity();
       totalProductPrice();
     });

@@ -6,7 +6,7 @@ const confirmationNumber = newUrl.get('id');
 // Fonction pour afficher le numéro de commande
 function orderNumber(){
     document.getElementById('orderId').innerText = confirmationNumber;
-    alert('Commande validée avec succes!');
+    alert('Commande validée avec succès!');
     localStorage.clear();
 }
 orderNumber();
