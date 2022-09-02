@@ -1,73 +1,136 @@
-// Récupération des paramètres avec l'URL
+// Récupération des données de l'article avec l'id
 
-const url = new URL(window.location.href);
-const idArticle= url.searchParams.get("id");
-console.log(idArticle);
+const url = window.location.search;
+const urlParams = new URLSearchParams(url);
+const idItem = urlParams.get("id");
 
-// Fonction requête GET récupération des données de l'article avec l'id
+// Fonction requête GET récupération des données de l'article
+async function requestItem() {
+  let res = await fetch("http://localhost:3000/api/products/" + idItem);
+  return res.json();
+}
 
-const requestArticle = async () => {
-  try {
-    const res = await fetch("http://localhost:3000/api/products/" + idArticle);
-    if (res.ok) {
-      console.log("Les données de l'article ont été récupérées");
-      return res.json();
-    } else {
-      console.error("Retour du serveur :", res.status);
-    }
-  } catch (e) {
-    console.log(e);
-  }
-};
 
-requestArticle();
 
-// Fonction traitement des données de l'article avec l'id
+const elementImg = document.createElement("img");
+const itemTitle = document.querySelector("#title");
+const itemPrice = document.querySelector("#price");
+const itemDescription = document.querySelector("#description");
 
-const treatmentArticle = async () => {
-  let resultArticle = await requestArticle().then((product) => {
+// Fonction insertion de l'élément "img" et de l'image
 
-    // Insertion de l'élément "img" et de l'image
-
-    const articleImg = document.querySelector(".item__img");
-    const elementImg = document.createElement("img");
-    articleImg.appendChild(elementImg);
-    elementImg.setAttribute("src", product.imageUrl);
-    elementImg.setAttribute("alt", product.altTxt);
-
-    // Insertion du titre
-
-    const articleTitle = document.querySelector("#title");
-    articleTitle.innerHTML = product.name;
-
-    // Insertion du prix
-
-    const articlePrice = document.querySelector("#price");
-    articlePrice.innerHTML = product.price;
-
-    // Insertion de la description
-
-    const articleDescription = document.querySelector("#description");
-    articleDescription.innerHTML = product.description;
+async function treatmentItemImg() {
+  let resultItemImg = await requestItem().then((product) => {
+    const itemImg = document.querySelector(".item__img");
+    elementImg.src = product.imageUrl;
+    elementImg.alt = product.altTxt;
+    itemImg.appendChild(elementImg);
   });
-  console.log("Les données de l'article ont été traitées");
-};
+}
+treatmentItemImg();
 
-treatmentArticle();
+// Fonction traitement des données de l'article
+
+async function treatmentItemData() {
+  let resultItemData = await requestItem().then((product) => {
+    itemTitle.innerHTML = product.name;
+    itemPrice.innerHTML = product.price;
+    itemDescription.innerHTML = product.description;
+  });
+}
+treatmentItemData();
 
 // Fonction traitement des couleurs
 
-const treatmentColors = async () => {
-  let resultColor = await requestArticle().then((product) => {
+const treatmentItemColors = async () => {
+  let resultColor = await requestItem().then((product) => {
     for (let i = 0; i < product.colors.length; i++) {
-      const articleColors = document.querySelector("#colors");
+      const itemColors = document.querySelector("#colors");
       const choiceColors = document.createElement("option");
       choiceColors.setAttribute("value", product.colors[i]);
       choiceColors.innerHTML = product.colors[i];
-      articleColors.appendChild(choiceColors);
+      itemColors.appendChild(choiceColors);
     }
   });
-  console.log("Les couleurs ont été traitées");
 };
 
-treatmentColors();
+treatmentItemColors();
+
+// Ecoute de l'évènement click bouton ajouter au panier
+
+const buttonAddToCart = document.querySelector("#addToCart");
+if (buttonAddToCart != null) {
+  buttonAddToCart.addEventListener("click", eventClick);
+}
+
+// Fonction évènement click bouton ajouter au panier
+
+async function eventClick() {
+  const itemColors = await document.querySelector("#colors").value;
+  const itemQuantity = await document.querySelector("#quantity").value;
+
+  if (cartInvalid(itemColors, itemQuantity)) return;
+  localStorageCart(itemColors, itemQuantity);
+  linkCart();
+}
+
+// Fonction validation choix couleurs et quantité
+
+function cartInvalid(itemColors, itemQuantity) {
+  if (
+    itemColors == null ||
+    itemColors === "" ||
+    itemQuantity == null ||
+    itemQuantity == 0
+  ) {
+    alert("Veuillez sélectionner la couleur et la quantité");
+    return true;
+  }
+  if (itemQuantity > 100) {
+    alert("Vous ne pouvez pas commander plus de cent articles");
+    return true;
+  }
+}
+
+let recordCartLocalStorage = JSON.parse(localStorage.getItem("cart"));
+
+// fonction enregistrement des données des produits dans localStorage
+
+function localStorageCart(itemColors, itemQuantity) {
+  const data = {
+    id: idItem,
+    color: itemColors,
+    quantity: Number(itemQuantity),
+    price: Number(itemPrice.textContent),
+    name: itemTitle.textContent,
+    description: itemDescription.textContent,
+    alt: elementImg.alt,
+    img: elementImg.src,
+  };
+
+  if (recordCartLocalStorage) {
+    let color = itemColors;
+    let quantity = itemQuantity;
+    const resultFind = recordCartLocalStorage.find(
+      (el) => el.id === idItem && el.color === color
+    );
+    if (resultFind) {
+      let newQuantity = parseInt(quantity) + parseInt(resultFind.quantity);
+      resultFind.quantity = newQuantity;
+      localStorage.setItem("cart", JSON.stringify(recordCartLocalStorage));
+    } else {
+      recordCartLocalStorage.push(data);
+      localStorage.setItem("cart", JSON.stringify(recordCartLocalStorage));
+    }
+  } else {
+    recordCartLocalStorage = [];
+    recordCartLocalStorage.push(data);
+    localStorage.setItem("cart", JSON.stringify(recordCartLocalStorage));
+  }
+}
+
+// Fonction lien page cart
+
+function linkCart() {
+  window.location.href = "cart.html";
+}

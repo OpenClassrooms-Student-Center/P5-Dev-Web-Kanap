@@ -1,56 +1,73 @@
-// Fonction requête GET récupération des données des produits de l'API
+// Fonction requête GET pour récupérer les données des produits de l'API
 
-const requestProducts = async () => {
-  try {
-    let res = await fetch("http://localhost:3000/api/products");
-    if (res.ok) {
-      console.log("Les données des produits ont été récupérées");
-      return res.json();
-    } else {
-      console.error("Retour du serveur :", res.status);
-    }
-  } catch (e) {
-    console.log(e);
-  }
-};
-
-requestProducts();
+async function requestApi() {
+  let resultApi = await fetch("http://localhost:3000/api/products")
+    .then((res) => res.json())
+    .then((data) => treatmentProducts(data));
+}
+requestApi();
 
 // Fonction traitement des données des produits de l'API
 
-const treatmentProducts = async () => {
-  let resultProducts = await requestProducts().then((product) => {
-    for (let i = 0; i < product.length; i++) {
+function treatmentProducts(product) {
+  for (i = 0; i < product.length; i++) {
+    const _id = product[i]._id;
+    const imageUrl = product[i].imageUrl;
+    const altTxt = product[i].altTxt;
+    const name = product[i].name;
+    const description = product[i].description;
 
-      // Insertion de l'élément "a"
-      const productBeacon = document.createElement("a");
-      document.querySelector("#items").appendChild(productBeacon);
-      productBeacon.href = `product.html?id=${product[i]._id}`;
+    const productImg = treatmentImg(imageUrl, altTxt);
+    const productBeacon = treatmentBeacon(_id);
+    const productArticle = document.createElement("article");
+    const productName = treatmentName(name);
+    const productDescription = treatmentDescription(description);
 
-      // Insertion de l'élément "article"
-      const productArticle = document.createElement("article");
-      productBeacon.appendChild(productArticle);
+    productArticle.appendChild(productImg);
+    productArticle.appendChild(productName);
+    productArticle.appendChild(productDescription);
+    treatmentSelectorChildren(productBeacon, productArticle);
+  }
+}
 
-      // Insertion de l'élément "img" et des images
-      const productImg = document.createElement("img");
-      productArticle.appendChild(productImg);
-      productImg.src = product[i].imageUrl;
-      productImg.alt = product[i].altTxt;
+// Fonction insertion de l'élément "a"
 
-      // Insertion de l'élément "h3" et des noms
-      const productName = document.createElement("h3");
-      productArticle.appendChild(productName);
-      productName.classList.add("productName");
-      productName.innerHTML = product[i].name;
+function treatmentBeacon(_id) {
+  const productBeacon = document.createElement("a");
+  productBeacon.href = "./product.html?id=" + _id;
+  return productBeacon;
+}
 
-      // Insertion de l'élément "p" et des descriptions
-      const productDescription = document.createElement("p");
-      productArticle.appendChild(productDescription);
-      productDescription.classList.add("productDescription");
-      productDescription.innerHTML = product[i].description;
-    }
-    console.log("Les données des produits ont été traitées");
-  });
-};
+// Fonction récupération de l'id items
 
-treatmentProducts();
+function treatmentSelectorChildren(productBeacon, productArticle) {
+  const items = document.querySelector("#items").appendChild(productBeacon);
+  items.appendChild(productArticle);
+}
+
+// Fonction insertion de l'élément "img" et des images
+
+function treatmentImg(imageUrl, altTxt) {
+  const productImg = document.createElement("img");
+  productImg.src = imageUrl;
+  productImg.alt = altTxt;
+  return productImg;
+}
+
+// Fonction insertion de l'élément "h3" et des noms
+
+function treatmentName(name) {
+  const productName = document.createElement("h3");
+  productName.classList.add("productName");
+  productName.innerHTML = name;
+  return productName;
+}
+
+// Fonction insertion de l'élément "p" et des descriptions
+
+function treatmentDescription(description) {
+  const productDescription = document.createElement("p");
+  productDescription.classList.add("productDescription");
+  productDescription.innerHTML = description;
+  return productDescription;
+}
