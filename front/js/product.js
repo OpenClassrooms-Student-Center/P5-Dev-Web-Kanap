@@ -5,12 +5,11 @@ const urlParams = new URLSearchParams(url);
 const idItem = urlParams.get("id");
 
 // Fonction requête GET récupération des données de l'article
+
 async function requestItem() {
   let res = await fetch("http://localhost:3000/api/products/" + idItem);
   return res.json();
 }
-
-
 
 const elementImg = document.createElement("img");
 const itemTitle = document.querySelector("#title");
