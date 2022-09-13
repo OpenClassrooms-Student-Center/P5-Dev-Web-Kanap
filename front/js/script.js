@@ -24,6 +24,7 @@ fetch("http://localhost:3000/api/products")
             `;
     }
 
+    // A FAIRE
     // data.forEach(product => {
     //     let a = document.createElement('a');
     //     a.href = `./product.html?id=${product._id}`

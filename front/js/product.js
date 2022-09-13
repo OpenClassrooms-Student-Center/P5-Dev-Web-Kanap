@@ -1,5 +1,5 @@
 
-// Lien vers les pages produits
+// Creation des liens vers les pages produits
 
 // Récupérer l'identifiant
 let url = new URL(window.location.href);

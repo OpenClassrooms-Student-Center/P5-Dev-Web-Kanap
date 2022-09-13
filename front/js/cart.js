@@ -33,8 +33,6 @@
 // let panier = JSON.parse(localStorage.getItem('panier'));
 // let cart__items = document.querySelector('#cart__items');
 
-// const afficher = async () => {
-
 async function afficher (products) {
 
     let panier = JSON.parse(localStorage.getItem('panier'));
@@ -57,10 +55,19 @@ async function afficher (products) {
 
             await fetch(`http://localhost:3000/api/products/` + products[i].id)
 
+            .then(function(response) {
+                if (response.ok){
+                    return response.json();
+                }
+            })
+            .then(function(product) {
+                totalQuantite += panier[i].qty
+                totalPrice += (panier[i].qty * product.price)
+            }
+            )
+
             panier = panier.find(data => data._id === data.id);
             
-            totalQuantite += panier[i].qty
-            totalPrice += (panier[i].qty * products.price)
 
             CreationPanier (panier[i].id, panier[i].color, panier[i].qty);
 
