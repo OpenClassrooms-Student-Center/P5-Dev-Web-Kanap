@@ -46,41 +46,55 @@ fetch(`http://localhost:3000/api/products/${productId}`)
 
 // Ajouter un produit au panier via le boutton 
 
-let button = document.querySelector('#addToCart');
+document.querySelector('#addToCart').addEventListener('click', function () {
 
-button.addEventListener('click', function () {
 	let color = document.querySelector('#colors').value;
-	let qty = document.querySelector('#quantity').value;
+	let qty = parseInt(document.querySelector('#quantity').value);   // parseInt -> modifie une chaine de caractère en un entier
 
-    // alert(`${productId} ${color} ${qty}`);
+    if (color.length == 0) {
+        alert("Veuillez séléctionner une couleur ")
+        return;
+    }
+
+    if (qty < 1 || qty > 100) {
+        alert("La quantité doit être comprise entre 1 et 100")
+        return;
+    }
+
 
     let panier = JSON.parse(localStorage.getItem('panier'))
 
-    // Le panier est vide, on ajoute un nouvel article
-    if(panier===null) 
-        panier = [{'id': productId, 'color':color,'qty':qty}]
 
-    // Si il y a déjà une ligne avec le même id et la même couleur, mettre à jour cette ligne, sinon, ajouter une ligne
-    else { 
-        panier = JSON.parse(panier);
-    //     for (let i of panier) {
-    //         if (i.id === productId && i.color === color) {
-    //             i.qty = parseInt(i.qty) + parseInt (i.qty);
-    //             NewProduct = false;
-    //         }
-    //     }
-        
-    //     else (NewProduct) {
-    //         panier.push({'id': productId, 'color': color, 'qty': qty})
-    // }
+    
+    if(panier === null) {   // Le panier est vide, on ajoute un nouvel article
+        panier = [
+            {
+                'id': productId,
+                'color':color,
+                'qty':qty,
+            }
+        ]    
+    } else {    // Le panier n'est pas vide
 
- }
- localStorage.setItem('panier', JSON.stringify(panier));
-    //addToCart(productId, color, qty);
+        let product = panier.find(p => p.id == productId && p.color == color);  //Find -> renvoie la valeur du premier élément trouvé
+
+        if (product === undefined) {
+            panier.push(  //Push -> on ajoute un élément au tableau
+                {
+                    'id': productId,
+                    'color': color,
+                    'qty': qty,
+                }
+            )
+        } else {
+            product.qty = parseInt(product.qty) + qty;
+        }
+    }
+
+    localStorage.setItem('panier', JSON.stringify(panier));
+
 } )
 
-
-let cart = JSON.parse(localStorage.getItem('products'));
 
 
 
