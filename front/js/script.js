@@ -1,4 +1,5 @@
-const sectionArticle = document.getElementById("items"); // declaration de la variable
+/**
+ * const sectionArticle = document.getElementById("items"); // declaration de la variable
 
 // Creation de la fonction d'afichage des produits
 const getProducts = function () {
@@ -25,3 +26,5 @@ const getProducts = function () {
 };
 // Appel de la fonction d'afichage des produits
 getProducts();
+
+ */

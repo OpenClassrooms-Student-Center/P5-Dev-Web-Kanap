@@ -18,19 +18,20 @@ exports.getAllProducts = (req, res, next) => {
 };
 
 exports.getOneProduct = (req, res, next) => {
-  Product.findById(req.params.id).then(
-    (product) => {
-      if (!product) {
-        return res.status(404).send(new Error('Product not found!'));
+  Product.findById(req.params.id)
+    .then(
+      (product) => {
+        if (!product) {
+          return res.status(404).send(new Error('Product not found!'));
+        }
+        product.imageUrl = req.protocol + '://' + req.get('host') + '/images/' + product.imageUrl;
+        res.status(200).json(product);
       }
-      product.imageUrl = req.protocol + '://' + req.get('host') + '/images/' + product.imageUrl;
-      res.status(200).json(product);
-    }
-  ).catch(
-    () => {
-      res.status(500).send(new Error('Database error!'));
-    }
-  )
+    ).catch(
+      () => {
+        res.status(500).send(new Error('Database error!'));
+      }
+    )
 };
 
 /**
@@ -48,12 +49,12 @@ exports.getOneProduct = (req, res, next) => {
  */
 exports.orderProducts = (req, res, next) => {
   if (!req.body.contact ||
-      !req.body.contact.firstName ||
-      !req.body.contact.lastName ||
-      !req.body.contact.address ||
-      !req.body.contact.city ||
-      !req.body.contact.email ||
-      !req.body.products) {
+    !req.body.contact.firstName ||
+    !req.body.contact.lastName ||
+    !req.body.contact.address ||
+    !req.body.contact.city ||
+    !req.body.contact.email ||
+    !req.body.products) {
     return res.status(400).send(new Error('Bad request!'));
   }
   let queries = [];
