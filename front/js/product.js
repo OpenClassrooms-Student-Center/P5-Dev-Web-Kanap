@@ -1,13 +1,10 @@
-
 // Creation des liens vers les pages produits
 
 // Récupérer l'identifiant
 let url = new URL(window.location.href);
 let productId = url.searchParams.get("id");
 
-
-fetch(`http://localhost:3000/api/products/${productId}`)
-
+fetch('http://localhost:3000/api/products/' + productId)
 .then(function(response) {
     if (response.ok){
         return response.json();
@@ -15,7 +12,6 @@ fetch(`http://localhost:3000/api/products/${productId}`)
 })
 
 //affichage des produits sur la page
-
 .then(function(data){  
 
     let img = document.createElement('img');
@@ -26,14 +22,12 @@ fetch(`http://localhost:3000/api/products/${productId}`)
     document.querySelector("#price").innerText = data.price;
     document.querySelector("#description").innerText = data.description;
 
-
     data.colors.forEach(color => {
         let option = document.createElement('option'); 
         option.value = color;
         option.innerText = color;
         document.querySelector("#colors").appendChild(option);
     });
-
 
 })
 
@@ -45,7 +39,6 @@ fetch(`http://localhost:3000/api/products/${productId}`)
 
 
 // Ajouter un produit au panier via le boutton 
-
 document.querySelector('#addToCart').addEventListener('click', function () {
 
 	let color = document.querySelector('#colors').value;
@@ -61,10 +54,7 @@ document.querySelector('#addToCart').addEventListener('click', function () {
         return;
     }
 
-
     let panier = JSON.parse(localStorage.getItem('panier'))
-
-
     
     if(panier === null) {   // Le panier est vide, on ajoute un nouvel article
         panier = [
@@ -93,8 +83,4 @@ document.querySelector('#addToCart').addEventListener('click', function () {
 
     localStorage.setItem('panier', JSON.stringify(panier));
 
-} )
-
-
-
-
+})

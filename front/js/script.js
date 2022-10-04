@@ -1,5 +1,4 @@
 // Récupération des produits via l'API 
-
 fetch("http://localhost:3000/api/products")
 
 .then(function(response) {
@@ -11,30 +10,28 @@ fetch("http://localhost:3000/api/products")
 
 //afficher les produits sur la page d'acceuil
 .then(function(data){
-    console.log(data);
-    for (product of data) {
-        document.getElementById("items").innerHTML += `
-            <a href="./product.html?id=${product._id}">
-    				<article>
-    					<img src="${product.imageUrl}" alt="${product.altTxt}" />
-    					<h3 class="productName">${product.name}</h3>
-    					<p class="productDescription">${product.description}</p>
-    				</article>
-			    </a>
-            `;
-    }
 
-    // A FAIRE
-    // data.forEach(product => {
-    //     let a = document.createElement('a');
-    //     a.href = `./product.html?id=${product._id}`
+    data.forEach(product => {
+        let a = document.createElement("a");
+        a.href = "./product.html?id=" + product._id;
+        document.querySelector('#items').appendChild(a);
 
+        let article = document.createElement("article");
+        a.appendChild(article);
 
-    //     // faire le reste des boucles
+        let image = document.createElement("img");
+        image.src = product.imageUrl;
+        image.alt = product.altText;
+        article.appendChild(image);
 
-    //     document.querySelector('#items').appendChild(a);
-    // });
+        let h3 = document.createElement("h3");
+        h3.textContent = product.name;
+        article.appendChild(h3);
 
+        let p = document.createElement("p");
+        p.textContent = product.description;
+        article.appendChild(p);
+    })
 
 })
 
