@@ -16,7 +16,8 @@ async function getDatas(){
     </a>`
 
     // Je crée une constante section qui permet de selectionner la section avec l'id items et de lui insérer le contenu de la constante product
-    const section = document.querySelector('#items').insertAdjacentHTML('beforeend', 
+    const el = document.querySelector('#items')
+           el.insertAdjacentHTML('beforeend', 
     product);
   } 
 }
