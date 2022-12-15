@@ -1,17 +1,39 @@
-fetch("http://localhost:3000/api/products") // Requête pour récupérer les json dans Product.js
-  .then(res => res.json())
-  .then(json => product(json));
+const itemId = new URL(location.href).searchParams.get("id");
+// console.log(itemId);
 
-const product = () => {
+fetch("http://localhost:3000/api/products/" + itemId) // Requête pour récupérer les json dans Product.js
+  .then((res) => res.json())
+  .then((json) => displayProduct(json));
 
-const itemImg = document.getElementsByClassName("item__img");
+const displayProduct = (product) => {
+  
+  console.log(product);
 
-const img = document.createElement("img");
-img.setAttribute("src", "?id="+ new URL(location.href).searchParams.get("id"));
-img.setAttribute("alt", product.altText);
-console.log(img);
-itemImg.append(img);
+  const img = document.createElement("img");
+  img.setAttribute("src", product.imageUrl);
+  img.setAttribute("alt", product.altTxt);
 
+  const itemImg = document.querySelector(".item__img");
+  itemImg.append(img);
 
-// new URL(location.href).searchParams.get("id");
+  const itemTitle = document.getElementById("title");
+  itemTitle.textContent = product.name;
+
+  const itemPrice = document.getElementById("price");
+  itemPrice.textContent = product.price;
+
+  const itemDescription = document.getElementById("description");
+  itemDescription.textContent = product.description;
+  
+  const itemColors = document.getElementById("colors");
+
+  const arrayColors = product.colors;
+    for (let i = 0; i< arrayColors.length; i++) {
+    const option = document.createElement("option");
+    option.textContent = arrayColors[i];
+    itemColors.appendChild(option);
+    console.log(option);
+  }
+
+  
 };
