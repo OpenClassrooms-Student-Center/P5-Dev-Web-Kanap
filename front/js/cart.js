@@ -1,11 +1,16 @@
-const numberOfItems = localStorage.length;
-const cartArray = [];
+const numberOfItems = localStorage.length; // nombre d'articles différents présents dans le panier
+const arrayCart = Object.entries(localStorage); 
 
-const retrieveItems = () => {
-   for (let i = 0; i < numberOfItems; i++) {
-      const itemsInCart = localStorage.getItem(localStorage.key(i));
-      const objectInCart = JSON.parse(itemsInCart);
-      cartArray.push(objectInCart);
+
+
+console.log(arrayCart);
+
+
+
+
+
+
+
       
       //<article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
       //    <div class="cart__item__img">
@@ -28,19 +33,10 @@ const retrieveItems = () => {
     //       </div>
     //    </div>
     //</article>
-   }
-   console.log(cartArray);
    
-     const displayItems = (itemsInCart) => {
-          itemsInCart.forEach((itemInCart) => displayItem(itemInCart));
-  };
-  console.log(displayItems);
-
 //   const displayItem = (itemInCart) => {
 //     const cartItem = document.getElementById("cart__items");
 //     const article = document.createElement("article");
 //     cartItem.appendChild(article);
-   //  article.setAttribute("class", "cart__item");
-   //  article.setAttribute("data-id", itemId);
+   
 // };
-};

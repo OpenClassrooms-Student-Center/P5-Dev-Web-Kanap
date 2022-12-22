@@ -43,19 +43,19 @@ const displayProduct = (product) => {
       }
       
       const dataCart = {
-        id: itemId,
+        // id: itemId,
         color: color,
         quantity: quantity,
         price: product.price,
         imageUrl: img.src,
         altText: product.altTxt
-      }
-      localStorage.setItem(itemId, JSON.stringify(dataCart) );
+      };
+      localStorage.setItem(itemId, JSON.stringify(dataCart));
 
       for( let i = 0; i < localStorage.length; i++){
           localStorage.key(i);}
 
-      window.location.href = "cart.html";
+      // window.location.href = "cart.html";
 
       console.log(localStorage);
     });
