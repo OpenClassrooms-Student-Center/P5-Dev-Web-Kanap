@@ -23,39 +23,51 @@ const displayProduct = (product) => {
 
   const itemColors = document.getElementById("colors"); // Récupère ce qui se trouve dans #colors
 
-  const arrayColors = product.colors;
-  for (let i = 0; i < arrayColors.length; i++) {
-    // Pour chaque élément du arrayColors, crée une ligne dans la liste
-    const option = document.createElement("option"); // chaque ligne est une option
-    option.textContent = arrayColors[i];
-    itemColors.appendChild(option); // crée un élément option, enfant de itemColors (pour chaque élément)
+  const colorsList = product.colors;
+  for (let i = 0; i < colorsList.length; i++) {
+    // Pour chaque élément du colorsList, crée une ligne dans la liste
+    const colorOption = document.createElement("option"); // chaque ligne est une option
+    colorOption.textContent = colorsList[i];
+    itemColors.appendChild(colorOption); // crée un élément colorOption, enfant de itemColors (pour chaque élément)
   }
 
   const addToCart = document.querySelector("#addToCart");
 
   if (addToCart != null) {
     addToCart.addEventListener("click", () => {
-      const color = document.querySelector("#colors").value
-      const quantity = document.querySelector("#quantity").value
-      if (color == null || color === "" || quantity == null || quantity == 0) {
-        alert("Veuillez sélectionner une couleur ET une quantité, SVP.")
-        return
+      const itemColor = document.querySelector("#colors").value;
+      const itemQuantity = parseInt(document.querySelector("#quantity").value); // parseInt permet de récupérer un nombre entier au lieu d'une string
+      if (itemColor == null || itemColor === "" || itemQuantity == null || itemQuantity == 0) {
+        alert("Veuillez sélectionner une couleur ET une quantité, SVP.");
+        return;
       }
-      
-      const dataCart = {
-        // id: itemId,
-        color: color,
-        quantity: quantity,
-        price: product.price,
-        imageUrl: img.src,
-        altText: product.altTxt
-      };
-      localStorage.setItem(itemId, JSON.stringify(dataCart));
 
-      for( let i = 0; i < localStorage.length; i++){
-          localStorage.key(i);}
+      const cartContent = JSON.parse(localStorage.getItem("cart")) || [];
+      // console.log(cartContent);
 
-      // window.location.href = "cart.html";
+      const existingItem = cartContent.findIndex(
+        (itemInCart) => itemInCart.id == itemId && itemInCart.color == itemColor
+      );
+      // console.log(existingItem);
+
+      if (existingItem === -1) {
+        const dataItem = {
+          id: itemId,
+          color: itemColor,
+          quantity: itemQuantity,
+          imageUrl: product.imageUrl,
+          altTxt: product.altTxt,
+          name: product.name,
+          price: product.price
+        };
+        cartContent.push(dataItem);
+      } else {
+        cartContent[existingItem].quantity += itemQuantity;
+      }
+
+      localStorage.setItem("cart", JSON.stringify(cartContent));
+
+      window.location.href = "cart.html";
 
       console.log(localStorage);
     });
