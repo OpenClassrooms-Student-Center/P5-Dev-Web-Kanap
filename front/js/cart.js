@@ -2,7 +2,6 @@ const cartArray = Object.entries(localStorage);
 const cartContent = JSON.parse(localStorage.getItem("cart")) || [];
 
 const cartItems = document.getElementById("cart__items");
-const numberOfItems = localStorage.length; // nombre d'articles différents présents dans le panier
 
 for (let i = 0; i < cartContent.length; i++) {
   const cartArticle = document.createElement("article");
@@ -38,7 +37,8 @@ for (let i = 0; i < cartContent.length; i++) {
   cartItemDescription.appendChild(cartItemColor);
 
   const cartItemPrice = document.createElement("p");
-  cartItemPrice.textContent = cartItem.price + "€";
+  const cartItemPriceValue = Number(cartItem.price);
+  cartItemPrice.textContent = cartItemPriceValue + "€";
   cartItemDescription.appendChild(cartItemPrice);
 
   const cartItemSettings = document.createElement("div");
@@ -46,7 +46,9 @@ for (let i = 0; i < cartContent.length; i++) {
   cartItemContent.appendChild(cartItemSettings);
 
   const cartItemSettingsQuantity = document.createElement("div");
-  cartItemSettingsQuantity.classList.add("cart__item__content__settings__quantity");
+  cartItemSettingsQuantity.classList.add(
+    "cart__item__content__settings__quantity"
+  );
   cartItemSettings.appendChild(cartItemSettingsQuantity);
 
   const cartItemQuantity = document.createElement("p");
@@ -60,9 +62,10 @@ for (let i = 0; i < cartContent.length; i++) {
   itemQuantityInput.min = "1";
   itemQuantityInput.max = "100";
   itemQuantityInput.value = cartItem.quantity;
+  const itemQuantityInputValue = Number(cartItem.quantity);
   cartItemSettingsQuantity.appendChild(itemQuantityInput);
-
-  const cartItemSettingsDelete = document.createElement("div")
+    
+  const cartItemSettingsDelete = document.createElement("div");
   cartItemSettingsDelete.classList.add("cart__item__content__settings__delete");
   cartItemSettings.appendChild(cartItemSettingsDelete);
 
@@ -72,14 +75,24 @@ for (let i = 0; i < cartContent.length; i++) {
   cartItemSettingsDelete.appendChild(cartItemDelete);
 
   const totalQuantity = document.getElementById("totalQuantity");
-  // const totalQuantities = cartItem.quantity;
+  let sumOfQuantities = 0; // quantité totale d'articles
+  for (let cartItem = 0; cartItem < cartContent.length; cartItem++) {
+    sumOfQuantities += cartContent[cartItem].quantity;
+  }
+  totalQuantity.textContent = sumOfQuantities;
+  
+  const totalPrice = document.getElementById("totalPrice");
+  let totalItemPrice = 0; 
+  for (let cartItem = 0; cartItem < cartContent.length; cartItem++) {
+    totalItemPrice = cartItemPriceValue * itemQuantityInputValue; // prix x qnté pour chaque article
+    // console.log(typeof totalItemPrice);
     
-    
-  console.log(totalQuantity);
+    let totalCartPrice = 0;// somme des totaux de tous les articles
+    for (let cartItem = 0; cartItem < cartContent.length; cartItem++) {
+      totalCartPrice += totalItemPrice[cartItem]++;
+      
+      totalPrice.textContent = totalCartPrice;
+    }
+    console.log(typeof totalCartPrice);
+  }
 }
-  
-  
-
-
-
-

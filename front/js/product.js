@@ -37,7 +37,12 @@ const displayProduct = (product) => {
     addToCart.addEventListener("click", () => {
       const itemColor = document.querySelector("#colors").value;
       const itemQuantity = parseInt(document.querySelector("#quantity").value); // parseInt permet de récupérer un nombre entier au lieu d'une string
-      if (itemColor == null || itemColor === "" || itemQuantity == null || itemQuantity == 0) {
+      if (
+        itemColor == null ||
+        itemColor === "" ||
+        itemQuantity == null ||
+        itemQuantity == 0
+      ) {
         alert("Veuillez sélectionner une couleur ET une quantité, SVP.");
         return;
       }
@@ -58,8 +63,9 @@ const displayProduct = (product) => {
           imageUrl: product.imageUrl,
           altTxt: product.altTxt,
           name: product.name,
-          price: product.price
+          price: product.price,
         };
+        console.log(dataItem.total);
         cartContent.push(dataItem);
       } else {
         cartContent[existingItem].quantity += itemQuantity;
