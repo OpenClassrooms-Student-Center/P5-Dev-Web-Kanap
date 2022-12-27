@@ -63,19 +63,18 @@ const displayProduct = (product) => {
           imageUrl: product.imageUrl,
           altTxt: product.altTxt,
           name: product.name,
-          price: product.price,
+          price: Number(product.price),
         };
-        console.log(dataItem.total);
         cartContent.push(dataItem);
       } else {
         cartContent[existingItem].quantity += itemQuantity;
       }
-
+      
+      
       localStorage.setItem("cart", JSON.stringify(cartContent));
 
       window.location.href = "cart.html";
 
-      console.log(localStorage);
     });
   }
 };
