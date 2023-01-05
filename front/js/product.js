@@ -5,71 +5,62 @@ fetch("http://localhost:3000/api/products/" + itemId) // Requête pour récupér
   .then((json) => displayProduct(json));
 
 const displayProduct = (product) => {
-  const img = document.createElement("img"); 
+  const img = document.createElement("img");
   img.setAttribute("src", product.imageUrl);
   img.setAttribute("alt", product.altTxt);
   // img crée avec 2 attributs
 
   const itemImg = document.querySelector(".item__img");
-  itemImg.append(img); 
+  itemImg.append(img);
   // .itemImg crée , parent de img -> insère la photo de l'article
 
   const itemTitle = document.querySelector("#title");
-  itemTitle.textContent = product.name; 
+  itemTitle.textContent = product.name;
   // insère le name du produit dans #title
 
   const itemPrice = document.querySelector("#price");
-  itemPrice.textContent = product.price; 
+  itemPrice.textContent = product.price;
   // insère le price du produit dans #price
 
   const itemDescription = document.getElementById("description");
-  itemDescription.textContent = product.description; 
+  itemDescription.textContent = product.description;
   // insère la description du produit dans #description
 
   const itemColors = document.getElementById("colors"); // pointe vers #colors
   const colorsList = product.colors;
   for (let i = 0; i < colorsList.length; i++) {
     // Pour chaque élément de colorsList, crée une ligne dans la liste déroulante
-    const colorOption = document.createElement("option"); 
+    const colorOption = document.createElement("option");
     // chaque ligne de la liste déroulante est une option
     colorOption.textContent = colorsList[i]; // ajoute toutes les options disponibles à la liste
     itemColors.appendChild(colorOption); // colorOption est créée en tant qu'enfant d'itemColors (pour chaque élément de la liste)
   }
 
   const addToCart = document.querySelector("#addToCart");
-// lors du click, les valeurs de colors et quantity sont verifiées (non nulles)
+  // lors du click, les valeurs de colors et quantity sont verifiées (non nulles)
   if (addToCart != null) {
     addToCart.addEventListener("click", () => {
       const itemColor = document.querySelector("#colors").value;
-      const itemQuantity = parseInt(document.querySelector("#quantity").value); 
+      const itemQuantity = parseInt(document.querySelector("#quantity").value);
       // parseInt permet de récupérer un nombre entier au lieu d'une string
-      if (
-        itemColor == null ||
-        itemColor === "" ||
-        itemQuantity == null ||
-        itemQuantity == 0
-      ) {
-        alert("Veuillez sélectionner une couleur ET une quantité, SVP."); 
+      if (itemColor == null || itemColor === "" || itemQuantity == null || itemQuantity == 0) {
+        alert("Veuillez sélectionner une couleur ET une quantité, SVP.");
         // alerte en cas d'élément color ou quantity nul
-        return;// empêche la redirection vers la page panier
+        return; // empêche la redirection vers la page panier
       }
 
-      const cartContent = JSON.parse(localStorage.getItem("cart")) || []; 
+      const cartContent = JSON.parse(localStorage.getItem("cart")) || [];
       // transforme le panier JSON en objet
 
-      const existingItem = cartContent.findIndex(
-        (itemInCart) => itemInCart.id == itemId && itemInCart.color == itemColor
-      );// verifie si l'id et la color sont identiques à un article déjà existant dans le panier
-      
-      if (existingItem === -1) {// quand l'article n'existe pas encore, on récupère ses datas
-        const dataItem = { // récupère l'id, la couleur, la quantité, ...
-          id: itemId, 
+      const existingItem = cartContent.findIndex((itemInCart) => itemInCart.id == itemId && itemInCart.color == itemColor); // verifie si l'id et la color sont identiques à un article déjà existant dans le panier
+
+      if (existingItem === -1) {
+        // quand l'article n'existe pas encore, on récupère ses datas
+        const dataItem = {
+          // récupère l'id, la couleur, la quantité, ...
+          id: itemId,
           color: itemColor,
           quantity: itemQuantity,
-          // imageUrl: product.imageUrl,
-          // altTxt: product.altTxt,
-          // name: product.name,
-          // price: Number(product.price),
         };
         cartContent.push(dataItem);
         // ajoute une nouvelle ligne pour l'article dans le tableau s'il n'y est pas déjà présent
@@ -77,13 +68,11 @@ const displayProduct = (product) => {
         // si l'article est déjà présent dans le panier, on augmente seulement la quantité de l'article existant
         cartContent[existingItem].quantity += itemQuantity;
       }
-      
-      
+
       localStorage.setItem("cart", JSON.stringify(cartContent));
       // transforme le panier objet en string JSON
 
-      window.location.href = "cart.html";// redirige vers le panier
-
+      window.location.href = "cart.html"; // redirige vers le panier
     });
   }
 };

@@ -1,17 +1,41 @@
 const cartContent = JSON.parse(localStorage.getItem("cart")) || [];
 // transforme le panier JSON en objet
 
-let totalItemPrice = 0; // prix total par article
-let sumOfQuantities = 0; // quantité totale d'articles
-let totalCartPrice = 0; // somme des prix totaux de tous les articles
-let newTotal = 0; // nouveau prix total du panier
+// let totalItemPrice = 0; // prix total par article
+// let sumOfQuantities = 0; // quantité totale d'articles
+// let totalCartPrice = 0; // somme des prix totaux de tous les articles
+// let newTotal = 0; // nouveau prix total du panier
 
-cartContent.forEach(cartItem => {
-  // const cartItemId = new URL(location.href).searchParams.get("id"); // récupère l'id des produits disponibles
-fetch("http://localhost:3000/api/products/" + cartItem.id) // Requête pour récupérer les json dans Product.js et les url pour chaque id de produit
-.then((res) => res.json())
-.then((product) => displayCartItems(cartItem, product));
-});
+const updateQuantityAndPrice = () => {
+  let totalQuantity = 0;
+  let totalArticlePrice = 0;
+  let totalCartPrice = 0;
+  const articles = document.querySelectorAll("article.cart__item");
+
+  articles.forEach((article) => {
+    const articleQuantity = article.querySelector(".itemQuantity").value;
+    totalQuantity += parseInt(articleQuantity);
+
+    const articlePrice = parseInt(article.querySelector(".cart__item__content__description p:nth-of-type(2)").textContent);
+    totalArticlePrice = articlePrice * articleQuantity;
+
+    totalCartPrice += totalArticlePrice;
+
+  });
+  document.querySelector("#totalPrice").textContent = totalCartPrice;
+  document.querySelector("#totalQuantity").textContent = totalQuantity;
+  console.log(totalCartPrice);
+};
+
+cartContent.forEach((cartItem) => {
+  fetch("http://localhost:3000/api/products/" + cartItem.id) // Requête pour récupérer les json dans Product.js et les url pour chaque id de produit
+  .then((res) => res.json())
+  .then((product) => displayCartItems(cartItem, product));
+  
+  const itemToUpdate = cartContent.findIndex((article) => article.id == cartItem.id && article.color == cartItem.color);
+  articleQuantity = cartContent[itemToUpdate].quantity;
+  console.log(articleQuantity);
+  });
 
 const displayCartItems = (cartItem, product) => {
   //affiche un article
@@ -113,81 +137,9 @@ const displayCartItems = (cartItem, product) => {
   itemQuantityInput.value = cartItem.quantity;
   cartItemSettingsQuantity.appendChild(itemQuantityInput);
   // input quantity créé avec ses attributs
-  
 
-  itemQuantityInput.addEventListener("change", () => handleChange(cartItem.id, cartItem.color, cartItem.quantity));
-  const handleChange = (id, color, quantity) => {
-    const itemInCart = cartContent.find((cartItem) => cartItem.id === id && cartItem.color === color);
+  itemQuantityInput.addEventListener("change", updateQuantityAndPrice);
 
-    const input = document.getElementsByClassName("itemQuantity");
-    const newQuantity = input.quantity;
-    console.log(newQuantity);
-  }
-
-  //   const newCartTotal = document.getElementById("totalPrice");
-  //   newCartTotal.textContent = newTotal;
-
-  //   newTotal += Number(newValue) * cartItem.price;
-  //   console.log(newTotal);
-  // }
-  //   // newItemTotalPrice =
-  //   totalCartPrice += totalItemPrice++;
-  //   //   let newTotal = 0;
-  //   //   newTotal += newItemTotalPrice;
-  
-  let itemQuantityInputValue = Number(cartItem.quantity);
-  sumOfQuantities += itemQuantityInputValue;
-  totalItemPrice = cartItemPriceValue * itemQuantityInputValue;
-  totalCartPrice += totalItemPrice++;
+  updateQuantityAndPrice();
 };
 // cartContent.forEach(displayCartItems);
-
-
-
-
-// addition des input quantity pour obtenir nombre total d'articles dans le panier
-
-// const newItemQuantityInput =
-//   document.getElementsByClassName("itemQuantity").value; // pointe vers la valeur qu'on veut updater
-// const newQuantityInput = itemQuantityInputValue;
-// const cartItemColorText = cartItemColor.innerHTML;
-
-// console.log(cartItemId);
-// console.log(cartItemColorText);
-// console.log(itemQuantityInput.value);
-
-// itemQuantityInput.addEventListener("change", () => {
-//   // écoute le change de l'input
-
-//   const handleChange = (change) => {
-//     // const article = input.closest(".cart__item")
-
-//     // const itemInCart = cartContent.findIndex(
-//     //   (article) =>
-//     //   article.dataset.id === cartItemId && article.dataset.color === cartItem.color
-// const createTotalQuantity = () => {};
-// const totalQuantity = document.getElementById("totalQuantity");
-// // pointe vers #totalQuantity
-// totalQuantity.textContent = sumOfQuantities;
-// // insère le résultat de sumOfQuantities dans #totalQuantity
-// createTotalQuantity();
-
-// const createTotalPrice = () => {};
-// const totalPrice = document.getElementById("totalPrice");
-// // pointe vers #totalPrice
-// totalPrice.textContent = totalCartPrice;
-// // insère le résultat de totalCartPrice dans #totalPrice
-// createTotalPrice();
-
-
-const totalQuantity = document.getElementById("totalQuantity");
-// pointe vers #totalQuantity
-totalQuantity.textContent = sumOfQuantities;
-// insère le résultat de sumOfQuantities dans #totalQuantity
-
-const totalPrice = document.getElementById("totalPrice");
-// pointe vers #totalPrice
-totalPrice.textContent = totalCartPrice;
-// insère le résultat de totalCartPrice dans #totalPrice
-
-// exécute displayCartItem pour chaque article du panier
