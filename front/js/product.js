@@ -66,10 +66,10 @@ const displayProduct = (product) => {
           id: itemId, 
           color: itemColor,
           quantity: itemQuantity,
-          imageUrl: product.imageUrl,
-          altTxt: product.altTxt,
-          name: product.name,
-          price: Number(product.price),
+          // imageUrl: product.imageUrl,
+          // altTxt: product.altTxt,
+          // name: product.name,
+          // price: Number(product.price),
         };
         cartContent.push(dataItem);
         // ajoute une nouvelle ligne pour l'article dans le tableau s'il n'y est pas déjà présent
