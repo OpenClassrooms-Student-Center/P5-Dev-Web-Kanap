@@ -5,27 +5,39 @@ fetch("http://localhost:3000/api/products/" + itemId) // Requête pour récupér
   .then((json) => displayProduct(json));
 
 const displayProduct = (product) => {
+  const createImg = () => {
   const img = document.createElement("img");
   img.setAttribute("src", product.imageUrl);
   img.setAttribute("alt", product.altTxt);
   // img crée avec 2 attributs
-
   const itemImg = document.querySelector(".item__img");
   itemImg.append(img);
   // .itemImg crée , parent de img -> insère la photo de l'article
-
+  };
+  createImg();
+  
+  const createTitle = () => {
   const itemTitle = document.querySelector("#title");
   itemTitle.textContent = product.name;
   // insère le name du produit dans #title
+  };
+  createTitle();
 
+  const createPrice = () => {
   const itemPrice = document.querySelector("#price");
   itemPrice.textContent = product.price;
   // insère le price du produit dans #price
+  };
+  createPrice();
 
+const createDecsription = () => {
   const itemDescription = document.getElementById("description");
   itemDescription.textContent = product.description;
   // insère la description du produit dans #description
+};
+createDecsription();
 
+const createColors = () => {
   const itemColors = document.getElementById("colors"); // pointe vers #colors
   const colorsList = product.colors;
   for (let i = 0; i < colorsList.length; i++) {
@@ -35,6 +47,8 @@ const displayProduct = (product) => {
     colorOption.textContent = colorsList[i]; // ajoute toutes les options disponibles à la liste
     itemColors.appendChild(colorOption); // colorOption est créée en tant qu'enfant d'itemColors (pour chaque élément de la liste)
   }
+};
+createColors();
 
   const addToCart = document.querySelector("#addToCart");
   // lors du click, les valeurs de colors et quantity sont verifiées (non nulles)
