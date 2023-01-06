@@ -1,18 +1,13 @@
 const cartContent = JSON.parse(localStorage.getItem("cart")) || [];
 // transforme le panier JSON en objet
 
-// let totalItemPrice = 0; // prix total par article
-// let sumOfQuantities = 0; // quantité totale d'articles
-// let totalCartPrice = 0; // somme des prix totaux de tous les articles
-// let newTotal = 0; // nouveau prix total du panier
-
 const updateQuantityAndPrice = () => {
   let totalQuantity = 0;
   let totalArticlePrice = 0;
   let totalCartPrice = 0;
   const articles = document.querySelectorAll("article.cart__item");
 
-  articles.forEach((article) => {
+  articles.forEach((article, cartItem) => {
     const articleQuantity = article.querySelector(".itemQuantity").value;
     totalQuantity += parseInt(articleQuantity);
 
@@ -20,22 +15,16 @@ const updateQuantityAndPrice = () => {
     totalArticlePrice = articlePrice * articleQuantity;
 
     totalCartPrice += totalArticlePrice;
-
   });
   document.querySelector("#totalPrice").textContent = totalCartPrice;
   document.querySelector("#totalQuantity").textContent = totalQuantity;
-  console.log(totalCartPrice);
-};
 
+  };
 cartContent.forEach((cartItem) => {
   fetch("http://localhost:3000/api/products/" + cartItem.id) // Requête pour récupérer les json dans Product.js et les url pour chaque id de produit
-  .then((res) => res.json())
-  .then((product) => displayCartItems(cartItem, product));
-  
-  const itemToUpdate = cartContent.findIndex((article) => article.id == cartItem.id && article.color == cartItem.color);
-  articleQuantity = cartContent[itemToUpdate].quantity;
-  console.log(articleQuantity);
-  });
+    .then((res) => res.json())
+    .then((product) => displayCartItems(cartItem, product));
+});
 
 const displayCartItems = (cartItem, product) => {
   //affiche un article
@@ -105,13 +94,14 @@ const displayCartItems = (cartItem, product) => {
 
   cartItemSettingsDelete.addEventListener(
     "click",
-    (deleteItem = (event) => {
+    (deleteItem = () => {
       const itemToDelete = cartContent.find((itemInCart) => cartItem.id === itemInCart.id && cartItem.color === itemInCart.color);
       cartContent.splice(itemToDelete);
-      console.log(itemToDelete); // renvoie l'item cliqué
 
-      // const inputDelete = event.target;
-      // const articleToDelete = inputDelete.closest(".cart__item")
+      localStorage.removeItem("cart");
+      const inputDelete = event.target;
+      const articleToDelete = inputDelete.closest(".cart__item");
+      console.log(articleToDelete); // renvoie l'item cliqué
 
       //supprimer l'article contenant le dataset id et color identique à ceux correspondant de itemToDelete
     })
@@ -141,5 +131,24 @@ const displayCartItems = (cartItem, product) => {
   itemQuantityInput.addEventListener("change", updateQuantityAndPrice);
 
   updateQuantityAndPrice();
+  itemQuantityInput.addEventListener("change", () => {
+    let newItemQuantity = document.querySelector(".itemQuantity").value;
+
+    const itemToUpdate = cartContent.findIndex((article) => article.id === cartItem.id && article.color === cartItem.color); // récupère l'index de l'article à updater
+
+    if (itemToUpdate != -1) {
+      newItemQuantity = itemQuantityInput.value;
+    }
+    cartItem.quantity = newItemQuantity;
+    console.log(cartItem.quantity, newItemQuantity);
+    
+  });
+
 };
-// cartContent.forEach(displayCartItems);
+  document.addEventListener("change", () => {
+  // const cartItemToSave = JSON.stringify(cartItem);
+  localStorage.setItem("cart", JSON.stringify(cartContent));
+  console.log(cartContent);
+}, [cartContent]);
+  
+
