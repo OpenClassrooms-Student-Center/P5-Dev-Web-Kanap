@@ -7,13 +7,13 @@ cartContent.forEach((cartItem) => {
     .then((product) => displayCartItems(cartItem, product));
 });
 
-const updateQuantityAndPrice = (cartItem) => {
+const updateQuantityAndPrice = () => {
   let totalQuantity = 0;
   let totalArticlePrice = 0;
   let totalCartPrice = 0;
   const articles = document.querySelectorAll("article.cart__item");
 
-  articles.forEach((article, cartItem) => {
+  articles.forEach((article) => {
     const articleQuantity = article.querySelector(".itemQuantity").value;
     totalQuantity += parseInt(articleQuantity);
     const articlePrice = parseInt(article.querySelector(".cart__item__content__description p:nth-of-type(2)").textContent);
@@ -98,19 +98,15 @@ const displayCartItems = (cartItem, product) => {
   cartItemSettingsDelete.classList.add("cart__item__content__settings__delete");
   cartItemSettings.appendChild(cartItemSettingsDelete);
 
-  
   cartItemSettingsDelete.addEventListener(
     "click",
-    (deleteItem = (article) => {
+    (deleteItem = () => {
       const itemToDelete = cartContent.findIndex((itemInCart) => cartItem.id === itemInCart.id && cartItem.color === itemInCart.color); // donne l'index de l'article cliqué
       cartContent.splice(itemToDelete); // supprime du cart l'article cliqué de façon permanente
 
-      const articleToDelete = document.querySelector(`article[data-id="${cartItem.id}"][data-color="${cartItem.color}"]`)
-      
-      articleToDelete.remove();
+      const articleToDelete = document.querySelector(`article[data-id="${cartItem.id}"][data-color="${cartItem.color}"]`); // pointe l'article correspondant à l'item
+      articleToDelete.remove(); // supprime l'article du HTML
 
-      console.log(cartContent);
-      
       updateQuantityAndPrice();
       storage();
     })
@@ -152,7 +148,7 @@ const displayCartItems = (cartItem, product) => {
       newItemQuantity = Number(itemQuantityInput.value); //remplace la quantié par la nouvelle valeur dans le panier
     }
     cartItem.quantity = newItemQuantity; // recalcule la somme des quantités en tenant compte des nouvelles valeurs dans le panier
-    });
+  });
 };
 
 const storage = () => {
@@ -169,4 +165,5 @@ const storage = () => {
 };
 updateQuantityAndPrice();
 storage();
-console.log(cartContent);
+
+
