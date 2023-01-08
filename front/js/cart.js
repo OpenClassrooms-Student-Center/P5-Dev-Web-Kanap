@@ -160,10 +160,108 @@ const storage = () => {
       updateQuantityAndPrice();
     },
     [cartContent]
-  ); // remplace le contenu du localStorage par celui du cartContent afin de sauvegarder dans le cache le panier après avoir quitter la page
+    ); // remplace le contenu du localStorage par celui du cartContent afin de sauvegarder dans le cache le panier après avoir quitter la page
+    updateQuantityAndPrice();
+  };
   updateQuantityAndPrice();
+  storage();
+  
+  
+const cartOrder = () => {
+  const orderButton = document.querySelector("#order"); // pointe le bouton Commander
+  orderButton.addEventListener("click", (event) => {
+    // écoute le click sur order et va contrôler :
+    if (cartContent.length == 0) { //si le panier est vide
+      event.preventDefault(); // ne pas envoyer form
+      alert("Votre panier est vide. Veuillez sélectionner des articles, SVP");// message d'alerte si panier vide
+      // return;
+    };
+  });
+    console.log(cartContent, event);
+    // event.preventDefault();
+    
+    
+  
+  
+  
+  
+  
 };
-updateQuantityAndPrice();
-storage();
+cartOrder();
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //   // Vérifier les infos saisies
+  //   const formDatas = document.querySelector("form");
+  //   // pointe vers le formulaire
+  //   formDatas.addEventListener("submit", (event) => {
+//     // écoute l'évènement sur l'élément type submit
+//     const lastNameInput = document.querySelector("#firstName"); // pointe vers l'input du prénom
+//     const firstNameRegex = /^[a-zA-Z-\'\s]+$/; // limite le contenu à des lettres, tiret, espace et apostrophe et autorise plusieurs mots
+
+//     if (firstNameRegex.test(lastNameInput.value) = false) {
+//       // ou si la valeur de l'input n'est pas conforme à la Regex
+//       const firstNameError = document.querySelector("#firstNameErrorMsg");
+//               // pointe le message d'erreur
+//       firstNameError.innerHTML = "Le prénom doit être composé de lettres (le tiret et l'apostrophe sont acceptés)"; // insère ce texte dans le message d'erreur
+//       event.preventDefault(); // empêche le submit
+//     };  
+//   });
+//   event.preventDefault(); // empêche le submit de s'exécuter
+
+
+
+
+//       if (lastNameInput.value.trim() = "") {
+//         // si la valeur de l'input est vide (les espaces pouvant être présents devant ou derrière sont retirés par trim), ...
+//         const firstNameError = document.querySelector("#firstNameErrorMsg");
+//         // pointe vers le message d'erreur
+//         firstNameError.innerHTML = "Veuillez indiquer votre prénom"; // insère ce texte dans le message d'erreur
+//         event.preventDefault(); // empêche le submit
+//       } else if (firstNameRegex.test(lastNameInput.value) = false) {
+//         // ou si la valeur de l'input n'est pas conforme à la Regex
+//         const firstNameError = document.querySelector("#firstNameErrorMsg");
+//         // pointe le message d'erreur
+//         firstNameError.innerHTML = "Le prénom doit être composé de lettres (le tiret et l'apostrophe sont acceptés)"; // insère ce texte dans le message d'erreur
+//         event.preventDefault(); // empêche le submit
+//       };
+
+//       const body = {
+//         contact: {
+//           firstName: "Prénom",
+//           lastName: "Nom de famille",
+//           address: "adresse",
+//           city: "ville",
+//           email: "em@il"
+//         },
+//         products: ["products ids"]
+//       };
+
+//       fetch("http://localhost:3000/api/products/order", { // Poste les datas json dans order
+//       method: "POST",
+//       body: JSON.stringify(body),
+//       header: {
+//         "Content-type": "application/json",
+//         "Access -Control-Allow-Origin": "*"
+//       }
+//     })
+//     .then((res) => res.json())
+//     .then((data) => console.log(data))
+//     event.preventDefault();
+
+//   });
+// });
+// };
