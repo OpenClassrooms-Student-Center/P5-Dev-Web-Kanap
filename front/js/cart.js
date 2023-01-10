@@ -152,116 +152,112 @@ const displayCartItems = (cartItem, product) => {
 };
 
 const storage = () => {
-  document.addEventListener(
-    "click",
-    () => {
-      // écoute le click sur le document
-      localStorage.setItem("cart", JSON.stringify(cartContent));
-      updateQuantityAndPrice();
-    },
-    [cartContent]
-    ); // remplace le contenu du localStorage par celui du cartContent afin de sauvegarder dans le cache le panier après avoir quitter la page
+  document.addEventListener("click", () => {
+    // écoute le click sur le document
+    localStorage.setItem("cart", JSON.stringify(cartContent));
     updateQuantityAndPrice();
-  };
-  updateQuantityAndPrice();
-  storage();
-  
-  
-const cartOrder = () => {
-  const orderButton = document.querySelector("#order"); // pointe le bouton Commander
-  orderButton.addEventListener("click", (event) => {
-    // écoute le click sur order et va contrôler :
-    if (cartContent.length == 0) { //si le panier est vide
-      event.preventDefault(); // ne pas envoyer form
-      alert("Votre panier est vide. Veuillez sélectionner des articles, SVP");// message d'alerte si panier vide
-      // return;
-    };
-  });
-    console.log(cartContent, event);
-    // event.preventDefault();
-    
-    
-  
-  
-  
-  
-  
+  }, [cartContent]); // remplace le contenu du localStorage par celui du cartContent afin de sauvegarder dans le cache le panier après avoir quitter la page
+    updateQuantityAndPrice();
 };
-cartOrder();
+updateQuantityAndPrice();
+storage();
+  
+const orderButton = document.querySelector("#order"); // pointe le bouton Commander
+orderButton.addEventListener("click", (event) => {
+  // écoute le click sur order et va contrôler :
+  if (cartContent.length == 0) { //si le panier est vide
+    event.preventDefault(); // ne pas envoyer form
+    alert("Votre panier est vide. Veuillez sélectionner des articles, SVP");// message d'alerte si panier vide
+    return; // pour arrêter
+  };
+});
 
+const firstNameInput = document.querySelector("#firstName"); // pointe vers l'input prénom
+const lastNameInput = document.querySelector("#lastName"); // pointe vers l'input nom
+const addressInput = document.querySelector("#address"); // pointe vers l'input adresse
+const cityInput = document.querySelector("#city"); // pointe vers l'input ville
+const emailInput = document.querySelector("#email"); // pointe vers l'input e-mail
 
+const nameRegex = /^[a-zA-Z\-\'\s]+$/; // limite le contenu à des lettres, tirets, espaces et apostrophes, et autorise plusieurs mots
+const addressRegex = /^[a-zA-Z0-9\s\,\'\-]*$/;
+const emailRegex = /^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/;
 
+firstNameInput.addEventListener("input", (event) => {
+  event.preventDefault();
+  let firstNameInputContent = firstNameInput.value; // valeur de l'input prénom (string)
+  const firstNameError = document.querySelector("#firstNameErrorMsg"); // pointe le message d'erreur
+  let nameRegexFNTest = nameRegex.test(firstNameInputContent); // teste la string dans input prénom et retourne true ou false
+  if (nameRegexFNTest === false) {
+    event.preventDefault();
+    firstNameError.textContent = "Le prénom doit être composé de lettres (le tiret et l'apostrophe sont acceptés)"; // insère ce texte dans le message d'erreur
+    firstNameInput.focus(); // remet le curseur dans l'input
+    return false;
+  } else {
+    firstNameError.textContent = "";
+  };
+});
+lastNameInput.addEventListener("input", (event) => {
+  event.preventDefault();
+  let lastNameInputContent = lastNameInput.value; // valeur de l'input nom (string)
+  const lastNameError = document.querySelector("#lastNameErrorMsg"); // pointe le message d'erreur
+  let nameRegexLNTest = nameRegex.test(lastNameInputContent); // teste la string dans input prénom et retourne true ou false
+  if (nameRegexLNTest === false) {
+    event.preventDefault();
+    lastNameError.textContent = "Le nom doit être composé de lettres (le tiret et l'apostrophe sont acceptés)"; // insère ce texte dans le message d'erreur
+    lastNameInput.focus();
+    return false;
+  } else {
+    lastNameError.textContent = "";
+  };
+});
+addressInput.addEventListener("input", (event) => {
+  event.preventDefault();
+  let addressInputContent = addressInput.value;
+  const addressError = document.querySelector("#addressErrorMsg"); // pointe le message d'erreur
+  let addressRegexTest = addressRegex.test(addressInputContent);
+  if (addressRegexTest === false) {
+    event.preventDefault();
+    addressError.textContent = "Format d'adresse non conforme"; // insère ce texte dans le message d'erreur
+    addressInput.focus();
+    return false;
+  } else {
+    addressError.textContent = "";
+  };
+});
 
+cityInput.addEventListener("input", (event) => {
+  event.preventDefault();
+  let cityInputContent= cityInput.value;
+  const cityError = document.querySelector("#cityErrorMsg"); // pointe le message d'erreur
+  let cityRegexTest = nameRegex.test (cityInputContent);
+  if (cityRegexTest === false) {
+    event.preventDefault();
+    cityError.textContent = "Le nom de la ville doit être composé de lettres (le tiret et l'apostrophe sont acceptés)"; // insère ce texte dans le message d'erreur
+    cityInput.focus();
+    return false;
+  } else {
+    cityError.textContent = "";
+  }
+});
 
+emailInput.addEventListener("input", (event) => {
+  event.preventDefault();
+  let emailInputContent = emailInput.value
+  const emailError = document.querySelector("#emailErrorMsg"); // pointe le message d'erreur
+  let emailRegexTest= emailRegex.test(emailInputContent);
+  if (emailRegexTest === false) {
+    event.preventDefault();
+    emailError.textContent = "Format d'adresse mail non conforme"; // insère ce texte dans le message d'erreur
+    emailInput.focus();
+    return false;
+  } else {
+    emailError.textContent = "";
+  }
+});
+// fetch("http://localhost:3000/api/products/order") // Requête pour poster les datas
 
-
-
-
-
-
-
-
-
-
-
-  //   // Vérifier les infos saisies
-  //   const formDatas = document.querySelector("form");
-  //   // pointe vers le formulaire
-  //   formDatas.addEventListener("submit", (event) => {
-//     // écoute l'évènement sur l'élément type submit
-//     const lastNameInput = document.querySelector("#firstName"); // pointe vers l'input du prénom
-//     const firstNameRegex = /^[a-zA-Z-\'\s]+$/; // limite le contenu à des lettres, tiret, espace et apostrophe et autorise plusieurs mots
-
-//     if (firstNameRegex.test(lastNameInput.value) = false) {
-//       // ou si la valeur de l'input n'est pas conforme à la Regex
-//       const firstNameError = document.querySelector("#firstNameErrorMsg");
-//               // pointe le message d'erreur
-//       firstNameError.innerHTML = "Le prénom doit être composé de lettres (le tiret et l'apostrophe sont acceptés)"; // insère ce texte dans le message d'erreur
-//       event.preventDefault(); // empêche le submit
-//     };  
-//   });
-//   event.preventDefault(); // empêche le submit de s'exécuter
-
-
-
-
-//       if (lastNameInput.value.trim() = "") {
-//         // si la valeur de l'input est vide (les espaces pouvant être présents devant ou derrière sont retirés par trim), ...
-//         const firstNameError = document.querySelector("#firstNameErrorMsg");
-//         // pointe vers le message d'erreur
-//         firstNameError.innerHTML = "Veuillez indiquer votre prénom"; // insère ce texte dans le message d'erreur
-//         event.preventDefault(); // empêche le submit
-//       } else if (firstNameRegex.test(lastNameInput.value) = false) {
-//         // ou si la valeur de l'input n'est pas conforme à la Regex
-//         const firstNameError = document.querySelector("#firstNameErrorMsg");
-//         // pointe le message d'erreur
-//         firstNameError.innerHTML = "Le prénom doit être composé de lettres (le tiret et l'apostrophe sont acceptés)"; // insère ce texte dans le message d'erreur
-//         event.preventDefault(); // empêche le submit
-//       };
-
-//       const body = {
-//         contact: {
-//           firstName: "Prénom",
-//           lastName: "Nom de famille",
-//           address: "adresse",
-//           city: "ville",
-//           email: "em@il"
-//         },
-//         products: ["products ids"]
-//       };
-
-//       fetch("http://localhost:3000/api/products/order", { // Poste les datas json dans order
-//       method: "POST",
-//       body: JSON.stringify(body),
-//       header: {
-//         "Content-type": "application/json",
-//         "Access -Control-Allow-Origin": "*"
-//       }
-//     })
 //     .then((res) => res.json())
-//     .then((data) => console.log(data))
-//     event.preventDefault();
+//     .then((product) => displayCartItems(cartItem, product)); 
 
-//   });
-// });
-// };
+  
+
