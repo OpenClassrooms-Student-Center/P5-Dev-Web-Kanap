@@ -184,7 +184,6 @@ orderButton.addEventListener("click", (event) => {
       const productKey = cartContent[i].id;
       const productId = productKey.split("-")[0];
       cacheProductsIds.push(productId);
-      console.log(productId);
     }
     return cacheProductsIds;
   };
@@ -213,11 +212,15 @@ orderButton.addEventListener("click", (event) => {
     },
   })
   .then((res) => res.json())
-  .then((products) => productsIdsFromCache(products))
+  .then((products) => {
+    const orderId = products.orderId;
+    window.location.href = "/front/html/confirmation.html" + "?orderId=" + orderId;
+  })
 });
+
 const nameRegex = /^[a-zA-Z\-\'\s]+$/; // limite le contenu à des lettres, tirets, espaces et apostrophes, et autorise plusieurs mots
 const addressRegex = /^[a-zA-Z0-9\s\,\'\-]*$/;
-const emailRegex = /^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+$/;
+const emailRegex = /^[A-Za-z0-9_!#$%&'*+\/=?`{|}~^.-]+@[A-Za-z0-9.-]+.[A-Za-z]$/;
 
 firstNameInput.addEventListener("input", (event) => {
   event.preventDefault();
@@ -233,6 +236,7 @@ firstNameInput.addEventListener("input", (event) => {
     firstNameError.textContent = "";
   }
 });
+
 lastNameInput.addEventListener("input", (event) => {
   event.preventDefault();
   let lastNameInputContent = lastNameInput.value; // valeur de l'input nom (string)
@@ -247,6 +251,7 @@ lastNameInput.addEventListener("input", (event) => {
     lastNameError.textContent = "";
   }
 });
+
 addressInput.addEventListener("input", (event) => {
   event.preventDefault();
   let addressInputContent = addressInput.value;
@@ -291,3 +296,4 @@ emailInput.addEventListener("input", (event) => {
     emailError.textContent = "";
   }
 });
+
