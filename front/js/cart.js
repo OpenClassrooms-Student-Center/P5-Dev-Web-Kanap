@@ -311,4 +311,3 @@ emailInput.addEventListener("input", (event) => {
     emailError.textContent = "";
   }
 });
-
