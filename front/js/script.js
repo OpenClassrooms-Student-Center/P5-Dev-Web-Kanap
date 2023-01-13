@@ -12,37 +12,33 @@ const displayProduct = (product) => { // Insère les "item" dans items
   const item = document.createElement("a");
   items.append(item);
   item.setAttribute("href", "./product.html?id=" + product._id); // Ajoute lien vers page article
-  
-  
-  const createArticle = () => {
-    const article = document.createElement("article"); // Insère l'élément article dans item
-  item.append(article);
-  
-  const createImg  = () => {
-    const img = document.createElement("img"); // Insère img avec ses attributs (description/alt et url de l'image)
-    img.setAttribute("alt", product.altText);
-    img.setAttribute("src", product.imageUrl);
-    article.appendChild(img); // Insère img dans article
-  };
-  createImg();
-  
-  const createName = () => {
+  createArticle(item, product);
+};
+const createImg  = (product, article) => {
+  const img = document.createElement("img"); // Insère img avec ses attributs (description/alt et url de l'image)
+  img.setAttribute("alt", product.altText);
+  img.setAttribute("src", product.imageUrl);
+  article.appendChild(img); // Insère img dans article
+};
+
+const createName = (product, article) => {
   const productName = document.createElement("h3"); 
   productName.classList.add("productName");
   productName.textContent = product.name;
   article.appendChild(productName);// Insère le titre de l'article
-  };
-  createName();
+};
 
-  const createDescription = () => {
+const createDescription = (product, article) => {
   const productDescription = document.createElement("p"); 
   productDescription.classList.add("productDescription");
   productDescription.textContent = product.description;
   article.appendChild(productDescription); // Insère la description
-  };
-  createDescription();
-};
-createArticle();
 };
 
-
+const createArticle = (item, product) => {
+  const article = document.createElement("article"); // Insère l'élément article dans item
+  item.append(article);
+  createImg(product, article);
+  createName(product, article);
+  createDescription(product, article);
+};
