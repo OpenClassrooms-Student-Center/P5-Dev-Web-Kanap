@@ -1,7 +1,10 @@
-// (expliquer chaque ligne) rien compris
+// (expliquer chaque ligne)
+//Recuperation de la chaince de requête (/product.html?id=107fb5b75607497b96722bda5b504926)
 const queryString = window.location.search;
+//Analyse de la chaine de requête 
 const urlParams = new URLSearchParams(queryString)
-const productId = urlParams.get ('id')
+//Appel de la methode sur le resultat (id)
+const productId = urlParams.get ("id")
 
 // On demande a l'API de nous retourner  les donnés du produits.
 fetch (`http://localhost:3000/api/products/${productId}`)
@@ -24,8 +27,12 @@ fetch (`http://localhost:3000/api/products/${productId}`)
         addCart(product._id)
     });
 })
+
+//TODO: FAIRE LE CATCH ERROR
+
+//on crée un message d'erreur lorsque l'API ne nous retourne pas d'infos.
 .catch((error)=>{
-// A FAIRE
+  document.getElementById('addToCart').innerHTML = `Une erreur est surevenue (${error})`
 });
 
 //FONCTION POUR RENDRE LE PRODUIT SUR LA PAGE PRODUIT
@@ -44,29 +51,6 @@ product.colors.forEach((color) => {
   });
  }
 
- // FONCTION POUR AJOUTER LE PANIER AU LOCAL STORAGE
-function saveCart(cart) {
-    //Ajout du panier au localStorage
-    localStorage.setItem("cart", JSON.stringify(cart));
-}
-
-
-// FONCTION QUI PERMET DE RECUPERER LA VALEUR DU PANIER
-function getCart() {
-    //On récupère la valeur "cart" du localStorage
-    let cart = localStorage.getItem('cart');
-    //Si elle n'existe pas on renvoit un tableau vide
-    if (cart == null){
-        return [];
-    } else {
-        //Sinon on renvoi sa valeur parsée
-        return JSON.parse(cart);
-    }
-}
-
-
-
-
 //FONCTION QUI PERMET D'AJOUTER UN PRODUIT ET SES OPTION "couleur et nombre" AU PANIER
 function addCart(productId) {
     //On récupère le contenu du panier en localStorage
@@ -81,7 +65,15 @@ function addCart(productId) {
       alert("La quantité doit être située entre 1 et 100");
       return;
     }
+
     //TODO: VERIFIER QU'UNE COULEUR A ETAIT CHOISIE
+
+    //On vérifié qu'une couleur a bien étais choisie
+    if (!color) {
+      //créer une aletre si la couleur n'as pas étais choisie
+      alert("Une couleur doit être séléctionnée");
+      return
+    }
   
     //On vérifie s'il existe déjà un produit avec le meme id et la meme couleur
     let foundProduct = cart.find(
@@ -106,3 +98,22 @@ function addCart(productId) {
     //On met à jour le localStorage
     saveCart(cart);
   }
+
+  // FONCTION QUI PERMET DE RECUPERER LA VALEUR DU PANIER
+function getCart() {
+  //On récupère la valeur "cart" du localStorage
+  let cart = localStorage.getItem("cart");
+  //Si elle n'existe pas on renvoit un tableau vide
+  if (cart == null){
+      return [];
+  } else {
+      //Sinon on renvoi sa valeur parsée
+      return JSON.parse(cart);
+  }
+}
+
+ // FONCTION POUR AJOUTER LE PANIER AU LOCAL STORAGE
+ function saveCart(cart) {
+  //Ajout du panier au localStorage
+  localStorage.setItem("cart", JSON.stringify(cart));
+}

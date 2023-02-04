@@ -5,31 +5,7 @@ fetch (`http://localhost:3000/api/products/`)
         return resp.json();
     }
 })
-//Fonction pour sauvegarder le panier dans le local storage
-function saveCart(cart) {
-      localStorage.setItem("cart", JSON.stringify(cart));
-  }
-//Fonction qui permet de créer le placement du produit dans le local storage et de nous retourner un tableau vide s'il n'y a rien
-function getCart() {
-      let cart = localStorage.getItem('cart');
-      if (cart == null){
-          return [];
-      } else {
-          return JSON.parse(cart);
-      }
-  }
-//Fonction qui permet d'ajouter un produit au local storage
-function addCart(product) {
-      let cart = getCart();
-      let foundProduct = cart.find(p => p.id == product.id);
-      if(foundProduct != undefined){
-        foundProduct.quantity++;
-      }else{
-        product.quantity = 1;
-        cart.push(product);
-      }
-      saveCart(cart);
-  }
+
 //Fonction qui permet de supprimer un produit et toute sa quantité du local storage
   function removeFromCart(product) {
     let cart = getCart();
