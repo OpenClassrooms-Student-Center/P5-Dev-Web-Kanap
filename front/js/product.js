@@ -111,3 +111,5 @@ function saveCart(cart) {
   //Ajout du panier au localStorage
   localStorage.setItem("cart", JSON.stringify(cart));
 }
+
+
