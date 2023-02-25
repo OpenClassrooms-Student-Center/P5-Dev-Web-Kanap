@@ -1,3 +1,7 @@
+import { getCart } from "./index.js";
+import { saveCart } from "./index.js";
+
+
 //Recuperation de la chaince de requête (product.html?id=107fb5b75607497b96722bda5b504926)
 const queryString = window.location.search;
 //Analyse de la chaine de requête
@@ -93,23 +97,5 @@ function addCart(productId) {
   saveCart(cart);
 }
 
-// FONCTION QUI PERMET DE RECUPERER LA VALEUR DU PANIER
-function getCart() {
-  //On récupère la valeur "cart" du localStorage
-  let cart = localStorage.getItem("cart");
-  //Si elle n'existe pas on renvoit un tableau vide
-  if (cart == null) {
-    return [];
-  } else {
-    //Sinon on renvoi sa valeur parsée
-    return JSON.parse(cart);
-  }
-}
-
-// FONCTION POUR AJOUTER LE PANIER AU LOCAL STORAGE
-function saveCart(cart) {
-  //Ajout du panier au localStorage
-  localStorage.setItem("cart", JSON.stringify(cart));
-}
 
 
