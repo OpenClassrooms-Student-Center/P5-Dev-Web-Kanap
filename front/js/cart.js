@@ -12,16 +12,16 @@ cart.sort(function (a, b) {
   return 0;
 });
 
-const url = "https://api.thecatapi.com/v1/images/";
-const catIds = ["4bo", "5ta", "5oe"];
+//const url = "https://api.thecatapi.com/v1/images/";
+//const catIds = ["4bo", "5ta", "5oe"];
 
-async function handleData() {
-  for (const catId of catIds) {
-    const response = await fetch(url + catId);
-    const data = await response.json();
-    console.log(data);
-  }
-}
+//async function handleData() {
+//  for (const catId of catIds) {
+//   const response = await fetch(url + catId);
+//  const data = await response.json();
+//    console.log(data);
+//  }
+//}
 handleData();
 
 cart.forEach((localProduct) => {
