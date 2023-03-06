@@ -156,13 +156,12 @@ function basketQuantity() {
   const basketQuantityDom = document.querySelector("#totalQuantity");
   let cartQuantity = 0;
   for (let i = 0; i < cart.length; i++) {
-    cartQuantity += +cart[i].quantity;
+    cartQuantity += Number(cart[i].quantity);
   }
   basketQuantityDom.textContent = cartQuantity;
 }
 
 //On calcule le prix total avec un array contenant le prix et la quantité de chaque produit
-//
 function basketPrice(cartLsApi) {
   const basketPriceDom = document.querySelector("#totalPrice");
   let cartPrice = 0;
@@ -173,7 +172,6 @@ function basketPrice(cartLsApi) {
 }
 
 //Formulaire
-
 const firstNameErrorMsg = document.querySelector("#firstNameErrorMsg");
 const lastNameErrorMsg = document.querySelector("#lastNameErrorMsg");
 const addressErrorMsg = document.querySelector("#addressErrorMsg");
@@ -193,30 +191,29 @@ const regexLastName = nameREGEX;
 const regexAddress = /^[#.0-9a-zA-ZÀ-ÿ\s,-]{2,60}$/;
 const regexCity = nameREGEX;
 const regexEmail =
-  /^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$/;
+  /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
 
 //On affiche un message d'erreur sur le premier element du formulaire invalide
+//TODO factoriser
 function formRegexValidation() {
-  let regexValidation = false;
+  let regexValidation = 0;
   if (
     regexFirstName.test(inputFirstName.value) == false ||
     inputFirstName.value === null
   ) {
     firstNameErrorMsg.innerHTML = "Merci de renseigner un prénom valide";
-    regexValidation = false;
+    regexValidation++;
   } else {
     firstNameErrorMsg.innerHTML = "";
-    regexValidation = true;
   }
   if (
     regexLastName.test(inputLastName.value) == false ||
     inputLastName.value === null
   ) {
     lastNameErrorMsg.innerHTML = "Merci de renseigner un nom de famille valide";
-    regexValidation = false;
+    regexValidation++;
   } else {
     lastNameErrorMsg.innerHTML = "";
-    regexValidation = true;
   }
   if (
     regexAddress.test(inputAddress.value) == false ||
@@ -224,26 +221,23 @@ function formRegexValidation() {
   ) {
     addressErrorMsg.innerHTML =
       "Merci de renseigner une adresse valide (Numéro, voie, nom de la voie, code postal)";
-    regexValidation = false;
+    regexValidation++;
   } else {
     addressErrorMsg.innerHTML = "";
-    regexValidation = true;
   }
   if (regexCity.test(inputCity.value) == false || inputCity.value === null) {
     cityErrorMsg.innerHTML = "Merci de renseigner un nom de ville valide";
-    regexValidation = false;
+    regexValidation++;
   } else {
     cityErrorMsg.innerHTML = "";
-    regexValidation = true;
   }
   if (regexEmail.test(inputEmail.value) == false || inputEmail.value === null) {
     emailErrorMsg.innerHTML = "Merci de renseigner une adresse email valide";
-    regexValidation = false;
+    regexValidation++;
   } else {
     emailErrorMsg.innerHTML = "";
-    regexValidation = true;
   }
-  return regexValidation;
+  return regexValidation == 0;
 }
 
 //On retourne le formulaire de commande et les Id après avoir validé le Regex du form
@@ -285,14 +279,14 @@ function orderApiPost(formProductObject) {
   });
 }
 
-//On verifie les inputs de l'utilisateur avant d'envoyer sa commande à l'API
+//OnClick On verifie les inputs de l'utilisateur avant d'envoyer sa commande à l'API
 function orderButton() {
   const orderButton = document.querySelector("#order");
   orderButton.addEventListener("click", function (defaultBlock) {
     defaultBlock.preventDefault();
 
     let formProductObject = orderValidation();
-    if (formProductObject != false) {
+    if (formProductObject) {
       orderApiPost(formProductObject);
     }
   });
