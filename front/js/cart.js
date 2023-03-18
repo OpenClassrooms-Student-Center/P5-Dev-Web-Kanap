@@ -1,7 +1,7 @@
+//import de fonction du fichier index
 import { getCart } from "./index.js";
 import { saveCart } from "./index.js";
 let cart = getCart();
-
 //tri
 cart.sort(function (a, b) {
   if (a._id < b._id) {
@@ -56,25 +56,50 @@ deleteButtons.forEach((button) => {
     removeFromCart(e);
   });
 });
-
+const quantitySelector = document.querySelectorAll (".itemQuantity")
+quantitySelector.forEach((input) => {
+  input.addEventListener("input", function (e){
+    changeQuantity(e);
+  });
+});
+//Fonction qui permet d'ajouter ou supprimer plus ou moins de quantité sur un produit
+function changeQuantity(event) {
+  const article = event.target.closest("article");
+  let cart = getCart();
+  let foundProduct = cart.find((p) => p._id === article.dataset.id && p.color === article.dataset.color);
+  if (foundProduct != undefined)
+  {
+    foundProduct.quantity = event.target.value;
+    //Cela appelle aussi la fonction du dessus lorsqu'un item passe à 0 ou en dessous afin de supprimer le produit du local storage
+    if (foundProduct.quantity <= 0) {
+      removeFromCart(foundProduct);
+    } else {
+      saveCart(cart);
+      getTotalQuantity();
+      getTotalPrice();
+    }
+  }
+}
 //Fonction qui permet de retirer un produit du panier
 function removeFromCart(event) {
   const article = event.target.closest("article");
   let cart = getCart();
   let itemToDelete = cart.find(
-    (p) => p._id != article.dataset.id && p.color != article.dataset.color
+    (p) => p._id === article.dataset.id && p.color === article.dataset.color
   );
+  fetch(`http://localhost:3000/api/products/${itemToDelete._id}`).then(function (response) {
+    return response.json();
+  }).then(function (data) {
+    lessAmount(data.price, itemToDelete.quantity)
+  })
   article.remove();
+  localStorage.removeItem('');
   saveCart(cart);
+  getTotalQuantity()
 }
-
-
-
-
-//ajouter le prix
+//r
 function addAmount(price, quantity) {
   const htmlPrice = document.getElementById("totalPrice");
-  console.log(htmlPrice.textContent);
   if (htmlPrice.textContent === "") {
     htmlPrice.innerText = price * quantity;
   } else {
@@ -82,38 +107,34 @@ function addAmount(price, quantity) {
       parseInt(htmlPrice.textContent) + parseInt(price * quantity);
   }
 }
-function refreshAmount(price, quantity) {
-  let foundPrice = htmlPrice;
-  if ()
-
+//f
+function lessAmount(price, quantity) {
+  const htmlPrice = document.getElementById("totalPrice");
+  htmlPrice.innerText =
+      parseInt(htmlPrice.textContent) - parseInt(price * quantity);
 }
-
-
-
-
 //Fonction qui nous permet d'ajouter tous les produits du panier afin de faire un total
 function getTotalQuantity() {
   let cart = getCart();
   let number = 0;
   for (let product of cart) {
-    number += product.quantity;
+    number += parseInt(product.quantity);
   }
   document.getElementById("totalQuantity").innerText = number;
 }
 getTotalQuantity();
-
-//Fonction qui permet d'ajouter ou supprimer plus ou moins de quantité sur un produit
-function changeQuantity(product, quantity) {
+//f
+function getTotalPrice () {
+  const htmlPrice = document.getElementById("totalPrice");
+  htmlPrice.innerText = "";
   let cart = getCart();
-  let foundProduct = cart.find((p) => p._id == product._id);
-  if (foundProduct != undefined);
-  {
-    foundProduct.quantity += quantity;
-    //Cela appelle aussi la fonction du dessus lorsqu'un item passe à 0 ou en dessous afin de supprimer le produit du local storage
-    if (foundProduct.quanity <= 0) {
-      removeFromCart(foundProduct);
-    } else {
-      saveCart(cart);
-    }
+  for (const localProduct of cart) {
+    try {
+      fetch(`http://localhost:3000/api/products/${localProduct._id}`).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        addAmount(data.price, localProduct.quantity)
+      })
+    } catch(err) { }
   }
 }
