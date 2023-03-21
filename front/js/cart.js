@@ -154,3 +154,78 @@ function getTotalPrice() {
     } catch (err) {}
   }
 }
+
+
+
+//Formulaire
+//prenom
+const firstNameInput = document.getElementById("firstName");
+const firstNameError = document.getElementById("firstNameErrorMsg");
+firstNameInput.addEventListener("input", function (e) {
+  if (
+    !firstNameInput.value.match(
+      /^([a-zA-ZáàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]+)$/
+    )
+  ) {
+    firstNameError.innerHTML = "Le texte ne doit contenire que des lettres";
+  } else {
+    firstNameError.innerHTML = "";
+  }
+});
+//Nom
+const lastNameInput = document.getElementById("lastName");
+const lastNameError = document.getElementById("lastNameErrorMsg");
+lastNameInput.addEventListener("input", function (e) {
+  if (
+    !lastNameInput.value.match(
+      /^([a-zA-ZáàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]+)$/
+    )
+  ) {
+    lastNameError.innerHTML = "Le texte ne doit contenire que des lettres";
+  } else {
+    lastNameError.innerHTML = "";
+  }
+});
+//adresse
+const adresseInput = document.getElementById("address");
+const adresseError = document.getElementById("addressErrorMsg");
+adresseInput.addEventListener("input", function (e) {
+  if (
+    !adresseInput.value.match(
+      /^[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s\-]*$/
+    )
+  ) {
+    adresseError.innerHTML =
+      "Le texte ne peut pas contenir de caractère spécial";
+  } else {
+    adresseError.innerHTML = "";
+  }
+});
+//ville
+const cityInput = document.getElementById("city");
+const cityError = document.getElementById("cityErrorMsg");
+cityInput.addEventListener("input", function (e) {
+  if (
+    !cityInput.value.match(
+      /^([a-zA-ZáàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s\-]+)$/
+    )
+  ) {
+    cityError.innerHTML = "Le texte ne doit contenire que des lettres";
+  } else {
+    cityError.innerHTML = "";
+  }
+});
+//email
+const emailInput = document.getElementById("email");
+const emailError = document.getElementById("emailErrorMsg");
+emailInput.addEventListener("input", function (e) {
+  if (
+    !emailInput.value.match(
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,10}))/i
+    )
+  ) {
+    emailError.innerHTML = "Veuillez entrer une adresse email valide";
+  } else {
+    emailError.innerHTML = "";
+  }
+});
