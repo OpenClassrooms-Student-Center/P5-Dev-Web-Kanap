@@ -155,9 +155,16 @@ function getTotalPrice() {
   }
 }
 
+//****************Traitement des erreurs de formulaires****************
+// function checkRegex() {
+// }
+//const firstNameInput = document.getElementById("firstName");
+//const firstNameError = document.getElementById("firstNameErrorMsg");
+//firstNameInput.addEventListener("input", function (e){
+//  checkRegex(firstNameInput, firstNameError, "/^([a-zA-ZáàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]+)$/"
+//  , "Le texte ne doit pas contenire que des lettres")
+//});
 
-
-//Formulaire
 //prenom
 const firstNameInput = document.getElementById("firstName");
 const firstNameError = document.getElementById("firstNameErrorMsg");
@@ -172,6 +179,7 @@ firstNameInput.addEventListener("input", function (e) {
     firstNameError.innerHTML = "";
   }
 });
+
 //Nom
 const lastNameInput = document.getElementById("lastName");
 const lastNameError = document.getElementById("lastNameErrorMsg");
@@ -186,13 +194,14 @@ lastNameInput.addEventListener("input", function (e) {
     lastNameError.innerHTML = "";
   }
 });
+
 //adresse
 const adresseInput = document.getElementById("address");
 const adresseError = document.getElementById("addressErrorMsg");
 adresseInput.addEventListener("input", function (e) {
   if (
     !adresseInput.value.match(
-      /^[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s\-]*$/
+      /^[a-zA-Z0-9"'áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s\-]*$/
     )
   ) {
     adresseError.innerHTML =
@@ -201,13 +210,14 @@ adresseInput.addEventListener("input", function (e) {
     adresseError.innerHTML = "";
   }
 });
+
 //ville
 const cityInput = document.getElementById("city");
 const cityError = document.getElementById("cityErrorMsg");
 cityInput.addEventListener("input", function (e) {
   if (
     !cityInput.value.match(
-      /^([a-zA-ZáàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s\-]+)$/
+      /^([a-zA-Z"'áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s\-]+)$/
     )
   ) {
     cityError.innerHTML = "Le texte ne doit contenire que des lettres";
@@ -215,6 +225,7 @@ cityInput.addEventListener("input", function (e) {
     cityError.innerHTML = "";
   }
 });
+
 //email
 const emailInput = document.getElementById("email");
 const emailError = document.getElementById("emailErrorMsg");
@@ -229,3 +240,34 @@ emailInput.addEventListener("input", function (e) {
     emailError.innerHTML = "";
   }
 });
+
+const randomCommandNumber = (max, min) => {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+};
+
+//*************Envoie du Formulaire a l'API*************
+function envoyerFormulaire() {
+  const formulaireEnvoie = document.getElementById("order");
+  formulaireEnvoie.addEventListener("submit", function (e) {
+    e.preventDefault();
+  });
+  //checkRegex()
+  const cmd = randomCommandNumber(99999999,10000000);
+  localStorage.setItem("commandNumber", JSON.stringify(cmd));
+  let cartCmd = getCart();
+  const form = {
+    firstName: target.querySelector("[name=firstname]").value,
+    LastName: target.querySelector("[name=lastname]").value,
+    address: target.querySelector("[name=address]").value,
+    city: target.querySelector("[name=city]").value,
+    email: target.querySelector("[name=email]").value,
+  };
+  const chargeUtile = JSON.stringify(form);
+
+  const send = fetch("http://localhost:3000/api/order", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: { chargeUtile, cmd, cartCmd }
+  });
+  location.href('http://127.0.0.1:5500/front/html/confirmation.html')
+}
