@@ -24,6 +24,7 @@ fetch(`http://localhost:3000/api/products/${productId}`)
     //On detecte le clic sur le bouton addToCart puis on appelle la fonction d'ajout au panier
     document.getElementById("addToCart").addEventListener("click", function () {
       addCart(product._id);
+      
     });
   })
   .catch((error) => {
@@ -73,6 +74,8 @@ function addCart(productId) {
     //créer une aletre si la couleur n'as pas étais choisie
     alert("Une couleur doit être séléctionnée");
     return;
+  }else{
+    alert("Le produit à bien était ajouté au panier")
   }
   
   //On vérifie s'il existe déjà un produit avec le meme id et la meme couleur
@@ -91,6 +94,7 @@ function addCart(productId) {
 
     //On ajoute ce produit formaté au panier
     cart.push(formattedProduct);
+    
   }
 
   //On met à jour le localStorage
