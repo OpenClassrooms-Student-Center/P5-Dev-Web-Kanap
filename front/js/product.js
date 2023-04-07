@@ -1,7 +1,6 @@
 import { getCart } from "./index.js";
 import { saveCart } from "./index.js";
 
-
 //Recuperation de la chaince de requête (product.html?id=107fb5b75607497b96722bda5b504926)
 const queryString = window.location.search;
 //Analyse de la chaine de requête
@@ -24,7 +23,6 @@ fetch(`http://localhost:3000/api/products/${productId}`)
     //On detecte le clic sur le bouton addToCart puis on appelle la fonction d'ajout au panier
     document.getElementById("addToCart").addEventListener("click", function () {
       addCart(product._id);
-      
     });
   })
   .catch((error) => {
@@ -74,10 +72,8 @@ function addCart(productId) {
     //créer une aletre si la couleur n'as pas étais choisie
     alert("Une couleur doit être séléctionnée");
     return;
-  }else{
-    alert("Le produit à bien était ajouté au panier")
   }
-  
+
   //On vérifie s'il existe déjà un produit avec le meme id et la meme couleur
   let foundProduct = cart.find((p) => p._id === productId && p.color === color);
 
@@ -94,12 +90,9 @@ function addCart(productId) {
 
     //On ajoute ce produit formaté au panier
     cart.push(formattedProduct);
-    
   }
 
   //On met à jour le localStorage
   saveCart(cart);
+  alert("Le produit à bien était ajouté au panier");
 }
-
-
-
