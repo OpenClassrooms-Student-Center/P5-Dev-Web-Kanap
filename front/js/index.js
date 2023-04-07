@@ -10,7 +10,6 @@ function getCart() {
     return JSON.parse(cart);
   }
 }
-
 export { getCart };
 
 // FONCTION POUR AJOUTER LE PANIER AU LOCAL STORAGE
