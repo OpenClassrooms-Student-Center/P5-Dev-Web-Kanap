@@ -1,7 +1,6 @@
 import { getCart } from "./index.js";
 import { saveCart } from "./index.js";
 
-
 //Recuperation de la chaince de requête (product.html?id=107fb5b75607497b96722bda5b504926)
 const queryString = window.location.search;
 //Analyse de la chaine de requête
@@ -74,7 +73,7 @@ function addCart(productId) {
     alert("Une couleur doit être séléctionnée");
     return;
   }
-  
+
   //On vérifie s'il existe déjà un produit avec le meme id et la meme couleur
   let foundProduct = cart.find((p) => p._id === productId && p.color === color);
 
@@ -95,7 +94,5 @@ function addCart(productId) {
 
   //On met à jour le localStorage
   saveCart(cart);
+  alert("Le produit à bien était ajouté au panier");
 }
-
-
-

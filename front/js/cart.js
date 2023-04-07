@@ -2,8 +2,8 @@
 import { getCart } from "./index.js";
 import { saveCart } from "./index.js";
 let cart = getCart();
-//tri
 
+//tri
 cart.sort(function (a, b) {
   if (a._id < b._id) {
     return -1;
@@ -52,14 +52,6 @@ for (const localProduct of cart) {
   } catch (err) {}
 }
 
-// ici recup boutton de suppression faire for each dessus et pour chaque element appelé deletefrom cart et get total quantity
-const deleteButtons = document.querySelectorAll(".deleteItem");
-deleteButtons.forEach((button) => {
-  button.addEventListener("click", function (e) {
-    removeFromCart(e);
-  });
-});
-
 const quantitySelector = document.querySelectorAll(".itemQuantity");
 quantitySelector.forEach((input) => {
   input.addEventListener("input", function (e) {
@@ -86,6 +78,14 @@ function changeQuantity(event) {
     }
   }
 }
+
+// ici recup boutton de suppression faire for each dessus et pour chaque element appelé deletefrom cart et get total quantity
+const deleteButtons = document.querySelectorAll(".deleteItem");
+deleteButtons.forEach((button) => {
+  button.addEventListener("click", function (e) {
+    removeFromCart(e);
+  });
+});
 
 //Fonction qui permet de retirer un produit du panier
 function removeFromCart(event) {
@@ -152,5 +152,136 @@ function getTotalPrice() {
           addAmount(data.price, localProduct.quantity);
         });
     } catch (err) {}
+  }
+}
+
+const nameRegex =
+  /^([a-zA-ZáàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]+)$/;
+const addressRegex =
+  /^[a-zA-Z0-9'áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s\-]*$/;
+const cityRegex =
+  /^([a-zA-Z'áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ\s\-]+)$/;
+const emailRegex =
+  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,10}))/i;
+
+function checkRegex(inputId, regex, errorElementId, errorMessage) {
+  const input = document.getElementById(inputId);
+  const errorElement = document.getElementById(errorElementId);
+  if (!input.value.match(regex)) {
+    errorElement.innerHTML = errorMessage;
+    return false;
+  } else {
+    errorElement.innerHTML = "";
+    return true;
+  }
+}
+
+function checkInputRegex(inputId, regex, errorElementId, errorMessage) {
+  const input = document.getElementById(inputId);
+  input.addEventListener("input", function (e) {
+    checkRegex(inputId, regex, errorElementId, errorMessage);
+  });
+}
+
+checkInputRegex(
+  "firstName",
+  nameRegex,
+  "firstNameErrorMsg",
+  "Le texte ne doit contenir que des lettres"
+);
+checkInputRegex(
+  "lastName",
+  nameRegex,
+  "lastNameErrorMsg",
+  "Le texte ne doit contenir que des lettres"
+);
+checkInputRegex(
+  "address",
+  addressRegex,
+  "addressErrorMsg",
+  "Le texte ne peut pas contenir de caractère spécial"
+);
+checkInputRegex(
+  "city",
+  cityRegex,
+  "cityErrorMsg",
+  "Le texte ne doit contenir que des lettres"
+);
+checkInputRegex(
+  "email",
+  emailRegex,
+  "emailErrorMsg",
+  "Veuillez entrer une adresse email valide"
+);
+
+const formulaireEnvoie = document.querySelector(".cart__order__form");
+formulaireEnvoie.addEventListener("submit", function (e) {
+  envoyerFormulaire(e);
+});
+
+function envoyerFormulaire(e) {
+  e.preventDefault();
+
+  if (
+    checkRegex(
+      "firstName",
+      nameRegex,
+      "firstNameErrorMsg",
+      "Le texte ne doit contenir que des lettres"
+    ) &&
+    checkRegex(
+      "lastName",
+      nameRegex,
+      "lastNameErrorMsg",
+      "Le texte ne doit contenir que des lettres"
+    ) &&
+    checkRegex(
+      "address",
+      addressRegex,
+      "addressErrorMsg",
+      "Le texte ne peut pas contenir de caractère spécial"
+    ) &&
+    checkRegex(
+      "city",
+      cityRegex,
+      "cityErrorMsg",
+      "Le texte ne doit contenir que des lettres"
+    ) &&
+    checkRegex(
+      "email",
+      emailRegex,
+      "emailErrorMsg",
+      "Veuillez entrer une adresse email valide"
+    )
+  ) {
+    const contact = {
+      firstName: document.getElementById("firstName").value,
+      lastName: document.getElementById("lastName").value,
+      address: document.getElementById("address").value,
+      city: document.getElementById("city").value,
+      email: document.getElementById("email").value,
+    };
+
+    const productsIds = getCart().map((product) => product._id);
+
+    const datas = {
+      contact: contact,
+      products: productsIds,
+    };
+
+    fetch("http://localhost:3000/api/products/order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(datas),
+    })
+      .then((resp) => {
+        if (resp.ok) {
+          return resp.json();
+        }
+      })
+      .then((datas) => {
+        localStorage.removeItem("cart");
+        window.location.href = `./confirmation.html?orderId=${datas.orderId}`;
+      });
   }
 }
