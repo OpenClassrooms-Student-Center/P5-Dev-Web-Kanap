@@ -1,9 +1,7 @@
-//import de fonction du fichier index
 import { getCart } from "./index.js";
 import { saveCart } from "./index.js";
 let cart = getCart();
 
-//tri
 cart.sort(function (a, b) {
   if (a._id < b._id) {
     return -1;
@@ -14,7 +12,7 @@ cart.sort(function (a, b) {
   return 0;
 });
 
-//creation des elements du panier
+
 for (const localProduct of cart) {
   try {
     const response = await fetch(
@@ -44,13 +42,16 @@ for (const localProduct of cart) {
           </div>
         </div>
       </article>`;
-    //Ensuite on appelle le parent du code qui a un id 'items' afin que le code soit écrit au bon endroit.
     const parentItems = document.getElementById("cart__items");
-    //On explique que le parents est du code HTML (qu'est ce que le inner.html)
     parentItems.innerHTML += html;
     addAmount(remoteProduct.price, localProduct.quantity);
-  } catch (err) {}
+  } catch (err) {
+    document.querySelector(
+      ".cart"
+    ).innerHTML = `<p>Une erreur est survenue (${error})</p>`;
+  }
 }
+
 
 const quantitySelector = document.querySelectorAll(".itemQuantity");
 quantitySelector.forEach((input) => {
@@ -59,7 +60,7 @@ quantitySelector.forEach((input) => {
   });
 });
 
-//Fonction qui permet d'ajouter ou supprimer plus ou moins de quantité sur un produit
+
 function changeQuantity(event) {
   const article = event.target.closest("article");
   let cart = getCart();
@@ -68,7 +69,6 @@ function changeQuantity(event) {
   );
   if (curentItem != undefined) {
     curentItem.quantity = event.target.value;
-    //Cela appelle aussi la fonction du dessus lorsqu'un item passe à 0 ou en dessous afin de supprimer le produit du local storage
     if (curentItem.quantity <= 0) {
       removeFromCart(curentItem);
     } else {
@@ -79,7 +79,7 @@ function changeQuantity(event) {
   }
 }
 
-// ici recup boutton de suppression faire for each dessus et pour chaque element appelé deletefrom cart et get total quantity
+
 const deleteButtons = document.querySelectorAll(".deleteItem");
 deleteButtons.forEach((button) => {
   button.addEventListener("click", function (e) {
@@ -87,7 +87,7 @@ deleteButtons.forEach((button) => {
   });
 });
 
-//Fonction qui permet de retirer un produit du panier
+
 function removeFromCart(event) {
   const article = event.target.closest("article");
   let cart = getCart();
@@ -101,6 +101,12 @@ function removeFromCart(event) {
     .then(function (data) {
       lessAmount(data.price, itemToDelete.quantity);
     });
+  // .catch((error) => {
+  //   //on crée un message d'erreur lorsque l'API ne nous retourne pas d'infos.
+  //   document.querySelector(
+  //     ".item"
+  //   ).innerHTML = `<p>Une erreur est survenue (${error})</p>`;
+  // });
   article.remove();
   cart = cart.filter((curentItem) => curentItem !== itemToDelete);
   console.log(cart);
@@ -108,7 +114,7 @@ function removeFromCart(event) {
   getTotalQuantity();
 }
 
-//r
+
 function addAmount(price, quantity) {
   const htmlPrice = document.getElementById("totalPrice");
   if (htmlPrice.textContent === "") {
@@ -119,14 +125,14 @@ function addAmount(price, quantity) {
   }
 }
 
-//f
+
 function lessAmount(price, quantity) {
   const htmlPrice = document.getElementById("totalPrice");
   htmlPrice.innerText =
     parseInt(htmlPrice.textContent) - parseInt(price * quantity);
 }
 
-//Fonction qui nous permet d'ajouter tous les produits du panier afin de faire un total
+
 function getTotalQuantity() {
   let cart = getCart();
   let number = 0;
@@ -137,7 +143,7 @@ function getTotalQuantity() {
 }
 getTotalQuantity();
 
-//f
+
 function getTotalPrice() {
   const htmlPrice = document.getElementById("totalPrice");
   htmlPrice.innerText = "";
@@ -151,9 +157,14 @@ function getTotalPrice() {
         .then(function (data) {
           addAmount(data.price, localProduct.quantity);
         });
-    } catch (err) {}
+    } catch (err) {
+      document.getElementById(
+        "totalPrice"
+      ).innerHTML = `<p>Une erreur est survenue (${error})</p>`;
+    }
   }
 }
+
 
 const nameRegex =
   /^([a-zA-ZáàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]+)$/;
@@ -176,12 +187,14 @@ function checkRegex(inputId, regex, errorElementId, errorMessage) {
   }
 }
 
+
 function checkInputRegex(inputId, regex, errorElementId, errorMessage) {
   const input = document.getElementById(inputId);
   input.addEventListener("input", function (e) {
     checkRegex(inputId, regex, errorElementId, errorMessage);
   });
 }
+
 
 checkInputRegex(
   "firstName",
@@ -214,10 +227,12 @@ checkInputRegex(
   "Veuillez entrer une adresse email valide"
 );
 
+
 const formulaireEnvoie = document.querySelector(".cart__order__form");
 formulaireEnvoie.addEventListener("submit", function (e) {
   envoyerFormulaire(e);
 });
+
 
 function envoyerFormulaire(e) {
   e.preventDefault();
@@ -283,5 +298,11 @@ function envoyerFormulaire(e) {
         localStorage.removeItem("cart");
         window.location.href = `./confirmation.html?orderId=${datas.orderId}`;
       });
+    // .catch((error) => {
+    //   //on crée un message d'erreur lorsque l'API ne nous retourne pas d'infos.
+    //   document.querySelector(
+    //     ".item"
+    //   ).innerHTML = `<p>Une erreur est survenue (${error})</p>`;
+    // });
   }
 }
