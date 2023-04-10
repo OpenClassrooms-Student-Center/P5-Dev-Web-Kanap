@@ -45,7 +45,7 @@ for (const localProduct of cart) {
     const parentItems = document.getElementById("cart__items");
     parentItems.innerHTML += html;
     addAmount(remoteProduct.price, localProduct.quantity);
-  } catch (err) {
+  } catch (error) {
     document.querySelector(
       ".cart"
     ).innerHTML = `<p>Une erreur est survenue (${error})</p>`;
@@ -100,16 +100,12 @@ function removeFromCart(event) {
     })
     .then(function (data) {
       lessAmount(data.price, itemToDelete.quantity);
-    });
-  // .catch((error) => {
-  //   //on crée un message d'erreur lorsque l'API ne nous retourne pas d'infos.
-  //   document.querySelector(
-  //     ".item"
-  //   ).innerHTML = `<p>Une erreur est survenue (${error})</p>`;
-  // });
+    })
+  .catch((error) => {
+    alert('Impossible de supprimer le panier')
+  });
   article.remove();
   cart = cart.filter((curentItem) => curentItem !== itemToDelete);
-  console.log(cart);
   saveCart(cart);
   getTotalQuantity();
 }
@@ -157,7 +153,7 @@ function getTotalPrice() {
         .then(function (data) {
           addAmount(data.price, localProduct.quantity);
         });
-    } catch (err) {
+    } catch (error) {
       document.getElementById(
         "totalPrice"
       ).innerHTML = `<p>Une erreur est survenue (${error})</p>`;
@@ -297,12 +293,11 @@ function envoyerFormulaire(e) {
       .then((datas) => {
         localStorage.removeItem("cart");
         window.location.href = `./confirmation.html?orderId=${datas.orderId}`;
-      });
-    // .catch((error) => {
-    //   //on crée un message d'erreur lorsque l'API ne nous retourne pas d'infos.
-    //   document.querySelector(
-    //     ".item"
-    //   ).innerHTML = `<p>Une erreur est survenue (${error})</p>`;
-    // });
+      })
+    .catch((error) => {
+      ddocument.querySelector(
+        ".cart"
+      ).innerHTML = `<p>Une erreur est survenue (${error})</p>`;
+    });
   }
 }
