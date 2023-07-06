@@ -28,6 +28,7 @@ function removeItem(itemId, itemColor) {
 
 function createCartItemElement(item, kanap) {
   item.price = kanap.price;
+  item.name = kanap.name;
   const cartItem = document.createElement("article");
   cartItem.classList.add("cart__item");
   cartItem.dataset.id = item.id;
