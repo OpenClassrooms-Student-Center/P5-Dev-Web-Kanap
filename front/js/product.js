@@ -6,19 +6,19 @@ const url = new URL(currentUrl);
 
 // Récupérer l'ID du produit depuis l'URL
 const idParam = url.searchParams.get("id");
-
+const itemsSection = document.getElementsByClassName("item__img")[0];
+const image = document.createElement('img');
 // Effectuer une requête GET vers l'API pour récupérer les informations du produit
 fetch(`http://localhost:3000/api/products/${idParam}/`)
   .then((response) => response.json())
-  .then((data) => {
-    // Récupérer les informations du produit
-    const kanap = data;
-
+  .then((kanap) => {
     // Afficher les informations dans le HTML
     document.getElementById("title").innerText = kanap.name;
     document.getElementById("price").innerText = kanap.price;
     document.getElementById("description").innerText = kanap.description;
-
+    image.src = kanap.imageUrl;
+    image.alt = kanap.altTxt;
+    itemsSection.appendChild(image);
     // Afficher les couleurs dans la liste déroulante
     const colorsSelect = document.getElementById("colors");
     kanap.colors.forEach((color) => {
@@ -29,9 +29,9 @@ fetch(`http://localhost:3000/api/products/${idParam}/`)
     });
   })
   .catch((error) => {
-    console.error(
-      "Une erreur s'est produite lors de la récupération des informations du produit:",
-      error
+    alert(
+      "Une erreur s'est produite lors de la récupération des informations du produit : " +
+        error
     );
   });
 
@@ -54,17 +54,14 @@ function addToCart() {
     if (!cartItems) {
       cartItems = [];
     }
+
     // Vérifier s'il y a déjà un produit similaire avec une quantité modifiée
-    let itemFound = false;
-    for (const item of cartItems) {
-
-      if (item.id === idParam && item.color === selectedColor) {
-        item.quantity += quantity;
-        itemFound = true;
-      }
-    }
-
-    if (!itemFound) {
+    const existingItem = cartItems.find(
+      (item) => item.id === idParam && item.color === selectedColor
+    );
+    if (existingItem) {
+      existingItem.quantity += quantity;
+    } else {
       // Créer un nouvel objet représentant le produit sélectionné
       const newItem = {
         id: idParam,
@@ -79,9 +76,9 @@ function addToCart() {
     // Mettre à jour le localStorage avec les nouvelles données
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
 
-    console.log("Produit ajouté au panier avec succès !");
+    alert("Produit ajouté au panier avec succès !");
   } else {
     // Afficher un message d'erreur
-    console.error("Veuillez sélectionner une couleur et une quantité valide.");
+    alert("Veuillez sélectionner une couleur et une quantité valide.");
   }
 }

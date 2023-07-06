@@ -33,5 +33,5 @@ fetch('http://localhost:3000/api/products')
     });
   })
   .catch(error => {
-    console.error('Une erreur s\'est produite lors de la récupération des données:', error);
+    alert('Une erreur s\'est produite lors de la récupération des données:', error);
   });
