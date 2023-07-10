@@ -13,6 +13,7 @@ fetch(`http://localhost:3000/api/products/${idParam}/`)
   .then((response) => response.json())
   .then((kanap) => {
     // Afficher les informations dans le HTML
+    document.title = kanap.name;
     document.getElementById("title").innerText = kanap.name;
     document.getElementById("price").innerText = kanap.price;
     document.getElementById("description").innerText = kanap.description;
