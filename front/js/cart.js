@@ -1,30 +1,36 @@
 const itemsSection = document.getElementById("cart__items");
+// Récupération des éléments du panier depuis le local storage ou un tableau vide
 let items = JSON.parse(localStorage.getItem("cartItems")) || [];
 
+// Fonction pour calculer le total de la quantité et du prix des éléments du panier
 function calculateTotal() {
-    let totalQuantity = 0;
-    let totalPrice = 0;
+  // Calcul de la quantité totale en utilisant reduce()
+  const totalQuantity = items.reduce((total, item) => total + item.quantity, 0);
   
-    for (const item of items) { // Parcours de tous les articles dans le panier
-        totalQuantity += item.quantity; // Ajout de la quantité de chaque article à la quantité totale
-        totalPrice += item.quantity * item.price; // Calcul du prix total en multipliant la quantité par le prix de chaque article
-      }
-    
-  
-    const totalQuantityElement = document.getElementById("totalQuantity");
-    totalQuantityElement.innerText = totalQuantity;
-  
-    const totalPriceElement = document.getElementById("totalPrice");
-    totalPriceElement.innerText = totalPrice.toFixed(2);
-  }
+  // Calcul du prix total en utilisant reduce()
+  const totalPrice = items.reduce((total, item) => total + (item.quantity * item.price), 0);
 
+  // Mise à jour des éléments HTML affichant le total
+  const totalQuantityElement = document.getElementById("totalQuantity");
+  totalQuantityElement.innerText = totalQuantity;
+
+  const totalPriceElement = document.getElementById("totalPrice");
+  totalPriceElement.innerText = totalPrice.toFixed(2);
+}
+
+// Fonction pour supprimer un élément du panier
 function removeItem(itemId, itemColor) {
-  items = items.filter(
-    (item) => item.id !== itemId || item.color !== itemColor
-  );
+  // Filtrage des éléments en utilisant filter()
+  items = items.filter(item => item.id !== itemId || item.color !== itemColor);
+  
+  // Mise à jour du local storage
   localStorage.setItem("cartItems", JSON.stringify(items));
+  
+  // Recalcul du total
   calculateTotal();
 }
+
+// Fonction pour créer un élément du panier dans le DOM
 
 function createCartItemElement(item, kanap) {
   item.price = kanap.price;
@@ -88,10 +94,9 @@ function createCartItemElement(item, kanap) {
   cartItem.appendChild(cartItemContent);
 
   deleteItemText.addEventListener("click", () => {
-    alert("Ce Kanap a été supprimer du panier : " + item.name)
+    alert("Ce Kanap a été supprimé du panier : " + item.name);
     removeItem(item.id, item.color); // supprime l'élément du localstorage
     cartItem.remove(); // supprime l'élément du DOM
-    
   });
 
   quantityInput.addEventListener("change", (event) => {
@@ -110,20 +115,41 @@ function createCartItemElement(item, kanap) {
   return cartItem;
 }
 
-function fetchProductData(item) {
+// Fonction récursive pour récupérer les données des produits de manière séquentielle
+function fetchProductData(items, index = 0) {
+  //// on verifie si on a fetch tous nos items
+  if (index >= items.length) {
+    calculateTotal();
+    return;
+  }
+
+  const item = items[index];
   fetch(`http://localhost:3000/api/products/${item.id}`)
-    .then((response) => response.json())
-    .then((kanap) => {
+    .then(response => response.json())
+    .then(kanap => {
       const cartItemElement = createCartItemElement(item, kanap);
       itemsSection.appendChild(cartItemElement);
-      calculateTotal();
+      fetchProductData(items, index + 1); /// récursive +1 index
     })
-    .catch((error) => {
-      alert("An error occurred while fetching product data:", error);
+    .catch(error => {
+      alert("Une erreur s'est produite lors de la récupération des données du produit :", error);
     });
 }
 
-for (const item of items) {
-  fetchProductData(item);
+// Création d'un objet contenant les éléments du panier groupés par ID 
+const itemsById = items.reduce((liste, item) => {
+  const id = item.id;
 
-}
+  if (!liste[id]) {
+    liste[id] = [];
+  }
+
+  liste[id].push(item);
+  return liste;
+}, {});
+
+// object contennat les elements du panier groupés par ID
+const filteredItems = Object.values(itemsById).flat();
+
+// Appel de la fonction pour récupérer les données des produits 
+fetchProductData(filteredItems);
