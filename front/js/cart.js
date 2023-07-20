@@ -188,3 +188,125 @@ const filteredItems = Object.values(itemsById).flat();
 
 // Appel de la fonction pour récupérer les données des produits
 fetchProductData(filteredItems);
+
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.querySelector(".cart__order__form");
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const firstNameInput = document.getElementById("firstName");
+    const lastNameInput = document.getElementById("lastName");
+    const addressInput = document.getElementById("address");
+    const cityInput = document.getElementById("city");
+    const emailInput = document.getElementById("email");
+
+    // Retrieve form values
+    const firstName = firstNameInput.value.trim();
+    const lastName = lastNameInput.value.trim();
+    const address = addressInput.value.trim();
+    const city = cityInput.value.trim();
+    const email = emailInput.value.trim();
+
+    // Regular expression patterns
+    const nameRegex = /^[a-zA-ZÀ-ÿ'-]+$/;
+    const adressRegex = /^[a-zA-ZÀ-ÿ-\s]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Validate first name
+    if (!nameRegex.test(firstName)) {
+      displayError(firstNameInput, "First name is invalid");
+      return;
+    } else {
+      clearError(firstNameInput);
+    }
+
+    // Validate last name
+    if (!nameRegex.test(lastName)) {
+      displayError(lastNameInput, "Last name is invalid");
+      return;
+    } else {
+      clearError(lastNameInput);
+    }
+
+    // Validate address
+    if (!adressRegex.test(address)) {
+      displayError(addressInput, "Address is invalid");
+      return;
+    } else {
+      clearError(addressInput);
+    }
+
+    // Validate city
+    if (!adressRegex.test(city)) {
+      displayError(cityInput, "City is invalid");
+      return;
+    } else {
+      clearError(cityInput);
+    }
+
+    // Validate email
+    if (!emailRegex.test(email)) {
+      displayError(emailInput, "Email is invalid");
+      return;
+    } else {
+      clearError(emailInput);
+    }
+
+    // Retrieve products from localStorage
+    const cartItems = JSON.parse(localStorage.getItem("cartItems"));
+
+    // Extract only the 'id' values from cartItems
+    const products = cartItems.map((item) => item.id);
+
+    // Create the payload object
+    const payload = {
+      contact: {
+        firstName,
+        lastName,
+        address,
+        city,
+        email,
+      },
+      products,
+    };
+
+    try {
+      const response = await fetch("http://localhost:3000/api/products/order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const orderId = data.orderId;
+        // Redirect to confirmation page with orderId
+        window.location.href = `confirmation.html?id=${orderId}`;
+      } else {
+        // Handle the error response
+        const errorData = await response.json();
+        console.log("Error:", errorData);
+      }
+    } catch (error) {
+      // Handle any network or general errors
+      console.log("Error:", error);
+    }
+  });
+
+  // Function to display error message for a specific field
+  function displayError(input, errorMessage) {
+    const errorElement = input.nextElementSibling;
+    errorElement.textContent = errorMessage;
+    errorElement.style.display = "block";
+  }
+
+  // Function to clear error message for a specific field
+  function clearError(input) {
+    const errorElement = input.nextElementSibling;
+    errorElement.textContent = "";
+    errorElement.style.display = "none";
+  }
+});
