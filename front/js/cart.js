@@ -174,7 +174,7 @@ function fetchProductData(items, index = 0) {
 // Création d'un objet contenant les éléments du panier groupés par ID
 const itemsById = items.reduce((liste, item) => {
   const id = item.id;
-
+  // Vérifie si la clé "id" existe déjà dans l'objet "liste"
   if (!liste[id]) {
     liste[id] = [];
   }
@@ -189,77 +189,81 @@ const filteredItems = Object.values(itemsById).flat();
 // Appel de la fonction pour récupérer les données des produits
 fetchProductData(filteredItems);
 
+// Attendre que le DOM (Document Object Model) soit chargé
 document.addEventListener("DOMContentLoaded", () => {
+  // Sélectionner le formulaire ayant la classe "cart__order__form"
   const form = document.querySelector(".cart__order__form");
 
+  // Ajouter un écouteur d'événement lorsque le formulaire est soumis
   form.addEventListener("submit", async (event) => {
-    event.preventDefault();
+    event.preventDefault(); // Empêcher l'envoi du formulaire par défaut
 
+    // Récupérer les éléments d'entrée du formulaire par leur identifiant
     const firstNameInput = document.getElementById("firstName");
     const lastNameInput = document.getElementById("lastName");
     const addressInput = document.getElementById("address");
     const cityInput = document.getElementById("city");
     const emailInput = document.getElementById("email");
 
-    // Retrieve form values
+    // Récupérer les valeurs des champs du formulaire
     const firstName = firstNameInput.value.trim();
     const lastName = lastNameInput.value.trim();
     const address = addressInput.value.trim();
     const city = cityInput.value.trim();
     const email = emailInput.value.trim();
 
-    // Regular expression patterns
-    const nameRegex = /^[a-zA-ZÀ-ÿ'-]+$/;
-    const adressRegex = /^[a-zA-ZÀ-ÿ-\s]+$/;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // Expressions régulières pour valider les entrées
+    const nameRegex = /^[a-zA-ZÀ-ÿ'-]+$/; // Permet uniquement les lettres, apostrophe et tiret
+    const addressRegex = /^[a-zA-ZÀ-ÿ-\s]+$/; // Permet uniquement les lettres, tirets et espaces
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Vérifie le format d'une adresse email
 
-    // Validate first name
+    // Valider le prénom
     if (!nameRegex.test(firstName)) {
-      displayError(firstNameInput, "First name is invalid");
+      displayError(firstNameInput, "Prénom invalide");
       return;
     } else {
       clearError(firstNameInput);
     }
 
-    // Validate last name
+    // Valider le nom de famille
     if (!nameRegex.test(lastName)) {
-      displayError(lastNameInput, "Last name is invalid");
+      displayError(lastNameInput, "Nom invalide");
       return;
     } else {
       clearError(lastNameInput);
     }
 
-    // Validate address
-    if (!adressRegex.test(address)) {
-      displayError(addressInput, "Address is invalid");
+    // Valider l'adresse
+    if (!addressRegex.test(address)) {
+      displayError(addressInput, "Adresse invalide");
       return;
     } else {
       clearError(addressInput);
     }
 
-    // Validate city
-    if (!adressRegex.test(city)) {
-      displayError(cityInput, "City is invalid");
+    // Valider la ville
+    if (!addressRegex.test(city)) {
+      displayError(cityInput, "Ville invalide");
       return;
     } else {
       clearError(cityInput);
     }
 
-    // Validate email
+    // Valider l'adresse email
     if (!emailRegex.test(email)) {
-      displayError(emailInput, "Email is invalid");
+      displayError(emailInput, "Email invalide");
       return;
     } else {
       clearError(emailInput);
     }
 
-    // Retrieve products from localStorage
+    // Récupérer les produits depuis le stockage local (localStorage)
     const cartItems = JSON.parse(localStorage.getItem("cartItems"));
 
-    // Extract only the 'id' values from cartItems
+    // Extraire uniquement les valeurs 'id' des produits du panier
     const products = cartItems.map((item) => item.id);
 
-    // Create the payload object
+    // Créer l'objet de données à envoyer (payload)
     const payload = {
       contact: {
         firstName,
@@ -272,6 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     try {
+      // Envoyer la requête POST avec les données au serveur
       const response = await fetch("http://localhost:3000/api/products/order", {
         method: "POST",
         headers: {
@@ -281,29 +286,29 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (response.ok) {
+        // Si la réponse est réussie, récupérer les données de la réponse
         const data = await response.json();
         const orderId = data.orderId;
-        // Redirect to confirmation page with orderId
+        // Rediriger vers la page de confirmation avec l'identifiant de commande
         window.location.href = `confirmation.html?id=${orderId}`;
       } else {
-        // Handle the error response
+        // Gérer la réponse d'erreur
         const errorData = await response.json();
-        console.log("Error:", errorData);
+        console.log("Erreur :", errorData);
       }
     } catch (error) {
-      // Handle any network or general errors
-      console.log("Error:", error);
+      console.log("Erreur :", error);
     }
   });
 
-  // Function to display error message for a specific field
+  // Fonction pour afficher un message d'erreur pour un champ spécifique
   function displayError(input, errorMessage) {
     const errorElement = input.nextElementSibling;
     errorElement.textContent = errorMessage;
     errorElement.style.display = "block";
   }
 
-  // Function to clear error message for a specific field
+  // Fonction pour effacer un message d'erreur pour un champ spécifique
   function clearError(input) {
     const errorElement = input.nextElementSibling;
     errorElement.textContent = "";
