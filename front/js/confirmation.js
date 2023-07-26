@@ -10,4 +10,4 @@ const orderIdSpan = document.getElementById("orderId");
 if (idParam) {
     orderIdSpan.textContent = idParam;
     document.title = "Confirmation : "+ idParam;
-  }
+  }x
