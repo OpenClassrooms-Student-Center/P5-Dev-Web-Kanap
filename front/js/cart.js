@@ -197,109 +197,115 @@ document.addEventListener("DOMContentLoaded", () => {
   // Ajouter un écouteur d'événement lorsque le formulaire est soumis
   form.addEventListener("submit", async (event) => {
     event.preventDefault(); // Empêcher l'envoi du formulaire par défaut
-
+  
     // Récupérer les éléments d'entrée du formulaire par leur identifiant
     const firstNameInput = document.getElementById("firstName");
     const lastNameInput = document.getElementById("lastName");
     const addressInput = document.getElementById("address");
     const cityInput = document.getElementById("city");
     const emailInput = document.getElementById("email");
-
+  
     // Récupérer les valeurs des champs du formulaire
     const firstName = firstNameInput.value.trim();
     const lastName = lastNameInput.value.trim();
     const address = addressInput.value.trim();
     const city = cityInput.value.trim();
     const email = emailInput.value.trim();
-
+  
     // Expressions régulières pour valider les entrées
     const nameRegex = /^[a-zA-ZÀ-ÿ'-]+$/; // Permet uniquement les lettres, apostrophe et tiret
-    const addressRegex = /^[a-zA-ZÀ-ÿ-\s]+$/; // Permet uniquement les lettres, tirets et espaces
+    const addressRegex = /^[a-zA-ZÀ-ÿ0-9\s'-]+$/; // Permet uniquement les lettres, tirets et espaces
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Vérifie le format d'une adresse email
-
+  
+    let hasErrors = false; // Variable pour suivre si des erreurs ont été trouvées
+  
     // Valider le prénom
     if (!nameRegex.test(firstName)) {
       displayError(firstNameInput, "Prénom invalide");
-      return;
+      hasErrors = true;
     } else {
       clearError(firstNameInput);
     }
-
+  
     // Valider le nom de famille
     if (!nameRegex.test(lastName)) {
       displayError(lastNameInput, "Nom invalide");
-      return;
+      hasErrors = true;
     } else {
       clearError(lastNameInput);
     }
-
+  
     // Valider l'adresse
     if (!addressRegex.test(address)) {
       displayError(addressInput, "Adresse invalide");
-      return;
+      hasErrors = true;
     } else {
       clearError(addressInput);
     }
-
+  
     // Valider la ville
     if (!addressRegex.test(city)) {
       displayError(cityInput, "Ville invalide");
-      return;
+      hasErrors = true;
     } else {
       clearError(cityInput);
     }
-
+  
     // Valider l'adresse email
     if (!emailRegex.test(email)) {
       displayError(emailInput, "Email invalide");
-      return;
+      hasErrors = true;
     } else {
       clearError(emailInput);
     }
-
-    // Récupérer les produits depuis le stockage local (localStorage)
-    const cartItems = JSON.parse(localStorage.getItem("cartItems"));
-
-    // Extraire uniquement les valeurs 'id' des produits du panier
-    const products = cartItems.map((item) => item.id);
-
-    // Créer l'objet de données à envoyer (payload)
-    const payload = {
-      contact: {
-        firstName,
-        lastName,
-        address,
-        city,
-        email,
-      },
-      products,
-    };
-
-    try {
-      // Envoyer la requête POST avec les données au serveur
-      const response = await fetch("http://localhost:3000/api/products/order", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+  
+    // Vérifier s'il y a des erreurs avant d'envoyer la requête
+    if (!hasErrors) {
+      // Récupérer les produits depuis le stockage local (localStorage)
+      const cartItems = JSON.parse(localStorage.getItem("cartItems"));
+  
+      // Extraire uniquement les valeurs 'id' des produits du panier
+      const products = cartItems.map((item) => item.id);
+  
+      // Créer l'objet de données à envoyer (payload)
+      const payload = {
+        contact: {
+          firstName,
+          lastName,
+          address,
+          city,
+          email,
         },
-        body: JSON.stringify(payload),
-      });
-
-      if (response.ok) {
-        // Si la réponse est réussie, récupérer les données de la réponse
-        const data = await response.json();
-        const orderId = data.orderId;
-        // Rediriger vers la page de confirmation avec l'identifiant de commande
-        window.location.href = `confirmation.html?id=${orderId}`;
-      } else {
-        // Gérer la réponse d'erreur
-        const errorData = await response.json();
-        console.log("Erreur :", errorData);
+        products,
+      };
+  
+      try {
+        // Envoyer la requête POST avec les données au serveur
+        const response = await fetch("http://localhost:3000/api/products/order", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+  
+        if (response.ok) {
+          // Si la réponse est réussie, récupérer les données de la réponse
+          const data = await response.json();
+          const orderId = data.orderId;
+          // Rediriger vers la page de confirmation avec l'identifiant de commande
+          window.location.href = `confirmation.html?id=${orderId}`;
+        } else {
+          // Gérer la réponse d'erreur
+          const errorData = await response.json();
+          console.log("Erreur :", errorData);
+        }
+      } catch (error) {
+        console.log("Erreur :", error);
       }
-    } catch (error) {
-      console.log("Erreur :", error);
     }
   });
+  
 
   // Fonction pour afficher un message d'erreur pour un champ spécifique
   function displayError(input, errorMessage) {
